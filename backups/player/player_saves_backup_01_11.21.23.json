@@ -1,0 +1,50 @@
+{
+  "entityName": "Josh",
+  "entityUUID": "70eb7e4e-92c9-4939-9d9e-764e6b64e8b3",
+  "entityHp": 100.0,
+  "currentDungeon": {
+    "locationName": "Test",
+    "locationUUID": "c9969c2a-d5c7-42d4-b6ce-9714aaf101c6",
+    "floors": [
+      {
+        "floorNumber": 1,
+        "floorUUID": "c9331eaf-56b0-4c85-8c14-bdc6c2059fc3"
+      }
+    ],
+    "currentFloorUUID": "c9331eaf-56b0-4c85-8c14-bdc6c2059fc3"
+  },
+  "inventory": {
+    "itemList": [
+      {
+        "itemName": "Weapon",
+        "itemUUID": "ac6b529b-b2ef-4ef5-aa86-60f5ab946729",
+        "itemType": "Weapon",
+        "weaponDamage": 5.0,
+        "weaponDurability": 10.0
+      },
+      {
+        "itemName": "Armor",
+        "itemUUID": "1d5bf346-0c6f-4098-adba-f18c0b7bbed1",
+        "itemType": "Armor",
+        "armorSlot": "HELMET",
+        "armorDefense": 5.0
+      }
+    ]
+  },
+  "currentWeapon": {
+    "weaponDamage": 5.0,
+    "weaponDurability": 10.0,
+    "itemName": "Weapon",
+    "itemUUID": "ac6b529b-b2ef-4ef5-aa86-60f5ab946729",
+    "itemType": "Weapon"
+  },
+  "armors": [
+    {
+      "slot": "HELMET",
+      "armorDefense": 5.0,
+      "itemName": "Armor",
+      "itemUUID": "1d5bf346-0c6f-4098-adba-f18c0b7bbed1",
+      "itemType": "Armor"
+    }
+  ]
+}

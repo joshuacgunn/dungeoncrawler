@@ -1,0 +1,13 @@
+[
+  {
+    "locationName": "Test",
+    "locationUUID": "c35b5372-adfc-4929-8c7e-327914cc5f02",
+    "floors": [
+      {
+        "floorNumber": 1,
+        "floorUUID": "a66c3aac-42b2-4b16-a6d6-79fcc114bc49"
+      }
+    ],
+    "currentFloorUUID": "a66c3aac-42b2-4b16-a6d6-79fcc114bc49"
+  }
+]
