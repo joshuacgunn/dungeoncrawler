@@ -11,7 +11,7 @@ public class Inventory extends Container {
     private final Entity parentEntity;
 
     public Inventory(UUID containerUUID, Entity parentEntity) {
-        super(containerUUID, "Inventory");
+        super(containerUUID, (parentEntity + "'s Inventory"));
         this.parentEntity = parentEntity;
     }
 

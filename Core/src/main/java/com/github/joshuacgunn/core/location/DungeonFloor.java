@@ -1,6 +1,9 @@
 package com.github.joshuacgunn.core.location;
 
-import java.util.UUID;
+import com.github.joshuacgunn.core.entity.Enemy;
+import com.github.joshuacgunn.core.entity.Goblin;
+
+import java.util.*;
 
 /**
  * Represents a floor within a dungeon in the game world.
@@ -14,9 +17,14 @@ public class DungeonFloor {
     /** The number of this floor within its parent dungeon */
     private final int floorNumber;
 
+    private float difficultyRating;
+
     /** Reference to the parent dungeon that contains this floor */
     private final Dungeon parentDungeon;
 
+    private ArrayList<Enemy> enemiesOnFloor = new ArrayList<>();
+
+    Random rand = new Random();
     /**
      * Creates a new dungeon floor with a specified UUID.
      *
@@ -24,10 +32,14 @@ public class DungeonFloor {
      * @param parentDungeon The dungeon that contains this floor
      * @param floorNumber The number of this floor within the dungeon
      */
-    public DungeonFloor(UUID floorUUID, Dungeon parentDungeon, int floorNumber) {
+    public DungeonFloor(UUID floorUUID, Dungeon parentDungeon, int floorNumber, boolean skipEnemyGeneration) {
         this.floorUUID = floorUUID;
         this.floorNumber = floorNumber;
         this.parentDungeon = parentDungeon;
+        if (!skipEnemyGeneration) {
+            generateEnemies();
+        }
+        this.difficultyRating = calculateDifficulty();
     }
 
     /**
@@ -37,6 +49,36 @@ public class DungeonFloor {
      */
     public UUID getFloorUUID() {
         return floorUUID;
+    }
+
+    private void generateEnemies() {
+        float enemyChance = rand.nextFloat();
+        for (int i = 0; i < 3; i++) {
+            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
+        }
+        if (enemyChance < 0.2f) {
+            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
+        } else if (enemyChance < .5f) {
+            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
+            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
+        } else if (enemyChance < .8f) {
+            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
+            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
+            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
+        } else if (enemyChance < .99f) {
+            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
+            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
+            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
+            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
+        }
+    }
+
+    public void setEnemiesOnFloor(ArrayList<Enemy> enemiesOnFloor) {
+        this.enemiesOnFloor = enemiesOnFloor;
+    }
+
+    public ArrayList<Enemy> getEnemiesOnFloor() {
+        return this.enemiesOnFloor;
     }
 
     /**
@@ -55,5 +97,55 @@ public class DungeonFloor {
      */
     public Dungeon getParentDungeon() {
         return parentDungeon;
+    }
+
+    public void setDifficultyRating(float rating) {
+        this.difficultyRating = rating;
+    }
+
+    public float calculateDifficulty() {
+        // Handle empty enemy list case
+        if (enemiesOnFloor.isEmpty()) {
+            return 0.0f;
+        }
+
+        // Base difficulty starts with the floor number
+        float difficulty = floorNumber * 0.2f;
+
+        // Total stats across all enemies
+        float totalHp = 0;
+        float totalDamage = 0;
+        float totalDefense = 0;
+
+        // Count different enemy types for variety bonus
+        Set<String> enemyTypes = new HashSet<>();
+
+        for (Enemy enemy : enemiesOnFloor) {
+            totalHp += enemy.getEntityHp();
+            totalDamage += enemy.getCurrentWeapon().getWeaponDamage();
+            totalDefense += enemy.getEntityDefense();
+            enemyTypes.add(enemy.getClass().getSimpleName());
+        }
+
+        // Calculate average stats but don't divide by enemy count
+        float hpFactor = totalHp / 100f;
+        float damageFactor = totalDamage / 25f;
+        float defenseFactor = totalDefense / 25f;
+
+        // Number of enemies is a multiplier rather than divisor
+        float enemyCountFactor = 0.75f + (enemiesOnFloor.size() * 0.25f);
+
+        // Variety bonus (more types = more difficult)
+        float varietyBonus = (enemyTypes.size() - 1) * 0.15f;
+
+        // Combine factors
+        difficulty += (hpFactor + damageFactor + defenseFactor) * enemyCountFactor + varietyBonus;
+
+        // Round to one decimal place
+        return Math.round(difficulty * 10) / 100.0f;
+    }
+
+    public float getDifficultyRating() {
+        return this.difficultyRating;
     }
 }

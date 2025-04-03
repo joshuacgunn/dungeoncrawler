@@ -10,11 +10,20 @@ public class DungeonDTO implements Serializable {
     private UUID locationUUID;
     private List<DungeonFloorDTO> floors = new ArrayList<>();
     private UUID currentFloorUUID;
+    private float difficultyRating;
 
     public DungeonDTO() { }
 
     public List<DungeonFloorDTO> getFloors() {
         return floors;
+    }
+
+    public float getDifficultyRating() {
+        return this.difficultyRating;
+    }
+
+    public void setDifficultyRating(float rating) {
+        this.difficultyRating = rating;
     }
 
     public void setFloors(List<DungeonFloorDTO> floors) {

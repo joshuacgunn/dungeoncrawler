@@ -17,8 +17,7 @@ public abstract class Container {
     protected String containerName;
 
     /** The list of items in this container */
-    private final List<Item> itemList = new ArrayList<>();
-
+    private final List<Item> items = new ArrayList<>();
 
     /** Global registry mapping UUIDs to all created containers */
     public static Map<UUID, Container> containerMap = new HashMap<>();
@@ -74,10 +73,10 @@ public abstract class Container {
     }
 
     public void addItem(Item item) {
-        itemList.add(item);
+        items.add(item);
     }
 
-    public List<Item> getItemList() {
-        return itemList;
+    public List<Item> getItems() {
+        return items;
     }
 }

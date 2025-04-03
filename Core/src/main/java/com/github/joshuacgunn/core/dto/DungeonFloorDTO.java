@@ -1,6 +1,7 @@
 package com.github.joshuacgunn.core.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -12,11 +13,15 @@ public class DungeonFloorDTO implements Serializable {
     /** The number of this floor within the dungeon */
     private int floorNumber;
 
+    private float difficultyRating;
+
     /** Unique identifier for this floor */
     private UUID floorUUID;
 
     /** Reference to the parent dungeon that contains this floor */
     private UUID parentDungeonUUID;
+
+    private ArrayList<EnemyDTO> enemiesOnFloor = new ArrayList<>();
 
     public DungeonFloorDTO() { }
 
@@ -27,6 +32,22 @@ public class DungeonFloorDTO implements Serializable {
      */
     public UUID getFloorUUID() {
         return floorUUID;
+    }
+
+    public float getDifficultyRating() {
+        return this.difficultyRating;
+    }
+
+    public void setDifficultyRating(float rating) {
+        this.difficultyRating = rating;
+    }
+
+    public void setEnemiesOnFloor(ArrayList<EnemyDTO> enemiesOnFloor) {
+        this.enemiesOnFloor = enemiesOnFloor;
+    }
+
+    public ArrayList<EnemyDTO> getEnemiesOnFloor() {
+        return enemiesOnFloor;
     }
 
     /**

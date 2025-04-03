@@ -34,6 +34,7 @@ public interface ItemMapper {
             dto.setItemUUID(armor.getItemUUID());
             dto.setArmorDefense(armor.getArmorDefense());
             dto.setSlot(armor.getArmorSlot());
+            dto.setQuality(armor.getArmorQuality());
             dto.setItemType("Armor"); // Explicitly set type
             return dto;
         } else {
@@ -57,12 +58,14 @@ public interface ItemMapper {
                     weaponDTO.getWeaponDurability()
             );
         } if (dto instanceof ArmorDTO armorDTO) {
-            return new Armor(
+            Armor armor = new Armor(
                     armorDTO.getItemUUID(),
-                    armorDTO.getArmorDefense(),
                     armorDTO.getSlot(),
-                    armorDTO.getItemName()
+                    armorDTO.getItemName(),
+                    armorDTO.getQuality()
                     );
+            armor.setArmorDefense(armorDTO.getArmorDefense());
+            return armor;
         } else {
             return new Item(dto.getItemName(), dto.getItemUUID());
         }

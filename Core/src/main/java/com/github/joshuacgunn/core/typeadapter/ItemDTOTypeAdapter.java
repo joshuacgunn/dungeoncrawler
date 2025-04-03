@@ -3,6 +3,7 @@ package com.github.joshuacgunn.core.typeadapter;
 import com.github.joshuacgunn.core.dto.ArmorDTO;
 import com.github.joshuacgunn.core.dto.ItemDTO;
 import com.github.joshuacgunn.core.dto.WeaponDTO;
+import com.github.joshuacgunn.core.item.Armor;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
@@ -48,8 +49,9 @@ public class ItemDTOTypeAdapter implements JsonSerializer<ItemDTO>, JsonDeserial
             result.addProperty("weaponDamage", weaponDTO.getWeaponDamage());
             result.addProperty("weaponDurability", weaponDTO.getWeaponDurability());
         } else if (src instanceof ArmorDTO armorDTO) {
-            result.addProperty("armorSlot", armorDTO.getSlot());
+            result.addProperty("armorSlot", armorDTO.getSlot().toString());
             result.addProperty("armorDefense", armorDTO.getArmorDefense());
+            result.addProperty("armorQuality", armorDTO.getQuality().toString());
         }
 
         return result;
@@ -88,7 +90,8 @@ public class ItemDTOTypeAdapter implements JsonSerializer<ItemDTO>, JsonDeserial
             armorDTO.setItemName(jsonObject.get("itemName").getAsString());
             armorDTO.setItemUUID(UUID.fromString(jsonObject.get("itemUUID").getAsString()));
             armorDTO.setArmorDefense(jsonObject.get("armorDefense").getAsFloat());
-            armorDTO.setSlot(jsonObject.get("armorSlot").getAsString());
+            armorDTO.setSlot(Armor.ArmorSlot.valueOf(jsonObject.get("armorSlot").getAsString()));
+            armorDTO.setQuality(Armor.ArmorQuality.valueOf(jsonObject.get("armorQuality").getAsString()));
             return armorDTO;
         } else {
             // Create regular ItemDTO
