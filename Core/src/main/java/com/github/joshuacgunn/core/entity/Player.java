@@ -18,11 +18,7 @@ public class Player extends Entity {
     /** The maximum health points a player can have */
     public static final float MAX_HP = 100f;
 
-    /** The dungeon the player is currently in */
-    private Dungeon currentDungeon;
-
     /** The player's inventory containing all collected items */
-    private final Inventory inventory;
 
     /**
      * Creates a new player with the specified name and UUID.
@@ -35,25 +31,6 @@ public class Player extends Entity {
     public Player(String name, UUID uuid) {
         super(name, uuid);
         this.entityHp = MAX_HP;
-        inventory = new Inventory(UUID.randomUUID(), this);
-    }
-
-    /**
-     * Gets the dungeon the player is currently in.
-     *
-     * @return The current dungeon, or null if the player is not in a dungeon
-     */
-    public Dungeon getCurrentDungeon() {
-        return currentDungeon;
-    }
-
-    /**
-     * Sets the player's current dungeon.
-     *
-     * @param currentDungeon The dungeon to place the player in
-     */
-    public void setCurrentDungeon(Dungeon currentDungeon) {
-        this.currentDungeon = currentDungeon;
     }
 
     /**
@@ -61,9 +38,6 @@ public class Player extends Entity {
      *
      * @return The player's inventory containing all collected items
      */
-    public Inventory getInventory() {
-        return inventory;
-    }
 
     /**
      * Gets the weapon the player currently has equipped.

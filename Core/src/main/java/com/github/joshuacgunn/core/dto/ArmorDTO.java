@@ -1,9 +1,12 @@
 package com.github.joshuacgunn.core.dto;
 
+import com.github.joshuacgunn.core.item.Armor;
+
 import java.io.Serializable;
 
 public class ArmorDTO extends ItemDTO {
-    private String slot;
+    private Armor.ArmorSlot slot;
+    private Armor.ArmorQuality quality;
     private float armorDefense;
 
     public ArmorDTO() {
@@ -11,11 +14,11 @@ public class ArmorDTO extends ItemDTO {
         this.setItemType("Armor");
     }
 
-    public String getSlot() {
-        return slot;
+    public Armor.ArmorSlot getSlot() {
+        return this.slot;
     }
 
-    public void setSlot(String slot) {
+    public void setSlot(Armor.ArmorSlot slot) {
         this.slot = slot;
     }
 
@@ -29,5 +32,13 @@ public class ArmorDTO extends ItemDTO {
 
     public String getArmorName() {
         return getItemName();
+    }
+
+    public Armor.ArmorQuality getQuality() {
+        return quality;
+    }
+
+    public void setQuality(Armor.ArmorQuality quality) {
+        this.quality = quality;
     }
 }

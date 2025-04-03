@@ -3,6 +3,7 @@ package com.github.joshuacgunn.core.location;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.Random;
 
 /**
  * Represents a dungeon location in the game world.
@@ -18,6 +19,10 @@ public class Dungeon extends Location {
 
     public boolean isCleared;
 
+    private float difficultyRating;
+
+    Random rand = new Random();
+
     /**
      * Creates a new dungeon with the specified name and UUID.
      * Automatically creates and adds the first floor.
@@ -25,26 +30,42 @@ public class Dungeon extends Location {
      * @param name The name of the dungeon
      * @param uuid The unique identifier for the dungeon
      */
-    public Dungeon(String name, UUID uuid) {
+    public Dungeon(String name, UUID uuid, boolean newDungeon) {
         super(name, uuid);
-        addFloor();
+        if (newDungeon) {
+            float floorsToMake = rand.nextFloat();
+            for (int i = 0; i < 3; i++) {
+                addFloor();
+            }
+            if (floorsToMake < .2f) {
+                addFloor();
+            } else if (floorsToMake < .45f) {
+                addFloor(); addFloor();
+            } else if (floorsToMake < .85f) {
+                addFloor(); addFloor(); addFloor();
+            } else if (floorsToMake < .94) {
+                addFloor();addFloor();addFloor();addFloor();
+            } else {
+                addFloor();addFloor();addFloor();addFloor();addFloor();
+            }
+        }
+        for (DungeonFloor floor : floors) {
+            this.difficultyRating += floor.getDifficultyRating();
+        }
     }
 
     /**
      * Adds a new floor to the dungeon.
      * The floor number is automatically assigned based on the current number of floors.
      * If this is the first floor, it is set as the current floor.
-     *
-     * @return The newly created dungeon floor
      */
-    public DungeonFloor addFloor() {
+    public void addFloor() {
         int floorNumber = floors.size() + 1;
-        DungeonFloor newFloor = new DungeonFloor(UUID.randomUUID(), this, floorNumber);
+        DungeonFloor newFloor = new DungeonFloor(UUID.randomUUID(), this, floorNumber, false);
         floors.add(newFloor);
         if (currentFloor == null) {
             currentFloor = newFloor;
         }
-        return newFloor;
     }
 
     public void clearFloor() {
@@ -94,5 +115,9 @@ public class Dungeon extends Location {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void setDifficultyRating(float rating) {
+        this.difficultyRating = rating;
     }
 }
