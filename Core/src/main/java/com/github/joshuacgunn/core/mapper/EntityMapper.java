@@ -52,6 +52,19 @@ public interface EntityMapper {
         dto.setEntityDefense(entity.getEntityDefense());
         dto.setDead(entity.getDeathStatus());
 
+        if (entity.getInventory() != null) {
+            InventoryDTO inventoryDTO = new InventoryDTO();
+            List<UUID> itemUUIDList = new ArrayList<>();
+
+            for (Item item : entity.getInventory().getItems()) {
+                itemUUIDList.add(item.getItemUUID());
+            }
+
+            inventoryDTO.setItemUUIDs(itemUUIDList);
+            dto.setInventory(inventoryDTO);
+        }
+
+
         // Handle armor items
         if (entity.getArmors() != null) {
             List<UUID> armorUUIDList = new ArrayList<>();
@@ -86,20 +99,6 @@ public interface EntityMapper {
         if (player.getCurrentDungeon() != null) {
             dto.setCurrentDungeonUUID(player.getCurrentDungeon().getLocationUUID());
         }
-
-        // Handle items in Inventory
-        if (player.getInventory() != null) {
-            InventoryDTO inventoryDTO = new InventoryDTO();
-            List<UUID> itemUUIDList = new ArrayList<>();
-
-            for (Item item : player.getInventory().getItems()) {
-                itemUUIDList.add(item.getItemUUID());
-            }
-
-            inventoryDTO.setItemUUIDs(itemUUIDList);
-            dto.setInventory(inventoryDTO);
-        }
-
         return dto;
     }
 
@@ -113,17 +112,6 @@ public interface EntityMapper {
         if (enemy == null) return null;
 
         EnemyDTO dto = new EnemyDTO();
-        if (enemy.getInventory() != null) {
-            InventoryDTO inventoryDTO = new InventoryDTO();
-            List<UUID> itemUUIDList = new ArrayList<>();
-
-            for (Item item : enemy.getInventory().getItems()) {
-                itemUUIDList.add(item.getItemUUID());
-            }
-
-            inventoryDTO.setItemUUIDs(itemUUIDList);
-            dto.setInventory(inventoryDTO);
-        }
 
         return dto;
     }

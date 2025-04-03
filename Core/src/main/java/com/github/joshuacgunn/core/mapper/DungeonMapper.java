@@ -24,6 +24,7 @@ public interface DungeonMapper {
         DungeonDTO dungeonDTO = new DungeonDTO();
         dungeonDTO.setLocationName(dungeon.getLocationName());
         dungeonDTO.setLocationUUID(dungeon.getLocationUUID());
+        dungeonDTO.setCurrentFloorUUID(dungeon.getCurrentFloor().getFloorUUID());
         ArrayList<DungeonFloorDTO> floorDTOs = new ArrayList<>();
         float difficulty = 0;
         for (DungeonFloor floor : dungeon.getFloors()) {
@@ -36,7 +37,6 @@ public interface DungeonMapper {
 
             ArrayList<UUID> enemyUUIDs = new ArrayList<>();
             for (Enemy enemy : floor.getEnemiesOnFloor()) {
-                EntityDTO enemyDTO = EntityMapper.INSTANCE.entityToEntityDTO(enemy);
                 enemyUUIDs.add(enemy.getEntityUUID());
             }
             floorDTO.setEnemyUUIDs(enemyUUIDs);

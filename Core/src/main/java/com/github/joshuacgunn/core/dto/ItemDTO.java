@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ItemDTO implements Serializable {
+    private String itemType;
     private String itemName;
     private UUID itemUUID;
-    private String itemType;
 
     public ItemDTO() { }
 

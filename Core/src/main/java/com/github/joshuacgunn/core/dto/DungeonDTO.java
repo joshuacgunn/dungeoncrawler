@@ -7,10 +7,10 @@ import java.util.UUID;
 
 public class DungeonDTO implements Serializable {
     private String locationName;
-    private UUID locationUUID;
-    private List<DungeonFloorDTO> floors = new ArrayList<>();
-    private UUID currentFloorUUID;
     private float difficultyRating;
+    private UUID locationUUID;
+    private UUID currentFloorUUID;
+    private List<DungeonFloorDTO> floors = new ArrayList<>();
 
     public DungeonDTO() { }
 

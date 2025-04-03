@@ -10,16 +10,16 @@ import java.util.UUID;
  * It serves as the parent for all entity-specific DTOs.
  */
 public class EntityDTO implements Serializable {
+    private String entityType;
     private String entityName;
     private UUID entityUUID;
     private float entityHp;
     private boolean isDead;
+    private UUID currentDungeonUUID;
     private float entityDefense;
     private UUID currentWeaponUUID;
     private List<UUID> equippedArmorUUIDs = new ArrayList<>();
-    private String entityType;
     private InventoryDTO inventory;
-    private UUID currentDungeonUUID;
 
     public EntityDTO() {
         // Default constructor

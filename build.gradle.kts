@@ -14,6 +14,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation(project(":Core"))
     implementation(project(":Common"))
+    implementation("commons-io:commons-io:2.15.1")
 }
 
 tasks.test {
