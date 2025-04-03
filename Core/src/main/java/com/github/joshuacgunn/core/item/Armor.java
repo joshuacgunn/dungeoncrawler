@@ -1,5 +1,7 @@
 package com.github.joshuacgunn.core.item;
 
+import com.github.joshuacgunn.core.entity.Entity;
+
 import java.util.UUID;
 import java.util.Random;
 
@@ -90,5 +92,23 @@ public class Armor extends Item {
      */
     public void updateArmorDefense() {
         this.armorDefense = calculateDefense();
+    }
+
+    public static void generateArmor(int pieces, Armor.ArmorQuality quality, boolean equip, Entity entity) {
+        final Random rand = new Random();
+        int i = 0;
+        while (i < pieces) {
+            Armor.ArmorSlot slot = Armor.ArmorSlot.values()[rand.nextInt(0, 4)];
+            Armor generatedArmor = new Armor(UUID.randomUUID(), slot, (entity.getEntityName() + "'s " + quality.toString().toLowerCase() + " " + slot.toString().toLowerCase()), quality);
+            if (!(entity.armors.containsKey(generatedArmor.getArmorSlot()))) {
+                System.out.println("Generated armor piece: " + generatedArmor.getArmorName());
+                if (equip) {
+                    entity.equipArmor(generatedArmor);
+                } else {
+                    entity.getInventory().addItem(generatedArmor);
+                }
+                i++;
+            }
+        }
     }
 }

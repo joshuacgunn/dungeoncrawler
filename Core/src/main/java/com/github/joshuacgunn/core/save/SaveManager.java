@@ -28,6 +28,15 @@ public abstract class SaveManager {
         saveDungeons();
     }
 
+    public static void loadState() {
+        // The order of this is critical for functionality. It will not work if changed.
+        loadEntities();
+        loadDungeons();
+        loadPlayer();
+    }
+
+
+
     public static void createDirectories() {
         try {
             File save_dir = new File(SAVE_DIRECTORY);

@@ -21,7 +21,7 @@ public class DungeonFloorDTO implements Serializable {
     /** Reference to the parent dungeon that contains this floor */
     private UUID parentDungeonUUID;
 
-    private ArrayList<EnemyDTO> enemiesOnFloor = new ArrayList<>();
+    private ArrayList<UUID> enemyUUIDs = new ArrayList<>();
 
     public DungeonFloorDTO() { }
 
@@ -42,14 +42,13 @@ public class DungeonFloorDTO implements Serializable {
         this.difficultyRating = rating;
     }
 
-    public void setEnemiesOnFloor(ArrayList<EnemyDTO> enemiesOnFloor) {
-        this.enemiesOnFloor = enemiesOnFloor;
+    public ArrayList<UUID> getEnemyUUIDs() {
+        return enemyUUIDs;
     }
 
-    public ArrayList<EnemyDTO> getEnemiesOnFloor() {
-        return enemiesOnFloor;
+    public void setEnemyUUIDs(ArrayList<UUID> enemyUUIDs) {
+        this.enemyUUIDs = enemyUUIDs;
     }
-
     /**
      * Sets the unique identifier of this floor.
      *

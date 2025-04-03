@@ -5,6 +5,8 @@ import com.github.joshuacgunn.core.entity.*;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
 import com.github.joshuacgunn.core.item.Weapon;
+import com.github.joshuacgunn.core.location.Dungeon;
+import com.github.joshuacgunn.core.location.Location;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -83,8 +85,7 @@ public interface EntityMapper {
 
         // Handle current dungeon
         if (player.getCurrentDungeon() != null) {
-            DungeonDTO dungeonDTO = DungeonMapper.INSTANCE.dungeonToDungeonDto(player.getCurrentDungeon());
-            dto.setCurrentDungeon(dungeonDTO);
+            dto.setCurrentDungeonUUID(player.getCurrentDungeon().getLocationUUID());
         }
 
         // Handle items in Inventory
@@ -199,10 +200,14 @@ public interface EntityMapper {
         Player player = new Player(dto.getEntityName(), dto.getEntityUUID());
 
         // Set current dungeon
-        if (dto.getCurrentDungeon() != null) {
-            player.setCurrentDungeon(DungeonMapper.INSTANCE.dungeonDtoToDungeon(dto.getCurrentDungeon()));
+        if (dto.getCurrentDungeonUUID() != null) {
+            if (Location.locationMap.containsKey(dto.getCurrentDungeonUUID())) {
+                Location location = Location.locationMap.get(dto.getCurrentDungeonUUID());
+                if (location instanceof Dungeon) {
+                    player.setCurrentDungeon((Dungeon) location);
+                }
+            }
         }
-
         return player;
     }
 

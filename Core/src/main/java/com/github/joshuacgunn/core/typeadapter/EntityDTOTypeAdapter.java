@@ -31,7 +31,7 @@ public class EntityDTOTypeAdapter implements JsonSerializer<EntityDTO>, JsonDese
     public JsonElement serialize(EntityDTO src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject result = new JsonObject();
 
-        // Serialize common EntityDTO properties
+        // Common fields remain the same
         result.addProperty("entityName", src.getEntityName());
         result.addProperty("entityUUID", src.getEntityUUID().toString());
         result.addProperty("entityHp", src.getEntityHp());
@@ -39,32 +39,29 @@ public class EntityDTOTypeAdapter implements JsonSerializer<EntityDTO>, JsonDese
         result.addProperty("entityDefense", src.getEntityDefense());
         result.addProperty("entityType", src.getEntityType());
 
-        // Serialize current weapon if present
+        // Current weapon and armor handling remains unchanged
         if (src.getCurrentWeapon() != null) {
             result.add("currentWeapon", context.serialize(src.getCurrentWeapon()));
         }
 
-        // Serialize armors if present
         if (src.getEquippedArmors() != null && !src.getEquippedArmors().isEmpty()) {
             result.add("armors", context.serialize(src.getEquippedArmors()));
         }
 
-        // Handle PlayerDTO-specific fields
-        if (src instanceof PlayerDTO playerDTO) {
-            if (playerDTO.getCurrentDungeon() != null) {
-                result.add("currentDungeon", context.serialize(playerDTO.getCurrentDungeon()));
-            }
-            if (playerDTO.getInventory() != null) {
-                result.add("inventory", context.serialize(playerDTO.getInventory()));
-            }
+        // Modified: Store dungeon UUID instead of the full dungeon object
+        if (src.getCurrentDungeonUUID() != null) {
+            result.addProperty("currentDungeonUUID", src.getCurrentDungeonUUID().toString());
         }
 
-        // Handle EnemyDTO-specific fields if needed
-        if (src instanceof EnemyDTO enemyDTO) {
-            if (enemyDTO.getInventory() != null) {
-                result.add("inventory", context.serialize(enemyDTO.getInventory()));
-            }
+        // Inventory serialization remains unchanged
+        if (src instanceof PlayerDTO playerDTO && playerDTO.getInventory() != null) {
+            result.add("inventory", context.serialize(playerDTO.getInventory()));
         }
+
+        if (src instanceof EnemyDTO enemyDTO && enemyDTO.getInventory() != null) {
+            result.add("inventory", context.serialize(enemyDTO.getInventory()));
+        }
+
         return result;
     }
 
@@ -82,28 +79,27 @@ public class EntityDTOTypeAdapter implements JsonSerializer<EntityDTO>, JsonDese
     @Override
     public EntityDTO deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
-
-        // Determine the entity type
         String entityType = jsonObject.has("entityType") ?
                 jsonObject.get("entityType").getAsString() : "Entity";
 
-        // Create the appropriate DTO based on entityType
         EntityDTO dto;
         switch (entityType) {
             case "Player":
                 dto = new PlayerDTO();
 
-                // Set player-specific fields
-                if (jsonObject.has("currentDungeon")) {
-                    ((PlayerDTO) dto).setCurrentDungeon(
-                            context.deserialize(jsonObject.get("currentDungeon"), DungeonDTO.class));
+                // Modified: Set dungeon UUID instead of full dungeon object
+                if (jsonObject.has("currentDungeonUUID")) {
+                    UUID dungeonUUID = UUID.fromString(jsonObject.get("currentDungeonUUID").getAsString());
+                    dto.setCurrentDungeonUUID(dungeonUUID);
                 }
+
                 if (jsonObject.has("inventory")) {
                     ((PlayerDTO) dto).setInventory(
                             context.deserialize(jsonObject.get("inventory"), InventoryDTO.class));
                 }
                 break;
 
+            // Enemy case remains unchanged
             case "Enemy":
             case "Goblin":
                 dto = new EnemyDTO();

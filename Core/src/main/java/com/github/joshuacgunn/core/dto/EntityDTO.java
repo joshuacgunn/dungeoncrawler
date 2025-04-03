@@ -19,18 +19,18 @@ public class EntityDTO implements Serializable {
     private List<ArmorDTO> equippedArmors;
     private String entityType;
     private InventoryDTO inventory;
-    private DungeonDTO currentDungeon;
+    private UUID currentDungeonUUID;
 
     public EntityDTO() {
         // Default constructor
     }
 
-    public DungeonDTO getCurrentDungeon() {
-        return currentDungeon;
+    public UUID getCurrentDungeonUUID() {
+        return currentDungeonUUID;
     }
 
-    public void setCurrentDungeon(DungeonDTO currentDungeon) {
-        this.currentDungeon = currentDungeon;
+    public void setCurrentDungeonUUID(UUID currentDungeonUUID) {
+        this.currentDungeonUUID = currentDungeonUUID;
     }
 
     public InventoryDTO getInventory() {

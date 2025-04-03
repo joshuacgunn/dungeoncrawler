@@ -43,3 +43,5 @@ bin/
 /saves/player_save.json
 /saves/dungeon_saves.json
 /saves/entities_save.json
+/src/
+/saves/

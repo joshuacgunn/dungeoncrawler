@@ -57,7 +57,7 @@ public abstract class Entity {
      * A map of all armor pieces equipped by the entity.
      * The key is the armor slot (e.g., "HELMET", "CHESTPLATE"), and the value is the Armor object.
      */
-    protected Map<Armor.ArmorSlot, Armor> armors = new HashMap<>();
+    public Map<Armor.ArmorSlot, Armor> armors = new HashMap<>();
 
     /**
      * A static map of all entities in the game.
@@ -198,6 +198,7 @@ public abstract class Entity {
             armors.put(armor.getArmorSlot(), armor);
             entityDefense += armor.getArmorDefense();
             armors.put(armor.getArmorSlot(), armor);
+            this.getInventory().getItems().remove(armor);
         }
     }
 
@@ -208,13 +209,14 @@ public abstract class Entity {
      *
      * @param armor The armor to be removed from the entity.
      */
-    public void removeArmor(Armor armor) {
+    public void unEquipArmor(Armor armor) {
         if (!armors.containsValue(armor)) {
             System.out.println("You don't have that equipped!");
         } else {
             armors.remove(armor.getArmorSlot());
             entityDefense -= armor.getArmorDefense();
             armors.remove(armor.getArmorSlot());
+            this.getInventory().addItem(armor);
         }
     }
 
@@ -228,21 +230,6 @@ public abstract class Entity {
             return null;
         } else {
             return new ArrayList<>(armors.values());
-        }
-    }
-
-    public void generateArmor(int pieces, Armor.ArmorQuality quality) {
-        final Random rand = new Random();
-        int i = 0;
-        while (i < pieces) {
-            Armor.ArmorSlot slot = Armor.ArmorSlot.values()[rand.nextInt(0, 4)];
-            Armor generatedArmor = new Armor(UUID.randomUUID(), slot, (this.entityName + "'s " + quality.toString().toLowerCase() + " " + slot.toString().toLowerCase()), quality);
-            if (!(armors.containsKey(generatedArmor.getArmorSlot()))) {
-                this.inventory.addItem(generatedArmor);
-                this.equipArmor(generatedArmor);
-                System.out.println("Generated armor piece: " + generatedArmor.getArmorName());
-                i++;
-            }
         }
     }
 }

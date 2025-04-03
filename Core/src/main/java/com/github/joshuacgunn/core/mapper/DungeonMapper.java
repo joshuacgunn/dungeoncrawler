@@ -11,6 +11,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 @Mapper
 public interface DungeonMapper {
@@ -33,12 +34,12 @@ public interface DungeonMapper {
 
             difficulty += floor.getDifficultyRating();
 
-            ArrayList<EnemyDTO> enemyDTOs = new ArrayList<>();
+            ArrayList<UUID> enemyUUIDs = new ArrayList<>();
             for (Enemy enemy : floor.getEnemiesOnFloor()) {
                 EntityDTO enemyDTO = EntityMapper.INSTANCE.entityToEntityDTO(enemy);
-                enemyDTOs.add((EnemyDTO) enemyDTO);
+                enemyUUIDs.add(enemy.getEntityUUID());
             }
-            floorDTO.setEnemiesOnFloor(enemyDTOs);
+            floorDTO.setEnemyUUIDs(enemyUUIDs);
 
             floorDTOs.add(floorDTO);
         }
@@ -55,10 +56,10 @@ public interface DungeonMapper {
             DungeonFloor floor = new DungeonFloor(floorDTO.getFloorUUID(), dungeon, floorDTO.getFloorNumber(), true);
 
             ArrayList<Enemy> enemies = new ArrayList<>();
-            for (EntityDTO enemyDTO : floorDTO.getEnemiesOnFloor()) {
-                Entity enemy = EntityMapper.INSTANCE.entityDtoToEntity(enemyDTO);
-                if (enemy instanceof Enemy) {
-                    enemies.add((Enemy) enemy);
+            for (UUID enemyUUID : floorDTO.getEnemyUUIDs()) {
+                Entity entity = Entity.entityMap.get(enemyUUID);
+                if (entity instanceof Enemy) {
+                    enemies.add((Enemy) entity);
                 }
             }
 
