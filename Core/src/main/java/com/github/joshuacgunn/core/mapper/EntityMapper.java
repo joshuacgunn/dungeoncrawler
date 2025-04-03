@@ -54,19 +54,18 @@ public interface EntityMapper {
 
         // Handle armor items
         if (entity.getArmors() != null) {
-            List<ArmorDTO> armorDTOList = new ArrayList<>();
+            List<UUID> armorUUIDList = new ArrayList<>();
             for (Item item : entity.getArmors()) {
                 if (item instanceof Armor) {
-                    armorDTOList.add((ArmorDTO) ItemMapper.INSTANCE.itemToItemDTO(item));
+                    armorUUIDList.add(item.getItemUUID());
                 }
             }
-            dto.setEquippedArmors(armorDTOList);
+            dto.setEquippedArmorUUIDs(armorUUIDList);
         }
 
         // Handle current weapon
         if (entity.getCurrentWeapon() != null) {
-            WeaponDTO weaponDTO = (WeaponDTO) ItemMapper.INSTANCE.itemToItemDTO(entity.getCurrentWeapon());
-            dto.setCurrentWeapon(weaponDTO);
+            dto.setCurrentWeaponUUID(entity.getCurrentWeapon().getItemUUID());
         }
 
         return dto;
@@ -91,13 +90,13 @@ public interface EntityMapper {
         // Handle items in Inventory
         if (player.getInventory() != null) {
             InventoryDTO inventoryDTO = new InventoryDTO();
-            List<ItemDTO> itemDTOList = new ArrayList<>();
+            List<UUID> itemUUIDList = new ArrayList<>();
 
             for (Item item : player.getInventory().getItems()) {
-                itemDTOList.add(ItemMapper.INSTANCE.itemToItemDTO(item));
+                itemUUIDList.add(item.getItemUUID());
             }
 
-            inventoryDTO.setItemList(itemDTOList);
+            inventoryDTO.setItemUUIDs(itemUUIDList);
             dto.setInventory(inventoryDTO);
         }
 
@@ -116,13 +115,13 @@ public interface EntityMapper {
         EnemyDTO dto = new EnemyDTO();
         if (enemy.getInventory() != null) {
             InventoryDTO inventoryDTO = new InventoryDTO();
-            List<ItemDTO> itemDTOList = new ArrayList<>();
+            List<UUID> itemUUIDList = new ArrayList<>();
 
             for (Item item : enemy.getInventory().getItems()) {
-                itemDTOList.add(ItemMapper.INSTANCE.itemToItemDTO(item));
+                itemUUIDList.add(item.getItemUUID());
             }
 
-            inventoryDTO.setItemList(itemDTOList);
+            inventoryDTO.setItemUUIDs(itemUUIDList);
             dto.setInventory(inventoryDTO);
         }
 
@@ -165,23 +164,23 @@ public interface EntityMapper {
         entity.setDeathStatus(dto.isDead());
 
         // Handle armors
-        if (dto.getEquippedArmors() != null) {
-            for (ArmorDTO armorDTO : dto.getEquippedArmors()) {
-                Armor armor = (Armor) ItemMapper.INSTANCE.itemDtoToItem(armorDTO);
+        if (dto.getEquippedArmorUUIDs() != null) {
+            for (UUID armorUUID : dto.getEquippedArmorUUIDs()) {
+                Armor armor = (Armor) Item.itemMap.get(armorUUID);
                 entity.equipArmor(armor);
             }
         }
 
-        if (dto.getInventory() != null && dto.getInventory().getItemList() != null) {
-            for (ItemDTO itemDTO : dto.getInventory().getItemList()) {
-                Item item = ItemMapper.INSTANCE.itemDtoToItem(itemDTO);
+        if (dto.getInventory() != null && dto.getInventory().getItemUUIDs() != null) {
+            for (UUID itemUUID : dto.getInventory().getItemUUIDs()) {
+                Item item = Item.itemMap.get(itemUUID);
                 entity.getInventory().addItem(item);
             }
         }
 
         // Handle current weapon
-        if (dto.getCurrentWeapon() != null) {
-            Weapon weapon = (Weapon) ItemMapper.INSTANCE.itemDtoToItem(dto.getCurrentWeapon());
+        if (dto.getCurrentWeaponUUID() != null) {
+            Weapon weapon = (Weapon) Item.itemMap.get(dto.getCurrentWeaponUUID());
             entity.setCurrentWeapon(weapon);
         }
 

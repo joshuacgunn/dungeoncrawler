@@ -14,10 +14,6 @@ public class Test {
     public static void main(String[] args) {
         try {
             Player player = createPlayer();
-            for (DungeonFloor df : player.getCurrentDungeon().getFloors()) {
-                System.out.println(df.getDifficultyRating());
-                System.out.println(df.getEnemiesOnFloor().size());
-            }
             SaveManager.saveState(player);
         } catch (Exception e) {
             e.printStackTrace();

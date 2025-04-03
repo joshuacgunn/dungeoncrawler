@@ -40,12 +40,17 @@ public class EntityDTOTypeAdapter implements JsonSerializer<EntityDTO>, JsonDese
         result.addProperty("entityType", src.getEntityType());
 
         // Current weapon and armor handling remains unchanged
-        if (src.getCurrentWeapon() != null) {
-            result.add("currentWeapon", context.serialize(src.getCurrentWeapon()));
+        if (src.getCurrentWeaponUUID() != null) {
+            result.addProperty("currentWeaponUUID", src.getCurrentWeaponUUID().toString());
         }
 
-        if (src.getEquippedArmors() != null && !src.getEquippedArmors().isEmpty()) {
-            result.add("armors", context.serialize(src.getEquippedArmors()));
+        // Store armor UUID references instead of full armors
+        if (src.getEquippedArmorUUIDs() != null && !src.getEquippedArmorUUIDs().isEmpty()) {
+            JsonArray armorArray = new JsonArray();
+            for (UUID uuid : src.getEquippedArmorUUIDs()) {
+                armorArray.add(uuid.toString());
+            }
+            result.add("equippedArmorUUIDs", armorArray);
         }
 
         // Modified: Store dungeon UUID instead of the full dungeon object
@@ -129,13 +134,13 @@ public class EntityDTOTypeAdapter implements JsonSerializer<EntityDTO>, JsonDese
 
         // Handle current weapon
         if (jsonObject.has("currentWeapon")) {
-            dto.setCurrentWeapon(context.deserialize(
+            dto.setCurrentWeaponUUID(context.deserialize(
                     jsonObject.get("currentWeapon"), WeaponDTO.class));
         }
 
         // Handle armors list
         if (jsonObject.has("armors")) {
-            dto.setEquippedArmors(context.deserialize(
+            dto.setEquippedArmorUUIDs(context.deserialize(
                     jsonObject.get("armors"), new TypeToken<List<ArmorDTO>>(){}.getClass()));
         }
 

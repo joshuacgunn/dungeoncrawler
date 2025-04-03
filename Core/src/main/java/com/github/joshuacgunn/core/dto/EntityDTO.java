@@ -15,8 +15,8 @@ public class EntityDTO implements Serializable {
     private float entityHp;
     private boolean isDead;
     private float entityDefense;
-    private WeaponDTO currentWeapon;
-    private List<ArmorDTO> equippedArmors;
+    private UUID currentWeaponUUID;
+    private List<UUID> equippedArmorUUIDs = new ArrayList<>();
     private String entityType;
     private InventoryDTO inventory;
     private UUID currentDungeonUUID;
@@ -81,20 +81,20 @@ public class EntityDTO implements Serializable {
         this.entityDefense = entityDefense;
     }
 
-    public WeaponDTO getCurrentWeapon() {
-        return currentWeapon;
+    public UUID getCurrentWeaponUUID() {
+        return currentWeaponUUID;
     }
 
-    public void setCurrentWeapon(WeaponDTO currentWeapon) {
-        this.currentWeapon = currentWeapon;
+    public void setCurrentWeaponUUID(UUID uuid) {
+        this.currentWeaponUUID = uuid;
     }
 
-    public List<ArmorDTO> getEquippedArmors() {
-        return equippedArmors;
+    public List<UUID> getEquippedArmorUUIDs() {
+        return equippedArmorUUIDs;
     }
 
-    public void setEquippedArmors(List<ArmorDTO> equippedArmors) {
-        this.equippedArmors = equippedArmors != null ? new ArrayList<>(equippedArmors) : null;
+    public void setEquippedArmorUUIDs(List<UUID> uuids) {
+        this.equippedArmorUUIDs = uuids;
     }
 
     public String getEntityType() {

@@ -7,34 +7,9 @@ import com.github.joshuacgunn.core.item.Armor;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
-import java.util.UUID;
 
-/**
- * Custom type adapter for serializing and deserializing ItemDTO objects with GSON.
- * <p>
- * This adapter ensures proper handling of the ItemDTO class hierarchy, particularly
- * between base ItemDTO objects and WeaponDTO subclasses. It preserves type information
- * during serialization and recreates the appropriate object type during deserialization.
- * <p>
- * Key responsibilities:
- * - Serializes ItemDTO and WeaponDTO objects with all their properties
- * - Ensures weapon-specific properties are included when serializing WeaponDTO objects
- * - Determines the correct object type to create during deserialization based on itemType
- */
 public class ItemDTOTypeAdapter implements JsonSerializer<ItemDTO>, JsonDeserializer<ItemDTO> {
 
-    /**
-     * Serializes an ItemDTO object to JSON.
-     * <p>
-     * Common properties (itemName, itemUUID, itemType) are serialized for all DTOs.
-     * For WeaponDTO objects, additional weapon-specific properties (weaponDamage,
-     * weaponDurability) are also included in the JSON output.
-     *
-     * @param src The ItemDTO object to serialize
-     * @param typeOfSrc The runtime type of the source object
-     * @param context The serialization context
-     * @return A JsonElement representing the serialized object
-     */
     @Override
     public JsonElement serialize(ItemDTO src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject result = new JsonObject();
@@ -42,64 +17,90 @@ public class ItemDTOTypeAdapter implements JsonSerializer<ItemDTO>, JsonDeserial
         // Common properties
         result.addProperty("itemName", src.getItemName());
         result.addProperty("itemUUID", src.getItemUUID().toString());
-        result.addProperty("itemType", src.getItemType());
 
-        // Set weapon-specific properties
+        // Type-specific properties
         if (src instanceof WeaponDTO weaponDTO) {
+            result.addProperty("itemType", "Weapon");
             result.addProperty("weaponDamage", weaponDTO.getWeaponDamage());
             result.addProperty("weaponDurability", weaponDTO.getWeaponDurability());
         } else if (src instanceof ArmorDTO armorDTO) {
-            result.addProperty("armorSlot", armorDTO.getSlot().toString());
+            result.addProperty("itemType", "Armor");
             result.addProperty("armorDefense", armorDTO.getArmorDefense());
-            result.addProperty("armorQuality", armorDTO.getQuality().toString());
+            if (armorDTO.getSlot() != null) {
+                result.addProperty("slot", armorDTO.getSlot().name());
+            }
+            if (armorDTO.getQuality() != null) {
+                result.addProperty("quality", armorDTO.getQuality().name());
+            }
+        } else {
+            result.addProperty("itemType", "Item");
         }
 
         return result;
     }
 
-    /**
-     * Deserializes a JSON element to an appropriate ItemDTO or WeaponDTO object.
-     * <p>
-     * The method examines the "itemType" field to determine which type of object
-     * to create. For "Weapon" types, it creates a WeaponDTO with all weapon-specific
-     * properties; otherwise, it creates a standard ItemDTO.
-     *
-     * @param json The JSON element to deserialize
-     * @param typeOfT The type of the object to deserialize to
-     * @param context The deserialization context
-     * @return An ItemDTO or WeaponDTO object populated with data from the JSON
-     * @throws JsonParseException If the JSON structure is invalid or missing required fields
-     */
     @Override
     public ItemDTO deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
+        String itemType = jsonObject.has("itemType") ?
+                jsonObject.get("itemType").getAsString() : "Item";
 
-        // Determine the type
-        String itemType = jsonObject.has("itemType") ? jsonObject.get("itemType").getAsString() : "Item";
+        ItemDTO dto;
 
-        if (itemType.equals("Weapon")) {
-            // Create WeaponDTO
-            WeaponDTO weaponDTO = new WeaponDTO();
-            weaponDTO.setItemName(jsonObject.get("itemName").getAsString());
-            weaponDTO.setItemUUID(UUID.fromString(jsonObject.get("itemUUID").getAsString()));
-            weaponDTO.setWeaponDamage(jsonObject.get("weaponDamage").getAsFloat());
-            weaponDTO.setWeaponDurability(jsonObject.get("weaponDurability").getAsFloat());
-            return weaponDTO;
-        } else if (itemType.equals("Armor")) {
-            ArmorDTO armorDTO = new ArmorDTO();
-            armorDTO.setItemName(jsonObject.get("itemName").getAsString());
-            armorDTO.setItemUUID(UUID.fromString(jsonObject.get("itemUUID").getAsString()));
-            armorDTO.setArmorDefense(jsonObject.get("armorDefense").getAsFloat());
-            armorDTO.setSlot(Armor.ArmorSlot.valueOf(jsonObject.get("armorSlot").getAsString()));
-            armorDTO.setQuality(Armor.ArmorQuality.valueOf(jsonObject.get("armorQuality").getAsString()));
-            return armorDTO;
-        } else {
-            // Create regular ItemDTO
-            ItemDTO itemDTO = new ItemDTO();
-            itemDTO.setItemName(jsonObject.get("itemName").getAsString());
-            itemDTO.setItemUUID(UUID.fromString(jsonObject.get("itemUUID").getAsString()));
-            itemDTO.setItemType(itemType);
-            return itemDTO;
+        switch (itemType) {
+            case "Weapon":
+                dto = new WeaponDTO();
+                if (jsonObject.has("weaponDamage")) {
+                    ((WeaponDTO) dto).setWeaponDamage(jsonObject.get("weaponDamage").getAsFloat());
+                }
+                if (jsonObject.has("weaponDurability")) {
+                    ((WeaponDTO) dto).setWeaponDurability(jsonObject.get("weaponDurability").getAsFloat());
+                }
+                break;
+
+            case "Armor":
+                dto = new ArmorDTO();
+                if (jsonObject.has("armorDefense")) {
+                    ((ArmorDTO) dto).setArmorDefense(jsonObject.get("armorDefense").getAsFloat());
+                }
+
+                // Safely parse armor slot
+                if (jsonObject.has("slot")) {
+                    try {
+                        String slotStr = jsonObject.get("slot").getAsString();
+                        ((ArmorDTO) dto).setSlot(Armor.ArmorSlot.valueOf(slotStr));
+                    } catch (IllegalArgumentException e) {
+                        // Handle invalid enum value
+                        System.err.println("Invalid armor slot value: " + jsonObject.get("slot").getAsString());
+                    }
+                }
+
+                // Safely parse armor quality
+                if (jsonObject.has("quality")) {
+                    try {
+                        String qualityStr = jsonObject.get("quality").getAsString();
+                        ((ArmorDTO) dto).setQuality(Armor.ArmorQuality.valueOf(qualityStr));
+                    } catch (IllegalArgumentException e) {
+                        // Handle invalid enum value
+                        System.err.println("Invalid armor quality value: " + jsonObject.get("quality").getAsString());
+                    }
+                }
+                break;
+
+            default:
+                dto = new ItemDTO();
+                break;
         }
+
+        // Set common properties
+        if (jsonObject.has("itemName")) {
+            dto.setItemName(jsonObject.get("itemName").getAsString());
+        }
+
+        if (jsonObject.has("itemUUID")) {
+            dto.setItemUUID(java.util.UUID.fromString(jsonObject.get("itemUUID").getAsString()));
+        }
+
+        return dto;
     }
 }

@@ -2,14 +2,16 @@ package com.github.joshuacgunn.core.save;
 
 import com.github.joshuacgunn.core.dto.DungeonDTO;
 import com.github.joshuacgunn.core.dto.EntityDTO;
+import com.github.joshuacgunn.core.dto.ItemDTO;
 import com.github.joshuacgunn.core.dto.PlayerDTO;
-import com.github.joshuacgunn.core.entity.Enemy;
 import com.github.joshuacgunn.core.entity.Entity;
 import com.github.joshuacgunn.core.entity.Player;
+import com.github.joshuacgunn.core.item.Item;
 import com.github.joshuacgunn.core.location.Dungeon;
 import com.github.joshuacgunn.core.location.Location;
 import com.github.joshuacgunn.core.mapper.DungeonMapper;
 import com.github.joshuacgunn.core.mapper.EntityMapper;
+import com.github.joshuacgunn.core.mapper.ItemMapper;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -23,13 +25,15 @@ public abstract class SaveManager {
     private static SimpleDateFormat date = new SimpleDateFormat("dd_HH.mm.ss");
 
     public static void saveState(Player player) {
-        savePlayer(player);
+        saveItems();
         saveEntities();
         saveDungeons();
+        savePlayer(player);
     }
 
     public static void loadState() {
         // The order of this is critical for functionality. It will not work if changed.
+        loadItems();
         loadEntities();
         loadDungeons();
         loadPlayer();
@@ -195,6 +199,39 @@ public abstract class SaveManager {
             for (DungeonDTO dto : dungeonDTOs) {
                 DungeonMapper.INSTANCE.dungeonDtoToDungeon(dto);
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void loadItems() {
+        try (Reader reader = new FileReader(SAVE_DIRECTORY + "items_save.json")) {
+            ItemDTO[] itemDTOs = GSON.fromJson(reader, ItemDTO[].class);
+
+            // Clear the existing items collection before loading
+            // This assumes Item has a similar pattern to Entity.entityMap
+            Item.itemMap.clear();
+
+            // Create items from DTOs
+            for (ItemDTO dto : itemDTOs) {
+                ItemMapper.INSTANCE.itemDtoToItem(dto);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void saveItems() {
+        createDirectories();
+        List<ItemDTO> itemDTOs = new ArrayList<>();
+
+        // Collect all unique items
+        for (Item item : Item.getItems()) {
+            itemDTOs.add(ItemMapper.INSTANCE.itemToItemDTO(item));
+        }
+
+        try (Writer writer = new FileWriter(SAVE_DIRECTORY + "items_save.json")) {
+            writer.write(GSON.toJson(itemDTOs));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
