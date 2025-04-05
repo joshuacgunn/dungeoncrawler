@@ -60,7 +60,7 @@ public abstract class SaveManager {
     public static void savePlayer(Player player) {
         createDirectories();
         try (Writer writer = new FileWriter(SAVE_DIRECTORY + "player_save.json")) {
-            // Cast to PlayerDTO to ensure the right type is passed to Gson
+
             PlayerDTO playerDTO = (PlayerDTO) EntityMapper.INSTANCE.entityToEntityDTO(player);
             writer.write(GSON.toJson(playerDTO, PlayerDTO.class));
         } catch (IOException e) {
@@ -79,7 +79,7 @@ public abstract class SaveManager {
             }
         }
 
-        try (Writer writer = new FileWriter(SAVE_DIRECTORY + "entities_save.json", false)) {
+        try (Writer writer = new FileWriter(SAVE_DIRECTORY + "entities_snapshot.json", false)) {
             writer.write(GSON.toJson(entityDTOs));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -120,7 +120,7 @@ public abstract class SaveManager {
     }
 
     public static void loadEntities() {
-        try (Reader reader = new FileReader(SAVE_DIRECTORY + "entities_save.json")) {
+        try (Reader reader = new FileReader(SAVE_DIRECTORY + "entities_snapshot.json")) {
             EntityDTO[] entityDTOs = GSON.fromJson(reader, EntityDTO[].class);
 
             // Remove all non-player entities before loading
@@ -142,17 +142,17 @@ public abstract class SaveManager {
         File saveDir = new File("saves/");
         try {
             FileUtils.copyDirectory(saveDir, backupDir);
-            manageBackupDirectory("saves", 10);
+            manageBackupDirectory();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static void manageBackupDirectory(String subdir, int maxFiles) {
-        File dir = new File(BACKUP_DIRECTORY + subdir + "/");
+    private static void manageBackupDirectory() {
+        File dir = new File(BACKUP_DIRECTORY + "saves" + "/");
         if (dir.exists()) {
             File[] files = dir.listFiles();
-            if (files != null && files.length > maxFiles) {
+            if (files != null && files.length > 10) {
                 Arrays.sort(files, Comparator.comparingLong(File::lastModified));
                 files[0].delete();
             }
@@ -167,7 +167,7 @@ public abstract class SaveManager {
                 .map(DungeonMapper.INSTANCE::dungeonToDungeonDto)
                 .toList();
 
-        try (Writer writer = new FileWriter(SAVE_DIRECTORY + "dungeon_saves.json")) {
+        try (Writer writer = new FileWriter(SAVE_DIRECTORY + "dungeons_snapshot.json")) {
             writer.write(GSON.toJson(dungeonDTOs));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -175,7 +175,7 @@ public abstract class SaveManager {
     }
 
     public static void loadDungeons() {
-        try (Reader reader = new FileReader(SAVE_DIRECTORY + "dungeon_saves.json")) {
+        try (Reader reader = new FileReader(SAVE_DIRECTORY + "dungeons_snapshot.json")) {
             DungeonDTO[] dungeonDTOs = GSON.fromJson(reader, DungeonDTO[].class);
 
             Location.locationMap.values().removeIf(location -> location instanceof Dungeon);
@@ -189,7 +189,7 @@ public abstract class SaveManager {
     }
 
     public static void loadItems() {
-        try (Reader reader = new FileReader(SAVE_DIRECTORY + "items_save.json")) {
+        try (Reader reader = new FileReader(SAVE_DIRECTORY + "items_snapshot.json")) {
             ItemDTO[] itemDTOs = GSON.fromJson(reader, ItemDTO[].class);
 
             Item.itemMap.clear();
@@ -211,7 +211,7 @@ public abstract class SaveManager {
             itemDTOs.add(ItemMapper.INSTANCE.itemToItemDTO(item));
         }
 
-        try (Writer writer = new FileWriter(SAVE_DIRECTORY + "items_save.json")) {
+        try (Writer writer = new FileWriter(SAVE_DIRECTORY + "items_snapshot.json")) {
             writer.write(GSON.toJson(itemDTOs));
         } catch (IOException e) {
             throw new RuntimeException(e);
