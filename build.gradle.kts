@@ -15,6 +15,9 @@ dependencies {
     implementation(project(":Core"))
     implementation(project(":Common"))
     implementation("commons-io:commons-io:2.15.1")
+    implementation("org.reflections:reflections:0.10.2")
+    implementation("org.slf4j:slf4j-api:2.0.12")
+    implementation("ch.qos.logback:logback-classic:1.5.6")
 }
 
 tasks.test {
