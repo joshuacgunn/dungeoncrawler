@@ -17,7 +17,7 @@ public abstract class Container {
     protected String containerName;
 
     /** The list of items in this container */
-    private final List<Item> items = new ArrayList<>();
+    protected List<Item> items = new ArrayList<>();
 
     /** Global registry mapping UUIDs to all created containers */
     public static Map<UUID, Container> containerMap = new HashMap<>();

@@ -22,7 +22,7 @@ public class Weapon extends Item {
 
     private float armorPenetration;
 
-    private WeaponQuality weaponQuality;
+    private final WeaponQuality weaponQuality;
 
     public enum WeaponQuality {
         RUSTED(0.2f, 0.0f, 0.4f),
@@ -52,10 +52,9 @@ public class Weapon extends Item {
      */
     public Weapon(String itemName, UUID itemUUID, WeaponQuality quality) {
         super(itemName, itemUUID);
-        this.weaponDamage = quality.damage;
-        this.weaponDurability = quality.durabilityMult;
-        this.armorPenetration = quality.armorPen;
         this.weaponQuality = quality;
+        this.weaponDurability = 100f;
+        updateAttributes();
     }
 
     /**
@@ -88,6 +87,14 @@ public class Weapon extends Item {
         this.weaponDurability = durability;
     }
 
+    public float getArmorPenetration() {
+        return armorPenetration;
+    }
+
+    public void setArmorPenetration(float armorPenetration) {
+        this.armorPenetration = armorPenetration;
+    }
+
     public static Weapon generateWeapon(int minQuality, int maxQuality, Container container) {
         Random rand = new Random();
 
@@ -103,5 +110,10 @@ public class Weapon extends Item {
             container.addItem(generatedWeapon);
         }
         return generatedWeapon;
+    }
+
+    public void updateAttributes() {
+        this.weaponDamage = weaponQuality.damage;
+        this.armorPenetration = weaponQuality.armorPen;
     }
 }

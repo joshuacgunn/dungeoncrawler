@@ -167,6 +167,15 @@ public interface EntityMapper {
             }
         }
 
+        if (dto.getCurrentWeaponUUID() != null) {
+            Item item = Item.itemMap.get(dto.getCurrentWeaponUUID());
+            if (item instanceof Weapon) {
+                entity.setCurrentWeapon((Weapon) item);
+            } else {
+                System.err.println("Item with UUID " + dto.getCurrentWeaponUUID() + " is not a Weapon.");
+            }
+        }
+
         if (dto.getInventory() != null && dto.getInventory().getItemUUIDs() != null) {
             for (UUID itemUUID : dto.getInventory().getItemUUIDs()) {
                 Item item = Item.itemMap.get(itemUUID);
@@ -175,11 +184,6 @@ public interface EntityMapper {
         }
 
         // Handle current weapon
-        if (dto.getCurrentWeaponUUID() != null) {
-            Weapon weapon = (Weapon) Item.itemMap.get(dto.getCurrentWeaponUUID());
-            entity.setCurrentWeapon(weapon);
-        }
-
         return entity;
     }
 

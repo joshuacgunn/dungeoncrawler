@@ -1,5 +1,4 @@
 import com.joshuacgunn.core.entity.Player;
-import com.joshuacgunn.core.item.Armor;
 import com.joshuacgunn.core.item.Weapon;
 import com.joshuacgunn.core.location.Dungeon;
 import com.joshuacgunn.core.save.SaveManager;
@@ -14,7 +13,6 @@ public class Test {
     public static void main(String[] args) {
         try {
             Player player = createPlayer();
-            System.out.println(player.getCurrentDungeon().getLocationName());
             SaveManager.saveState(player);
         } catch (Exception e) {
             e.printStackTrace();
@@ -26,9 +24,9 @@ public class Test {
             Player player = new Player("Josh", UUID.randomUUID());
             player.setCurrentDungeon(new Dungeon("Test", UUID.randomUUID(), true));
             Weapon weapon = generateWeapon(3, 3, player.getInventory());
-            player.getInventory().addItem(weapon);
             player.setCurrentWeapon(weapon);
             generateArmor(3, 3, player.getInventory());
+            System.out.println(weapon.getArmorPenetration());
             return player;
         } else {
             SaveManager.loadState();

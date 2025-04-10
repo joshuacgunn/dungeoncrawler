@@ -22,9 +22,10 @@ public interface ItemMapper {
             WeaponDTO dto = new WeaponDTO();
             dto.setItemName(weapon.getItemName());
             dto.setItemUUID(weapon.getItemUUID());
+            dto.setWeaponQuality(weapon.getWeaponQuality());
             dto.setWeaponDamage(weapon.getWeaponDamage());
             dto.setWeaponDurability(weapon.getWeaponDurability());
-            dto.setWeaponQuality(weapon.getWeaponQuality());
+            dto.setArmorPenetration(weapon.getArmorPenetration());
             dto.setItemType("Weapon"); // Explicitly set type
             return dto;
         } else if (item instanceof Armor armor) {
@@ -56,7 +57,10 @@ public interface ItemMapper {
                     weaponDTO.getWeaponQuality()
             );
             weapon.setWeaponDamage(weaponDTO.getWeaponDamage());
+            weapon.setArmorPenetration(weaponDTO.getArmorPenetration());
             weapon.setWeaponDurability(weaponDTO.getWeaponDurability());
+            weapon.setWeaponDurability(weaponDTO.getWeaponDurability());
+            return weapon;
         } if (dto instanceof ArmorDTO armorDTO) {
             Armor armor = new Armor(
                     armorDTO.getItemUUID(),

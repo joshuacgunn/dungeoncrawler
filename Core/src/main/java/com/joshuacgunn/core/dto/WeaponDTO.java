@@ -5,10 +5,12 @@ import com.joshuacgunn.core.item.Weapon;
 public class WeaponDTO extends ItemDTO {
     private float weaponDamage;
     private float weaponDurability;
+    private float armorPenetration;
     private Weapon.WeaponQuality weaponQuality;
 
     public WeaponDTO() {
-        setItemType("Weapon");
+        super();
+        this.setItemType("Weapon");
     }
 
     public float getWeaponDamage() {
@@ -33,5 +35,13 @@ public class WeaponDTO extends ItemDTO {
 
     public void setWeaponQuality(Weapon.WeaponQuality weaponQuality) {
         this.weaponQuality = weaponQuality;
+    }
+
+    public float getArmorPenetration() {
+        return armorPenetration;
+    }
+
+    public void setArmorPenetration(float armorPenetration) {
+        this.armorPenetration = armorPenetration;
     }
 }

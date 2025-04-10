@@ -29,10 +29,7 @@ public class Goblin extends Enemy {
             generateArmor(0, 1, this.getInventory());
         }
 
-
-
         Weapon weapon = Weapon.generateWeapon(0, 3, this.getInventory());
-        this.getInventory().addItem(weapon);
         this.currentWeapon = weapon;
     }
 }

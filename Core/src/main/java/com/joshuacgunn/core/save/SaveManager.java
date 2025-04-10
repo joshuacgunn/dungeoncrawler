@@ -29,7 +29,6 @@ public abstract class SaveManager {
         saveItems();
         saveEntities();
         saveDungeons();
-        //saveChests();
         savePlayer(player);
         backupSave();
     }
@@ -39,7 +38,6 @@ public abstract class SaveManager {
         loadItems();
         loadEntities();
         loadDungeons();
-        //loadChests();
         loadPlayer();
     }
 

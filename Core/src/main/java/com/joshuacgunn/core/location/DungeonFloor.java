@@ -1,7 +1,9 @@
 package com.joshuacgunn.core.location;
 
+import com.joshuacgunn.core.container.Chest;
 import com.joshuacgunn.core.entity.Enemy;
 import com.joshuacgunn.core.entity.Goblin;
+import com.joshuacgunn.core.item.Weapon;
 
 import java.util.*;
 
@@ -24,6 +26,10 @@ public class DungeonFloor {
 
     private ArrayList<Enemy> enemiesOnFloor = new ArrayList<>();
 
+    private boolean hasChest;
+
+    private Chest chest;
+
     Random rand = new Random();
     /**
      * Creates a new dungeon floor with a specified UUID.
@@ -36,6 +42,9 @@ public class DungeonFloor {
         this.floorUUID = floorUUID;
         this.floorNumber = floorNumber;
         this.parentDungeon = parentDungeon;
+        this.hasChest = true;
+        this.chest = new Chest(Chest.ChestRarity.COMMON, false);
+//        this.chest.addItem(new Weapon("TestWeapon", UUID.randomUUID(), Weapon.WeaponQuality.EXQUISITE));
         if (!skipEnemyGeneration) {
             generateEnemies();
         }
@@ -122,7 +131,7 @@ public class DungeonFloor {
 
         for (Enemy enemy : enemiesOnFloor) {
             totalHp += enemy.getEntityHp();
-            totalDamage += enemy.getCurrentWeapon().getWeaponDamage();
+//            totalDamage += enemy.getCurrentWeapon().getWeaponDamage();
             totalDefense += enemy.getEntityDefense();
             enemyTypes.add(enemy.getClass().getSimpleName());
         }
@@ -147,5 +156,17 @@ public class DungeonFloor {
 
     public float getDifficultyRating() {
         return this.difficultyRating;
+    }
+
+    public boolean isHasChest() {
+        return hasChest;
+    }
+
+    public void setHasChest(boolean hasChest) {
+        this.hasChest = hasChest;
+    }
+
+    public Chest getChest() {
+        return chest;
     }
 }

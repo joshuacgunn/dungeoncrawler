@@ -12,7 +12,6 @@ public class Chest extends Container{
     private boolean locked;
     private UUID keyUUID;
     private ChestRarity chestRarity;
-    private List<Item> chestContents;
     private DungeonFloor parentFloor;
 
     public enum ChestRarity {
@@ -44,14 +43,6 @@ public class Chest extends Container{
         return items;
     }
 
-    public void setContents(List<Item> contents) {
-        this.chestContents = contents;
-    }
-
-    public List<Item> getContents() {
-        return  this.chestContents;
-    }
-
     @SuppressWarnings("unchecked")
     public <T extends Item> T generateItem() {
         try {
@@ -76,5 +67,9 @@ public class Chest extends Container{
             e.printStackTrace();
         }
         return null;
+    }
+
+    public ChestRarity getChestRarity() {
+        return this.chestRarity;
     }
 }

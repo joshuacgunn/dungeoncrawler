@@ -23,6 +23,10 @@ public class DungeonFloorDTO implements Serializable {
 
     private ArrayList<UUID> enemyUUIDs = new ArrayList<>();
 
+    private boolean hasChest;
+
+    private ChestDTO chest;
+
     public DungeonFloorDTO() { }
 
     /**
@@ -92,5 +96,21 @@ public class DungeonFloorDTO implements Serializable {
      */
     public void setFloorNumber(int floorNumber) {
         this.floorNumber = floorNumber;
+    }
+
+    public boolean hasChest() {
+        return hasChest;
+    }
+
+    public void setHasChest(boolean hasChest) {
+        this.hasChest = hasChest;
+    }
+
+    public ChestDTO getChest() {
+        return chest;
+    }
+
+    public void setChest(ChestDTO chest) {
+        this.chest = chest;
     }
 }

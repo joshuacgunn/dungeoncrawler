@@ -5,6 +5,7 @@ import com.joshuacgunn.core.dto.DungeonDTO;
 import com.joshuacgunn.core.dto.DungeonFloorDTO;
 import com.joshuacgunn.core.entity.Enemy;
 import com.joshuacgunn.core.entity.Entity;
+import com.joshuacgunn.core.item.Item;
 import com.joshuacgunn.core.location.Dungeon;
 import com.joshuacgunn.core.location.DungeonFloor;
 import org.mapstruct.Mapper;
@@ -12,6 +13,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Mapper
@@ -33,6 +35,18 @@ public interface DungeonMapper {
             floorDTO.setFloorNumber(floor.getFloorNumber());
             floorDTO.setFloorUUID(floor.getFloorUUID());
             floorDTO.setDifficultyRating(floor.getDifficultyRating());
+
+            if (floor.isHasChest()) {
+                floorDTO.setHasChest(true);
+                floorDTO.setChest(new ChestDTO());
+                floorDTO.getChest().setChestRarity(floor.getChest().getChestRarity());
+                floorDTO.getChest().setChestUUID(floor.getChest().getContainerUUID());
+                List<UUID> chestContents = new ArrayList<>();
+                for (Item item : floor.getChest().getItems()) {
+                    chestContents.add(item.getItemUUID());
+                }
+                floorDTO.getChest().setChestContents(chestContents);
+            }
 
             difficulty += floor.getDifficultyRating();
 
@@ -67,6 +81,14 @@ public interface DungeonMapper {
             floor.setEnemiesOnFloor(enemies);
 
             floor.setDifficultyRating(floor.calculateDifficulty());
+
+            if (floorDTO.hasChest()) {
+                floor.setHasChest(true);
+                for (UUID itemDTO : floorDTO.getChest().getChestContents()) {
+                    Item item = Item.itemMap.get(itemDTO);
+                    floor.getChest().addItem(item);
+                }
+            }
 
             dungeon.getFloors().add(floor);
 
