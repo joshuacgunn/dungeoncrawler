@@ -1,17 +1,16 @@
 package com.joshuacgunn.core.save;
 
-import com.joshuacgunn.core.dto.DungeonDTO;
-import com.joshuacgunn.core.dto.EntityDTO;
-import com.joshuacgunn.core.dto.ItemDTO;
-import com.joshuacgunn.core.dto.PlayerDTO;
+import com.joshuacgunn.core.dto.*;
 import com.joshuacgunn.core.entity.Entity;
 import com.joshuacgunn.core.entity.Player;
 import com.joshuacgunn.core.item.Item;
 import com.joshuacgunn.core.location.Dungeon;
 import com.joshuacgunn.core.location.Location;
+import com.joshuacgunn.core.location.Town;
 import com.joshuacgunn.core.mapper.DungeonMapper;
 import com.joshuacgunn.core.mapper.EntityMapper;
 import com.joshuacgunn.core.mapper.ItemMapper;
+import com.joshuacgunn.core.mapper.TownMapper;
 import org.apache.commons.io.FileUtils;
 
 import java.text.SimpleDateFormat;
@@ -29,6 +28,7 @@ public abstract class SaveManager {
         saveItems();
         saveEntities();
         saveDungeons();
+        saveTowns();
         savePlayer(player);
         backupSave();
     }
@@ -38,6 +38,7 @@ public abstract class SaveManager {
         loadItems();
         loadEntities();
         loadDungeons();
+        loadTowns();
         loadPlayer();
     }
 
@@ -217,4 +218,34 @@ public abstract class SaveManager {
             throw new RuntimeException(e);
         }
     }
+
+    public static void saveTowns() {
+        createDirectories();
+        List<TownDTO> townDTOS = Location.locationMap.values().stream()
+                .filter(location -> location instanceof Town)
+                .map(location -> (Town) location)
+                .map(TownMapper.INSTANCE::townToTownDto)
+                .toList();
+
+        try (Writer writer = new FileWriter(SAVE_DIRECTORY + "towns_snapshot.json")) {
+            writer.write(GSON.toJson(townDTOS));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void loadTowns() {
+        try (Reader reader = new FileReader(SAVE_DIRECTORY + "towns_snapshot.json")) {
+            TownDTO[] townDTOS = GSON.fromJson(reader, TownDTO[].class);
+
+            Location.locationMap.values().removeIf(location -> location instanceof Town);
+
+            for (TownDTO dto : townDTOS) {
+                TownMapper.INSTANCE.townDtoToTown(dto);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

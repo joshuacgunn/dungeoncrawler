@@ -13,7 +13,6 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation(project(":Core"))
-    implementation(project(":Common"))
     implementation("commons-io:commons-io:2.15.1")
     implementation("org.reflections:reflections:0.10.2")
     implementation("org.slf4j:slf4j-api:2.0.12")

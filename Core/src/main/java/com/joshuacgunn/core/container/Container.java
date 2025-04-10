@@ -44,38 +44,19 @@ public abstract class Container {
     }
 
     /**
-     * Gets the name of this container.
+     * Adds an item to this container.
      *
-     * @return The name of this container
+     * @param item The item to add to the container
      */
-    public String getContainerName() {
-        return containerName;
-    }
-
-    /**
-     * Returns a list of all registered containers.
-     *
-     * @return A list containing all containers
-     */
-    public List<Container> getContainers() {
-        return containerMap.values().stream().toList();
-    }
-
-    /**
-     * Returns a filtered list of containers of the specified type.
-     *
-     * @param <T> The specific container type to filter by
-     * @param containerClass The class object representing the container type
-     * @return A list containing only containers of the specified type
-     */
-    public <T extends Container> List<T> getContainersByType(Class<T> containerClass) {
-        return containerMap.values().stream().filter(containerClass::isInstance).map(containerClass::cast).toList();
-    }
-
     public void addItem(Item item) {
         items.add(item);
     }
 
+    /**
+     * Gets all items currently stored in this container.
+     *
+     * @return A list containing all items in this container
+     */
     public List<Item> getItems() {
         return items;
     }

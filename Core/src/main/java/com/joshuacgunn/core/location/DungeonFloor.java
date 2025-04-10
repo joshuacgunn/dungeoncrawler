@@ -10,7 +10,8 @@ import java.util.*;
 /**
  * Represents a floor within a dungeon in the game world.
  * Each floor is identified by a unique UUID and has a specific floor number
- * within its parent dungeon.
+ * within its parent dungeon. Floors contain enemies, may have a chest with
+ * items, and have a difficulty rating based on various factors.
  */
 public class DungeonFloor {
     /** Unique identifier for this dungeon floor */
@@ -19,36 +20,45 @@ public class DungeonFloor {
     /** The number of this floor within its parent dungeon */
     private final int floorNumber;
 
+    /**
+     * The calculated difficulty rating of this floor based on enemies
+     * and floor number
+     */
     private float difficultyRating;
 
     /** Reference to the parent dungeon that contains this floor */
     private final Dungeon parentDungeon;
 
+    /** List of enemies present on this floor */
     private ArrayList<Enemy> enemiesOnFloor = new ArrayList<>();
 
+    /** Indicates whether this floor contains a chest */
     private boolean hasChest;
 
+    /** The chest on this floor, if any */
     private Chest chest;
 
+    /** Random number generator for enemy and loot generation */
     Random rand = new Random();
+
     /**
      * Creates a new dungeon floor with a specified UUID.
      *
      * @param floorUUID The unique identifier for this floor
      * @param parentDungeon The dungeon that contains this floor
      * @param floorNumber The number of this floor within the dungeon
+     * @param skipEnemyGeneration If true, enemies will not be generated automatically
      */
     public DungeonFloor(UUID floorUUID, Dungeon parentDungeon, int floorNumber, boolean skipEnemyGeneration) {
         this.floorUUID = floorUUID;
         this.floorNumber = floorNumber;
         this.parentDungeon = parentDungeon;
-        this.hasChest = true;
-        this.chest = new Chest(Chest.ChestRarity.COMMON, false);
-//        this.chest.addItem(new Weapon("TestWeapon", UUID.randomUUID(), Weapon.WeaponQuality.EXQUISITE));
         if (!skipEnemyGeneration) {
             generateEnemies();
         }
         this.difficultyRating = calculateDifficulty();
+        this.hasChest = true;
+        this.chest = new Chest(Chest.ChestRarity.COMMON, false, this);
     }
 
     /**
@@ -60,6 +70,11 @@ public class DungeonFloor {
         return floorUUID;
     }
 
+    /**
+     * Generates enemies for this floor based on random probability.
+     * The number of enemies depends on a random chance, with higher
+     * chances resulting in more enemies.
+     */
     private void generateEnemies() {
         float enemyChance = rand.nextFloat();
         for (int i = 0; i < 3; i++) {
@@ -82,10 +97,21 @@ public class DungeonFloor {
         }
     }
 
+    /**
+     * Sets the list of enemies on this floor.
+     * Used primarily for loading saved game states.
+     *
+     * @param enemiesOnFloor The list of enemies to place on this floor
+     */
     public void setEnemiesOnFloor(ArrayList<Enemy> enemiesOnFloor) {
         this.enemiesOnFloor = enemiesOnFloor;
     }
 
+    /**
+     * Gets the list of enemies currently on this floor.
+     *
+     * @return List of enemies on this floor
+     */
     public ArrayList<Enemy> getEnemiesOnFloor() {
         return this.enemiesOnFloor;
     }
@@ -108,10 +134,24 @@ public class DungeonFloor {
         return parentDungeon;
     }
 
+    /**
+     * Sets the difficulty rating of this floor manually.
+     *
+     * @param rating The new difficulty rating value
+     */
     public void setDifficultyRating(float rating) {
         this.difficultyRating = rating;
     }
 
+    /**
+     * Calculates the difficulty rating of this floor based on multiple factors:
+     * - Floor number (deeper floors are more difficult)
+     * - Enemy statistics (HP, damage, defense)
+     * - Number of enemies
+     * - Variety of enemy types
+     *
+     * @return The calculated difficulty rating as a float
+     */
     public float calculateDifficulty() {
         // Handle empty enemy list case
         if (enemiesOnFloor.isEmpty()) {
@@ -131,7 +171,7 @@ public class DungeonFloor {
 
         for (Enemy enemy : enemiesOnFloor) {
             totalHp += enemy.getEntityHp();
-//            totalDamage += enemy.getCurrentWeapon().getWeaponDamage();
+            totalDamage += enemy.getCurrentWeapon().getWeaponDamage();
             totalDefense += enemy.getEntityDefense();
             enemyTypes.add(enemy.getClass().getSimpleName());
         }
@@ -154,18 +194,38 @@ public class DungeonFloor {
         return Math.round(difficulty * 10) / 100.0f;
     }
 
+    /**
+     * Gets the current difficulty rating of this floor.
+     *
+     * @return The difficulty rating
+     */
     public float getDifficultyRating() {
         return this.difficultyRating;
     }
 
+    /**
+     * Checks if this floor has a chest.
+     *
+     * @return true if the floor has a chest, false otherwise
+     */
     public boolean isHasChest() {
         return hasChest;
     }
 
+    /**
+     * Sets whether this floor has a chest.
+     *
+     * @param hasChest true if the floor should have a chest, false otherwise
+     */
     public void setHasChest(boolean hasChest) {
         this.hasChest = hasChest;
     }
 
+    /**
+     * Gets the chest on this floor, if any.
+     *
+     * @return The chest object on this floor, or null if no chest exists
+     */
     public Chest getChest() {
         return chest;
     }

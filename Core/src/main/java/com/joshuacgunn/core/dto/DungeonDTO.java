@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class DungeonDTO implements Serializable {
-    private String locationName;
+    private String dungeonName;
     private float difficultyRating;
-    private UUID locationUUID;
+    private UUID dungeonUUID;
     private UUID currentFloorUUID;
     private List<DungeonFloorDTO> floors = new ArrayList<>();
 
@@ -38,19 +38,19 @@ public class DungeonDTO implements Serializable {
         this.currentFloorUUID = currentFloorUUID;
     }
 
-    public String getLocationName() {
-        return locationName;
+    public String getDungeonName() {
+        return dungeonName;
     }
 
-    public void setLocationName(String locationName) {
-        this.locationName = locationName;
+    public void setDungeonName(String dungeonName) {
+        this.dungeonName = dungeonName;
     }
 
-    public UUID getLocationUUID() {
-        return locationUUID;
+    public UUID getDungeonUUID() {
+        return dungeonUUID;
     }
 
-    public void setLocationUUID(UUID locationUUID) {
-        this.locationUUID = locationUUID;
+    public void setDungeonUUID(UUID dungeonUUID) {
+        this.dungeonUUID = dungeonUUID;
     }
 }

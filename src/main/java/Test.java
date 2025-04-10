@@ -1,6 +1,7 @@
 import com.joshuacgunn.core.entity.Player;
 import com.joshuacgunn.core.item.Weapon;
 import com.joshuacgunn.core.location.Dungeon;
+import com.joshuacgunn.core.location.Town;
 import com.joshuacgunn.core.save.SaveManager;
 
 import java.io.File;
@@ -25,8 +26,8 @@ public class Test {
             player.setCurrentDungeon(new Dungeon("Test", UUID.randomUUID(), true));
             Weapon weapon = generateWeapon(3, 3, player.getInventory());
             player.setCurrentWeapon(weapon);
+            Town town = new Town("TestTown", UUID.randomUUID(), 2, true);
             generateArmor(3, 3, player.getInventory());
-            System.out.println(weapon.getArmorPenetration());
             return player;
         } else {
             SaveManager.loadState();

@@ -111,11 +111,9 @@ public class Armor extends Item {
         Armor generatedArmor = new Armor(UUID.randomUUID(), slot, "Generated Armor", qualityToUse);
         if (entity != null && !(entity.armors.containsKey(generatedArmor.getArmorSlot()))) {
                 generatedArmor.setItemName(entity.getEntityName() + "'s " + " " + qualityToUse.name().toLowerCase() + " " + generatedArmor.getArmorSlot().name().toLowerCase());
-                System.out.println("Generated armor piece: " + generatedArmor.getArmorName());
                 entity.getInventory().addItem(generatedArmor);
                 entity.equipArmor(generatedArmor);
         } else if (container instanceof Chest){
-            System.out.println("Generated armor piece: " + generatedArmor.getArmorName());
             container.addItem(generatedArmor);
         }
         return generatedArmor;

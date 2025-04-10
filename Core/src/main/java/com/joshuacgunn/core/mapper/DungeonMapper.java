@@ -25,8 +25,8 @@ public interface DungeonMapper {
         if (dungeon == null) return null;
 
         DungeonDTO dungeonDTO = new DungeonDTO();
-        dungeonDTO.setLocationName(dungeon.getLocationName());
-        dungeonDTO.setLocationUUID(dungeon.getLocationUUID());
+        dungeonDTO.setDungeonName(dungeon.getLocationName());
+        dungeonDTO.setDungeonUUID(dungeon.getLocationUUID());
         dungeonDTO.setCurrentFloorUUID(dungeon.getCurrentFloor().getFloorUUID());
         ArrayList<DungeonFloorDTO> floorDTOs = new ArrayList<>();
         float difficulty = 0;
@@ -65,7 +65,7 @@ public interface DungeonMapper {
 
     @Mapping(target = "locationMap", ignore = true)
     default Dungeon dungeonDtoToDungeon(DungeonDTO dungeonDTO) {
-        Dungeon dungeon = new Dungeon(dungeonDTO.getLocationName(), dungeonDTO.getLocationUUID(), false);
+        Dungeon dungeon = new Dungeon(dungeonDTO.getDungeonName(), dungeonDTO.getDungeonUUID(), false);
 
         for (DungeonFloorDTO floorDTO : dungeonDTO.getFloors()) {
             DungeonFloor floor = new DungeonFloor(floorDTO.getFloorUUID(), dungeon, floorDTO.getFloorNumber(), true);
