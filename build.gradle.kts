@@ -14,9 +14,11 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation(project(":Core"))
     implementation("commons-io:commons-io:2.15.1")
-    implementation("org.reflections:reflections:0.10.2")
     implementation("org.slf4j:slf4j-api:2.0.12")
+    implementation("com.google.code.gson:gson:2.12.1")
+    implementation ("org.reflections:reflections:0.10.2")
     implementation("ch.qos.logback:logback-classic:1.5.6")
+    implementation("com.github.javafaker:javafaker:1.0.2")
 }
 
 tasks.test {

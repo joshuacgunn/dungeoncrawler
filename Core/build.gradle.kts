@@ -17,7 +17,9 @@ dependencies {
     implementation("com.google.code.gson:gson:2.12.1")
     implementation("commons-io:commons-io:2.15.1")
     implementation ("org.reflections:reflections:0.10.2")
+    implementation("com.github.javafaker:javafaker:1.0.2")
 }
+
 
 tasks.test {
     useJUnitPlatform()
