@@ -58,6 +58,10 @@ public class EntityTypeAdapter implements JsonSerializer<Entity>, JsonDeserializ
             result.add("inventoryItemUUIDs", inventoryArray);
         }
 
+        if (src instanceof Player player) {
+            result.addProperty("playerClass", player.getPlayerClass().toString());
+        }
+
         // NPC-specific properties
         if (src instanceof NPC npc) {
             result.addProperty("npcPersonality", npc.getNpcPersonality().name());
@@ -78,12 +82,14 @@ public class EntityTypeAdapter implements JsonSerializer<Entity>, JsonDeserializ
         UUID entityUUID = UUID.fromString(jsonObject.get("entityUUID").getAsString());
         String entityName = jsonObject.get("entityName").getAsString();
 
+
         Entity entity;
 
         // Create appropriate entity subclass based on type
         switch (entityType) {
             case "Player":
-                entity = new Player(entityName, entityUUID);
+                Player.PlayerClass playerClass = Player.PlayerClass.valueOf(jsonObject.get("playerClass").getAsString());
+                entity = new Player(entityName, entityUUID, playerClass);
                 break;
 
             case "NPC":

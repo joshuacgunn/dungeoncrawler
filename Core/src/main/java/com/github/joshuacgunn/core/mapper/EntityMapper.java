@@ -108,6 +108,19 @@ public interface EntityMapper {
         if (player.getCurrentLocation() != null) {
             dto.setCurrentLocationUUID(player.getCurrentLocation());
         }
+
+        dto.setPlayerClass(player.getPlayerClass());
+
+        dto.setPlayerStats(player.getPlayerStats());
+
+        dto.getPlayerStats().setStrength(player.getPlayerStats().getStrength());
+        dto.getPlayerStats().setDexterity(player.getPlayerStats().getDexterity());
+        dto.getPlayerStats().setIntelligence(player.getPlayerStats().getIntelligence());
+        dto.getPlayerStats().setLuck(player.getPlayerStats().getLuck());
+        dto.getPlayerStats().setCharisma(player.getPlayerStats().getCharisma());
+        dto.getPlayerStats().setVitality(player.getPlayerStats().getVitality());
+
+
         return dto;
     }
 
@@ -168,7 +181,8 @@ public interface EntityMapper {
         // Handle armors
         if (dto.getEquippedArmorUUIDs() != null) {
             for (UUID armorUUID : dto.getEquippedArmorUUIDs()) {
-                Item armor = Item.itemMap.get(armorUUID);                entity.equipArmor((Armor) armor);
+                Item armor = Item.itemMap.get(armorUUID);
+                entity.equipArmor((Armor) armor);
             }
         }
 
@@ -201,7 +215,16 @@ public interface EntityMapper {
     default Player playerDtoToPlayer(PlayerDTO dto) {
         if (dto == null) return null;
 
-        Player player = new Player(dto.getEntityName(), dto.getEntityUUID());
+        Player player = new Player(dto.getEntityName(), dto.getEntityUUID(), dto.getPlayerClass());
+
+        player.setPlayerStats(dto.getPlayerStats());
+
+        player.getPlayerStats().setStrength(dto.getPlayerStats().getStrength());
+        player.getPlayerStats().setDexterity(dto.getPlayerStats().getDexterity());
+        player.getPlayerStats().setIntelligence(dto.getPlayerStats().getIntelligence());
+        player.getPlayerStats().setLuck(dto.getPlayerStats().getLuck());
+        player.getPlayerStats().setCharisma(dto.getPlayerStats().getCharisma());
+        player.getPlayerStats().setVitality(dto.getPlayerStats().getVitality());
 
         return player;
     }

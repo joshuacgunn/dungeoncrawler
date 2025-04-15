@@ -16,7 +16,15 @@ public class Player extends Entity {
     /** The maximum health points a player can have */
     public static final float MAX_HP = 100f;
 
-    /** The player's inventory containing all collected items */
+    public enum PlayerClass {
+        ROGUE,
+        WIZARD,
+        PALADIN;
+    }
+
+    private PlayerStats playerStats;
+
+    private PlayerClass playerClass;
 
     /**
      * Creates a new player with the specified name and UUID.
@@ -26,16 +34,51 @@ public class Player extends Entity {
      * @param name The player's name
      * @param uuid The unique identifier for the player
      */
-    public Player(String name, UUID uuid) {
+    public Player(String name, UUID uuid, PlayerClass playerClass) {
         super(name, uuid);
         this.entityHp = MAX_HP;
+        this.playerClass = playerClass;
+        this.playerStats = initializeStats();
     }
 
-    /**
-     * Gets the player's inventory.
-     *
-     * @return The player's inventory containing all collected items
-     */
+    private PlayerStats initializeStats() {
+        PlayerStats stats = new PlayerStats();
+
+        switch(playerClass) {
+            case ROGUE:
+                stats.setDexterity(12);
+                stats.setStrength(4);
+                stats.setCharisma(2);
+                stats.setLuck(8);
+                stats.setIntelligence(5);
+                stats.setVitality(4);
+                break;
+            case WIZARD:
+                stats.setDexterity(4);
+                stats.setStrength(2);
+                stats.setCharisma(6);
+                stats.setLuck(3);
+                stats.setIntelligence(11);
+                stats.setVitality(6);
+                break;
+            case PALADIN:
+                stats.setDexterity(1);
+                stats.setStrength(14);
+                stats.setCharisma(9);
+                stats.setLuck(2);
+                stats.setIntelligence(3);
+                stats.setVitality(8);
+                break;
+            case null, default:
+                stats.setDexterity(0);
+                stats.setStrength(0);
+                stats.setCharisma(0);
+                stats.setLuck(0);
+                stats.setIntelligence(0);
+                break;
+        }
+        return stats;
+    }
 
     /**
      * Gets the weapon the player currently has equipped.
@@ -53,5 +96,42 @@ public class Player extends Entity {
      */
     public void setCurrentWeapon(Weapon weapon) {
         this.currentWeapon = weapon;
+    }
+
+    public PlayerClass getPlayerClass() {
+        return this.playerClass;
+    }
+
+    public String getPlayerStatsString() {
+        return String.format(
+                "Player Stats for %s (%s):\n" +
+                        "HP: %.1f/%.1f\n" +
+                        "Class: %s\n" +
+                        "Strength: %d\n" +
+                        "Dexterity: %d\n" +
+                        "Vitality: %d\n" +
+                        "Intelligence: %d\n" +
+                        "Luck: %d\n" +
+                        "Charisma: %d\n" +
+                        "Current Weapon: %s",
+                getEntityName(), getEntityUUID(),
+                entityHp, MAX_HP,
+                playerClass,
+                this.playerStats.getStrength(),
+                this.playerStats.getDexterity(),
+                this.playerStats.getVitality(),
+                this.playerStats.getIntelligence(),
+                this.playerStats.getLuck(),
+                this.playerStats.getCharisma(),
+                currentWeapon != null ? currentWeapon.getItemName() : "None"
+        );
+    }
+
+    public PlayerStats getPlayerStats() {
+        return this.playerStats;
+    }
+
+    public void setPlayerStats(PlayerStats playerStats) {
+        this.playerStats = playerStats;
     }
 }

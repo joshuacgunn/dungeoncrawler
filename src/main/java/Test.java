@@ -1,4 +1,3 @@
-import com.github.joshuacgunn.core.entity.Enemy;
 import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.item.Weapon;
 import com.github.joshuacgunn.core.location.Dungeon;
@@ -28,7 +27,7 @@ public class Test {
 
     public static Player createPlayer() {
         if (!(new File("saves/player_save.json").exists())) {
-            Player player = new Player("Josh", UUID.randomUUID());
+            Player player = new Player("Josh", UUID.randomUUID(), Player.PlayerClass.ROGUE);
             Dungeon dungeon = new Dungeon("Test", UUID.randomUUID(), true);
             player.setCurrentLocation(dungeon.getLocationUUID());
             Weapon weapon = generateWeapon(3, 3, player.getInventory());

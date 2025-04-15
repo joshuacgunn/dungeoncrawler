@@ -2,6 +2,7 @@ package com.github.joshuacgunn.core.typeadapter;
 
 import com.github.joshuacgunn.core.dto.*;
 import com.github.joshuacgunn.core.entity.NPC;
+import com.github.joshuacgunn.core.entity.Player;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
@@ -64,6 +65,7 @@ public class EntityDTOTypeAdapter implements JsonSerializer<EntityDTO>, JsonDese
         // Inventory serialization remains unchanged
         if (src instanceof PlayerDTO playerDTO && playerDTO.getInventory() != null) {
             result.add("inventory", context.serialize(playerDTO.getInventory()));
+            result.add("playerClass", context.serialize(playerDTO.getPlayerClass()));
         }
 
         if (src instanceof EnemyDTO enemyDTO && enemyDTO.getInventory() != null) {
@@ -102,6 +104,12 @@ public class EntityDTOTypeAdapter implements JsonSerializer<EntityDTO>, JsonDese
                 if (jsonObject.has("inventory")) {
                     (dto).setInventory(
                             context.deserialize(jsonObject.get("inventory"), InventoryDTO.class));
+                }
+
+                if (jsonObject.has("playerClass")) {
+                    ((PlayerDTO) dto).setPlayerClass(Player.PlayerClass.valueOf(jsonObject.get("playerClass").getAsString()));
+                } else {
+                    ((PlayerDTO) dto).setPlayerClass(context.deserialize(jsonObject.get("playerClass"), Player.PlayerClass.class));
                 }
                 break;
             case "NPC":
