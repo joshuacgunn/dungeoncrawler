@@ -178,11 +178,11 @@ public class Weapon extends Item {
         Weapon generatedWeapon = new Weapon("Weapon", UUID.randomUUID(), quality);
         if (container instanceof Inventory inventory) {
             Entity entity = inventory.getOwner();
-            generatedWeapon.setItemName(entity.getEntityName() + "s " + quality.name().toLowerCase() + " Weapon");
+            generatedWeapon.setItemName(entity.getEntityName() + "s " + quality.name().toLowerCase() + " quality sword");
             entity.addItem(generatedWeapon);
             entity.setCurrentWeapon(generatedWeapon);
         } else {
-            generatedWeapon.setItemName("A " + quality.name() + " Weapon");
+            generatedWeapon.setItemName("A " + quality.name() + " quality sword");
             container.addItem(generatedWeapon);
         }
         return generatedWeapon;
@@ -193,8 +193,35 @@ public class Weapon extends Item {
      * Sets the weapon's damage and armor penetration values according to
      * the corresponding values in its WeaponQuality.
      */
+    /**
+     * Updates the weapon's attributes based on its quality level.
+     * Calculates weapon damage and armor penetration with a balanced approach
+     * that includes base values, quality multipliers and some randomness.
+     */
     public void updateAttributes() {
-        this.weaponDamage = weaponQuality.damage;
-        this.armorPenetration = weaponQuality.armorPen;
+        Random rand = new Random();
+
+        // Base damage calculation
+        // Start with base damage of 15 and multiply by quality damage factor
+        float baseDamage = 15f * weaponQuality.damage;
+
+        // Add small random variation (±15%) to make weapons of same quality slightly different
+        float variationFactor = 0.85f + (rand.nextFloat() * 0.3f);
+        this.weaponDamage = Math.round(baseDamage * variationFactor);
+
+        // Calculate armor penetration (how much of target's armor is bypassed)
+        // Base value from quality (0% to 50%) plus small random variation
+        float baseArmorPen = weaponQuality.armorPen;
+        float penVariation = rand.nextFloat() * 0.05f; // ±5% variation
+
+        // Higher quality weapons get positive variation, lower quality get negative
+        if (weaponQuality.ordinal() > WeaponQuality.TEMPERED.ordinal()) {
+            this.armorPenetration = Math.min(baseArmorPen + penVariation, 0.6f); // Cap at 60%
+        } else {
+            this.armorPenetration = Math.max(baseArmorPen - penVariation, 0f); // Minimum 0%
+        }
+
+        // Update durability based on quality
+        this.weaponDurability = 100f * weaponQuality.durabilityMult;
     }
 }

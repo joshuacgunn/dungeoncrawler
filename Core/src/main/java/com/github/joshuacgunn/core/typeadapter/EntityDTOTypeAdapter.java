@@ -3,6 +3,7 @@ package com.github.joshuacgunn.core.typeadapter;
 import com.github.joshuacgunn.core.dto.*;
 import com.github.joshuacgunn.core.entity.NPC;
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -122,7 +123,6 @@ public class EntityDTOTypeAdapter implements JsonSerializer<EntityDTO>, JsonDese
                 break;
 
             case "Enemy":
-            case "Goblin":
                 dto = new EnemyDTO();
                 if (jsonObject.has("inventory")) {
                     (dto).setInventory(
@@ -160,9 +160,11 @@ public class EntityDTOTypeAdapter implements JsonSerializer<EntityDTO>, JsonDese
         }
 
         // Handle armors list
-        if (jsonObject.has("armors")) {
+        if (jsonObject.has("equippedArmorUUIDs")) {
             dto.setEquippedArmorUUIDs(context.deserialize(
-                    jsonObject.get("armors"), new TypeToken<List<ArmorDTO>>(){}.getClass()));
+                    jsonObject.get("equippedArmorUUIDs"),
+                    new com.google.gson.reflect.TypeToken<List<UUID>>(){}.getType()
+            ));
         }
 
         return dto;

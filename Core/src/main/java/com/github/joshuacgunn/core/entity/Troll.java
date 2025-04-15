@@ -10,14 +10,16 @@ public class Troll extends Enemy{
 
     Random rand = new Random();
 
-    public Troll(UUID uuid) {
+    public Troll(UUID uuid, boolean newEnemy) {
         super("Troll", uuid, new Random().nextFloat(50f, 75f));
         final int armorPieces = rand.nextInt(2, 4);
 
-        for (int i = 0; i < armorPieces; i++) {
-            Armor.generateArmor(2, 4, this.getInventory());
-        }
+        if (newEnemy) {
+            for (int i = 0; i < armorPieces; i++) {
+                Armor.generateArmor(2, 4, this.getInventory());
+            }
 
-        Weapon.generateWeapon(3, 4, this.getInventory());
+            Weapon.generateWeapon(3, 4, this.getInventory());
+        }
     }
 }

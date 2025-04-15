@@ -115,6 +115,9 @@ public class Armor extends Item {
             while (entity.armors.containsKey(generatedArmor.getArmorSlot())) {
                 slot = Armor.ArmorSlot.values()[rand.nextInt(0, 4)];
                 generatedArmor = new Armor(UUID.randomUUID(), slot, "Generated Armor", qualityToUse);
+                if (entity.armors.containsKey(generatedArmor.getArmorSlot())) {
+                    Item.itemMap.remove(generatedArmor.getItemUUID());
+                }
             }
         }
         if (entity != null) {

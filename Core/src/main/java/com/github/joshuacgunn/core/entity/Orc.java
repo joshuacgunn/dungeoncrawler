@@ -11,12 +11,15 @@ public class Orc extends Enemy {
 
     Random rand = new Random();
 
-    public Orc(UUID uuid) {
+    public Orc(UUID uuid, boolean newEnemy) {
         super("Orc", uuid, new Random().nextFloat(40f, 50f));
         final int armorPieces = rand.nextInt(2, 4);
-        for (int i = 0; i < armorPieces; i++) {
-            generateArmor(1, 3, this.getInventory());
+
+        if (newEnemy) {
+            for (int i = 0; i < armorPieces; i++) {
+                generateArmor(1, 3, this.getInventory());
+            }
+            Weapon.generateWeapon(2, 4, this.getInventory());
         }
-        Weapon.generateWeapon(2, 4, this.getInventory());
     }
 }

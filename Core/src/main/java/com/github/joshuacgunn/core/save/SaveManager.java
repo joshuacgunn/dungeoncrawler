@@ -202,8 +202,6 @@ public abstract class SaveManager {
         try (Reader reader = new FileReader(SAVE_DIRECTORY + "items_snapshot.json")) {
             ItemDTO[] itemDTOs = GSON.fromJson(reader, ItemDTO[].class);
 
-            Item.itemMap.clear();
-
             // Create items from DTOs
             for (ItemDTO dto : itemDTOs) {
                 ItemMapper.INSTANCE.itemDtoToItem(dto);

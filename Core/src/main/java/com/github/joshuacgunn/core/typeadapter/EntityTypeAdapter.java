@@ -97,15 +97,23 @@ public class EntityTypeAdapter implements JsonSerializer<Entity>, JsonDeserializ
                 break;
 
             case "Goblin":
-                entity = new Goblin(entityUUID);
+                entity = new Goblin(entityUUID, false);
                 break;
 
             case "Enemy":
-                // Handle abstract Enemy class with anonymous implementation
-                float hp = jsonObject.has("entityHp") ? jsonObject.get("entityHp").getAsFloat() : 0f;
-                entity = new Enemy(entityName, entityUUID, hp) {};
+                if (entityName.equalsIgnoreCase("goblin")) {
+                    entity = new Goblin(entityUUID, false);
+                } else if (entityName.equalsIgnoreCase("orc")) {
+                    entity = new Orc(entityUUID, false);
+                } else if (entityName.equalsIgnoreCase("troll")) {
+                    entity = new Troll(entityUUID, false);
+                } else {
+                    // Handle abstract Enemy class with anonymous implementation
+                    float hp = jsonObject.has("entityHp") ? jsonObject.get("entityHp").getAsFloat() : 0f;
+                    entity = new Enemy(entityName, entityUUID, hp) {
+                    };
+                }
                 break;
-
             default:
                 throw new JsonParseException("Unknown entity type: " + entityType);
         }

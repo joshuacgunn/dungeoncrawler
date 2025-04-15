@@ -197,7 +197,6 @@ public abstract class Entity {
         } else {
             armors.put(armor.getArmorSlot(), armor);
             entityDefense += armor.getArmorDefense();
-            armors.put(armor.getArmorSlot(), armor);
             this.getInventory().getItems().remove(armor);
         }
     }
@@ -213,7 +212,6 @@ public abstract class Entity {
         if (!armors.containsValue(armor)) {
             System.out.println("You don't have that equipped!");
         } else {
-            armors.remove(armor.getArmorSlot());
             entityDefense -= armor.getArmorDefense();
             armors.remove(armor.getArmorSlot());
             this.getInventory().addItem(armor);
@@ -225,7 +223,7 @@ public abstract class Entity {
      *
      * @return A list of all armor pieces equipped by the entity, or null if no armor is equipped.
      */
-    public ArrayList<Item> getArmors() {
+    public ArrayList<Armor> getArmors() {
         if (armors.isEmpty()) {
             return null;
         } else {

@@ -161,20 +161,20 @@ public interface EntityMapper {
             default:
                 throw new IllegalArgumentException("Unknown entity type: " + entityType);
         }
+
         // Set common entity properties that weren't set in the constructor
         entity.setDeathStatus(dto.isDead());
 
         // Handle armors
         if (dto.getEquippedArmorUUIDs() != null) {
             for (UUID armorUUID : dto.getEquippedArmorUUIDs()) {
-                Armor armor = (Armor) Item.itemMap.get(armorUUID);
-                entity.equipArmor(armor);
+                Item armor = Item.itemMap.get(armorUUID);                entity.equipArmor((Armor) armor);
             }
         }
 
         if (dto.getCurrentWeaponUUID() != null) {
-            Weapon weapon = (Weapon) Item.itemMap.get(dto.getCurrentWeaponUUID());
-            entity.setCurrentWeapon(weapon);
+            Item weapon = Item.itemMap.get(dto.getCurrentWeaponUUID());
+            entity.setCurrentWeapon((Weapon) weapon);
         }
 
         if (dto.getCurrentLocationUUID() != null) {
@@ -218,14 +218,20 @@ public interface EntityMapper {
     default Enemy enemyDtoToEnemy(EnemyDTO dto) {
         if (dto == null) return null;
         if (dto.getEntityName().equalsIgnoreCase("GOBLIN")) {
-            Goblin goblin = new Goblin(dto.getEntityUUID());
+            Goblin goblin = new Goblin(dto.getEntityUUID(), false);
             goblin.setEntityHp(dto.getEntityHp());
             goblin.setDeathStatus(dto.isDead());
             return goblin;
         } else if (dto.getEntityName().equalsIgnoreCase("ORC")) {
-            Orc orc = new Orc(dto.getEntityUUID());
+            Orc orc = new Orc(dto.getEntityUUID(), false);
             orc.setEntityHp(dto.getEntityHp());
             orc.setDeathStatus(dto.isDead());
+            return orc;
+        } else if (dto.getEntityName().equalsIgnoreCase("TROLL")) {
+            Troll troll = new Troll(dto.getEntityUUID(), false);
+            troll.setEntityHp(dto.getEntityHp());
+            troll.setDeathStatus(dto.isDead());
+            return troll;
         }
         Enemy enemy = new Enemy(dto.getEntityName(), dto.getEntityUUID(), dto.getEntityHp()) {
         };

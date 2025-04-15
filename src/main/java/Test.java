@@ -1,6 +1,8 @@
+import com.github.joshuacgunn.core.entity.Enemy;
 import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.item.Weapon;
 import com.github.joshuacgunn.core.location.Dungeon;
+import com.github.joshuacgunn.core.location.Location;
 import com.github.joshuacgunn.core.location.Town;
 import com.github.joshuacgunn.core.save.SaveManager;
 
@@ -15,6 +17,10 @@ public class Test {
         try {
             Player player = createPlayer();
             SaveManager.saveState(player);
+            Dungeon dungeon = (Dungeon) Location.locationMap.get(player.getCurrentLocation());
+//            for (Enemy enemy : dungeon.getCurrentFloor().getEnemiesOnFloor()) {
+//                System.out.println(enemy.getEntityName() + " " + enemy.getEntityUUID());
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

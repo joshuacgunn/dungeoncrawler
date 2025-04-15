@@ -76,13 +76,13 @@ public class DungeonFloor extends Location{
         for (int i = 0; i < enemyCount; i++) {
             float generateChance = rand.nextFloat(0, 1.0f - floorBonus) + floorBonus;
             if (generateChance < .6f || floorNumber < 3) {
-                Goblin goblin = new Goblin(UUID.randomUUID());
+                Goblin goblin = new Goblin(UUID.randomUUID(), true);
                 enemies.add(goblin);
             } else if (generateChance < .75f || floorNumber < 4) {
-                Orc orc = new Orc(UUID.randomUUID());
+                Orc orc = new Orc(UUID.randomUUID(), true);
                 enemies.add(orc);
             } else if (generateChance < .9f) {
-                Troll troll = new Troll(UUID.randomUUID());
+                Troll troll = new Troll(UUID.randomUUID(), true);
                 enemies.add(troll);
             }
         }

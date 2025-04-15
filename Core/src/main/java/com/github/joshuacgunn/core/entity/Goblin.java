@@ -19,14 +19,16 @@ public class Goblin extends Enemy {
      * @param uuid The unique identifier for the Goblin.
      */
     Random rand = new Random();
-    public Goblin(UUID uuid) {
+    public Goblin(UUID uuid, boolean newEnemy) {
         super("Goblin", uuid, new Random().nextFloat(25.0f, 35.0f));
         final int armorPieces = rand.nextInt(1, 3);
 
-        for (int i = 0; i < armorPieces; i++) {
-            generateArmor(0, 1, this.getInventory());
-        }
+        if (newEnemy) {
+            for (int i = 0; i < armorPieces; i++) {
+                generateArmor(0, 1, this.getInventory());
+            }
 
-        Weapon.generateWeapon(0, 2, this.getInventory());
+            Weapon.generateWeapon(0, 2, this.getInventory());
+        }
     }
 }
