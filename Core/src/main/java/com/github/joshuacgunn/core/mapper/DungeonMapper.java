@@ -27,13 +27,13 @@ public interface DungeonMapper {
         DungeonDTO dungeonDTO = new DungeonDTO();
         dungeonDTO.setDungeonName(dungeon.getLocationName());
         dungeonDTO.setDungeonUUID(dungeon.getLocationUUID());
-        dungeonDTO.setCurrentFloorUUID(dungeon.getCurrentFloor().getFloorUUID());
+        dungeonDTO.setCurrentFloorUUID(dungeon.getCurrentFloor().getLocationUUID());
         ArrayList<DungeonFloorDTO> floorDTOs = new ArrayList<>();
         float difficulty = 0;
         for (DungeonFloor floor : dungeon.getFloors()) {
             DungeonFloorDTO floorDTO = new DungeonFloorDTO();
             floorDTO.setFloorNumber(floor.getFloorNumber());
-            floorDTO.setFloorUUID(floor.getFloorUUID());
+            floorDTO.setFloorUUID(floor.getLocationUUID());
             floorDTO.setDifficultyRating(floor.getDifficultyRating());
 
             if (floor.isHasChest()) {
@@ -72,10 +72,8 @@ public interface DungeonMapper {
 
             ArrayList<Enemy> enemies = new ArrayList<>();
             for (UUID enemyUUID : floorDTO.getEnemyUUIDs()) {
-                Entity entity = Entity.entityMap.get(enemyUUID);
-                if (entity instanceof Enemy) {
-                    enemies.add((Enemy) entity);
-                }
+                Enemy enemy = (Enemy) Entity.entityMap.get(enemyUUID);
+                enemies.add(enemy);
             }
 
             floor.setEnemiesOnFloor(enemies);

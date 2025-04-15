@@ -3,6 +3,8 @@ package com.github.joshuacgunn.core.location;
 import com.github.joshuacgunn.core.container.Chest;
 import com.github.joshuacgunn.core.entity.Enemy;
 import com.github.joshuacgunn.core.entity.Goblin;
+import com.github.joshuacgunn.core.entity.Orc;
+import com.github.joshuacgunn.core.entity.Troll;
 
 import java.util.*;
 
@@ -12,10 +14,7 @@ import java.util.*;
  * within its parent dungeon. Floors contain enemies, may have a chest with
  * items, and have a difficulty rating based on various factors.
  */
-public class DungeonFloor {
-    /** Unique identifier for this dungeon floor */
-    private final UUID floorUUID;
-
+public class DungeonFloor extends Location{
     /** The number of this floor within its parent dungeon */
     private final int floorNumber;
 
@@ -29,7 +28,7 @@ public class DungeonFloor {
     private final Dungeon parentDungeon;
 
     /** List of enemies present on this floor */
-    private ArrayList<Enemy> enemiesOnFloor = new ArrayList<>();
+    private ArrayList<? extends Enemy> enemiesOnFloor = new ArrayList<>();
 
     /** Indicates whether this floor contains a chest */
     private boolean hasChest;
@@ -49,51 +48,45 @@ public class DungeonFloor {
      * @param skipEnemyGeneration If true, enemies will not be generated automatically
      */
     public DungeonFloor(UUID floorUUID, Dungeon parentDungeon, int floorNumber, boolean skipEnemyGeneration) {
-        this.floorUUID = floorUUID;
+        super("Floor " + floorNumber, floorUUID );
         this.floorNumber = floorNumber;
         this.parentDungeon = parentDungeon;
         if (!skipEnemyGeneration) {
             generateEnemies();
+            for (Enemy enemy : enemiesOnFloor) {
+                enemy.setCurrentLocation(this.locationUUID);
+            }
         }
         this.difficultyRating = calculateDifficulty();
         this.hasChest = true;
         this.chest = new Chest(Chest.ChestRarity.COMMON, false, this);
     }
 
-    /**
-     * Gets the unique identifier of this floor.
-     *
-     * @return The UUID of this floor
-     */
-    public UUID getFloorUUID() {
-        return floorUUID;
-    }
-
-    /**
-     * Generates enemies for this floor based on random probability.
-     * The number of enemies depends on a random chance, with higher
-     * chances resulting in more enemies.
-     */
     private void generateEnemies() {
-        float enemyChance = rand.nextFloat();
-        for (int i = 0; i < 3; i++) {
-            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
+        ArrayList<Enemy> enemies = new ArrayList<>();
+
+        int baseEnemyCount = 2 + (int)(floorNumber * 0.5);
+
+        int variableCount = rand.nextInt(3);
+        int enemyCount = baseEnemyCount + variableCount;
+
+        Random rand = new Random();
+        float floorBonus = (floorNumber * 10) / 200.0f;
+
+        for (int i = 0; i < enemyCount; i++) {
+            float generateChance = rand.nextFloat(0, 1.0f - floorBonus) + floorBonus;
+            if (generateChance < .6f || floorNumber < 3) {
+                Goblin goblin = new Goblin(UUID.randomUUID());
+                enemies.add(goblin);
+            } else if (generateChance < .75f || floorNumber < 4) {
+                Orc orc = new Orc(UUID.randomUUID());
+                enemies.add(orc);
+            } else if (generateChance < .9f) {
+                Troll troll = new Troll(UUID.randomUUID());
+                enemies.add(troll);
+            }
         }
-        if (enemyChance < 0.2f) {
-            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
-        } else if (enemyChance < .5f) {
-            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
-            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
-        } else if (enemyChance < .8f) {
-            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
-            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
-            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
-        } else if (enemyChance < .99f) {
-            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
-            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
-            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
-            enemiesOnFloor.add(new Goblin(UUID.randomUUID()));
-        }
+        this.enemiesOnFloor = enemies;
     }
 
     /**
@@ -111,7 +104,7 @@ public class DungeonFloor {
      *
      * @return List of enemies on this floor
      */
-    public ArrayList<Enemy> getEnemiesOnFloor() {
+    public ArrayList<? extends Enemy> getEnemiesOnFloor() {
         return this.enemiesOnFloor;
     }
 

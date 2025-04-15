@@ -58,7 +58,7 @@ public interface EntityMapper {
         dto.setEntityDefense(entity.getEntityDefense());
         dto.setDead(entity.getDeathStatus());
         if (entity.getCurrentLocation() != null) {
-            dto.setCurrentLocationUUID(entity.getCurrentLocation().getLocationUUID());
+            dto.setCurrentLocationUUID(entity.getCurrentLocation());
         }
 
         if (entity.getInventory() != null) {
@@ -106,7 +106,7 @@ public interface EntityMapper {
 
         // Handle current dungeon
         if (player.getCurrentLocation() != null) {
-            dto.setCurrentLocationUUID(player.getCurrentLocation().getLocationUUID());
+            dto.setCurrentLocationUUID(player.getCurrentLocation());
         }
         return dto;
     }
@@ -173,19 +173,12 @@ public interface EntityMapper {
         }
 
         if (dto.getCurrentWeaponUUID() != null) {
-            Item item = Item.itemMap.get(dto.getCurrentWeaponUUID());
-            if (item instanceof Weapon) {
-                entity.setCurrentWeapon((Weapon) item);
-            } else {
-                System.err.println("Item with UUID " + dto.getCurrentWeaponUUID() + " is not a Weapon.");
-            }
+            Weapon weapon = (Weapon) Item.itemMap.get(dto.getCurrentWeaponUUID());
+            entity.setCurrentWeapon(weapon);
         }
 
         if (dto.getCurrentLocationUUID() != null) {
-            if (Location.locationMap.containsKey(dto.getCurrentLocationUUID())) {
-                Location location = Location.locationMap.get(dto.getCurrentLocationUUID());
-                entity.setCurrentLocation(location);
-            }
+            entity.setCurrentLocation(dto.getCurrentLocationUUID());
         }
 
         if (dto.getInventory() != null && dto.getInventory().getItemUUIDs() != null) {
@@ -229,6 +222,10 @@ public interface EntityMapper {
             goblin.setEntityHp(dto.getEntityHp());
             goblin.setDeathStatus(dto.isDead());
             return goblin;
+        } else if (dto.getEntityName().equalsIgnoreCase("ORC")) {
+            Orc orc = new Orc(dto.getEntityUUID());
+            orc.setEntityHp(dto.getEntityHp());
+            orc.setDeathStatus(dto.isDead());
         }
         Enemy enemy = new Enemy(dto.getEntityName(), dto.getEntityUUID(), dto.getEntityHp()) {
         };

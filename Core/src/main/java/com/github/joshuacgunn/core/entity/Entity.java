@@ -46,7 +46,7 @@ public abstract class Entity {
     /**
      * The dungeon the player is currently in
      */
-    private Location currentLocation;
+    private UUID currentLocation;
 
     /**
      * The total defense value of the entity.
@@ -89,7 +89,7 @@ public abstract class Entity {
      *
      * @return The current dungeon, or null if the player is not in a dungeon
      */
-    public Location getCurrentLocation() {
+    public UUID getCurrentLocation() {
         return currentLocation;
     }
 
@@ -98,7 +98,7 @@ public abstract class Entity {
      *
      * @param currentLocation The dungeon to place the player in
      */
-    public void setCurrentLocation(Location currentLocation) {
+    public void setCurrentLocation(UUID currentLocation) {
         this.currentLocation = currentLocation;
     }
 

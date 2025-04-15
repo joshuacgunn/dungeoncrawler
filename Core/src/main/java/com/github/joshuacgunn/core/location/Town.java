@@ -36,7 +36,7 @@ public class Town extends Location {
         for (int i = 0; i < shopCount; i++) {
             NPC npc = new NPC(faker.name().firstName(), UUID.randomUUID());
             Shop shop = new Shop("Blacksmith", UUID.randomUUID(), npc);
-            npc.setCurrentLocation(shop);
+            npc.setCurrentLocation(shop.locationUUID);
             shops.add(shop);
         }
         return shops;

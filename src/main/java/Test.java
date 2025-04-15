@@ -23,7 +23,8 @@ public class Test {
     public static Player createPlayer() {
         if (!(new File("saves/player_save.json").exists())) {
             Player player = new Player("Josh", UUID.randomUUID());
-            player.setCurrentLocation(new Dungeon("Test", UUID.randomUUID(), true));
+            Dungeon dungeon = new Dungeon("Test", UUID.randomUUID(), true);
+            player.setCurrentLocation(dungeon.getLocationUUID());
             Weapon weapon = generateWeapon(3, 3, player.getInventory());
             player.setCurrentWeapon(weapon);
             Town town = new Town("TestTown", UUID.randomUUID(), 2, true);

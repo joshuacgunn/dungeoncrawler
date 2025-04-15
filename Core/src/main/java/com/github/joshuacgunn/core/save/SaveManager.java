@@ -83,18 +83,6 @@ public abstract class SaveManager {
         }
     }
 
-
-    public static void savePlayer(Player player) {
-        createDirectories();
-        try (Writer writer = new FileWriter(SAVE_DIRECTORY + "player_save.json")) {
-
-            PlayerDTO playerDTO = (PlayerDTO) EntityMapper.INSTANCE.entityToEntityDTO(player);
-            writer.write(GSON.toJson(playerDTO, PlayerDTO.class));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static void saveEntities() {
         createDirectories();
         List<EntityDTO> entityDTOs = new ArrayList<>();
@@ -108,6 +96,40 @@ public abstract class SaveManager {
 
         try (Writer writer = new FileWriter(SAVE_DIRECTORY + "entities_snapshot.json", false)) {
             writer.write(GSON.toJson(entityDTOs));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void loadEntities() {
+        try (Reader reader = new FileReader(SAVE_DIRECTORY + "entities_snapshot.json")) {
+            // Use TypeToken for proper generic type handling
+            Type listType = new TypeToken<List<EntityDTO>>(){}.getType();
+            List<EntityDTO> entityDTOs = GSON.fromJson(reader, listType);
+
+            // Clear existing entities
+            Entity.entityMap.clear();
+
+            // Create entities from DTOs
+            for (EntityDTO dto : entityDTOs) {
+                EntityMapper.INSTANCE.entityDtoToEntity(dto);
+            }
+        } catch (IOException e) {
+            // Handle empty file case
+            if (e instanceof FileNotFoundException || e.getMessage().contains("empty")) {
+                System.err.println("No entities file found or empty file. Starting with empty entities.");
+                return;
+            }
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void savePlayer(Player player) {
+        createDirectories();
+        try (Writer writer = new FileWriter(SAVE_DIRECTORY + "player_save.json")) {
+
+            PlayerDTO playerDTO = (PlayerDTO) EntityMapper.INSTANCE.entityToEntityDTO(player);
+            writer.write(GSON.toJson(playerDTO, PlayerDTO.class));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -146,28 +168,6 @@ public abstract class SaveManager {
         return null;
     }
 
-    public static void loadEntities() {
-        try (Reader reader = new FileReader(SAVE_DIRECTORY + "entities_snapshot.json")) {
-            // Use TypeToken for proper generic type handling
-            Type listType = new TypeToken<List<EntityDTO>>(){}.getType();
-            List<EntityDTO> entityDTOs = GSON.fromJson(reader, listType);
-
-            // Clear existing entities
-            Entity.entityMap.clear();
-
-            // Create entities from DTOs
-            for (EntityDTO dto : entityDTOs) {
-                EntityMapper.INSTANCE.entityDtoToEntity(dto);
-            }
-        } catch (IOException e) {
-            // Handle empty file case
-            if (e instanceof FileNotFoundException || e.getMessage().contains("empty")) {
-                System.err.println("No entities file found or empty file. Starting with empty entities.");
-                return;
-            }
-            throw new RuntimeException(e);
-        }
-    }
 
     public static void saveDungeons() {
         createDirectories();

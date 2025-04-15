@@ -12,12 +12,14 @@ public class Armor extends Item {
     private float armorDefense;
 
     public enum ArmorQuality {
-        FLIMSY(0.7f, 2),
-        WORN(1.2f, 5),
-        STURDY(1.9f, 7),
-        FINE(2.6f, 9),
-        EXQUISITE(3.4f, 10),
-        MASTERWORK(4.0f, 11);
+        FLIMSY(7f, 1),
+        WORN(12f, 3),
+        DECENT(15f, 4),
+        STURDY(19f, 5),
+        HARDENED(26f, 6),
+        FINE(30f, 7),
+        EXQUISITE(34f, 8),
+        MASTERWORK(36f, 9);
 
         public final float defenseValue;
         public final int durabilityMultiplier;
@@ -82,14 +84,14 @@ public class Armor extends Item {
      *
      * @return The calculated defense value for this armor piece
      */
-    public float calculateDefense() {
+    private float calculateDefense() {
         // Base defense from quality, adjusted by slot multiplier
         float baseDefense = armorQuality.defenseValue * armorSlot.defenseMult;
 
         // Add small random variation (±10%) to make identical armor pieces slightly different
         float variationFactor = 0.6f + (rand.nextFloat() * 0.2f);
 
-        return Math.round(10*(baseDefense * variationFactor));
+        return Math.round((baseDefense * variationFactor));
     }
 
     /**
@@ -109,7 +111,13 @@ public class Armor extends Item {
         Armor.ArmorQuality qualityToUse = Armor.ArmorQuality.values()[rand.nextInt(minQuality, maxQuality +1)];
         Armor.ArmorSlot slot = Armor.ArmorSlot.values()[rand.nextInt(0, 4)];
         Armor generatedArmor = new Armor(UUID.randomUUID(), slot, "Generated Armor", qualityToUse);
-        if (entity != null && !(entity.armors.containsKey(generatedArmor.getArmorSlot()))) {
+        if (entity != null && entity.armors.containsKey(generatedArmor.getArmorSlot())) {
+            while (entity.armors.containsKey(generatedArmor.getArmorSlot())) {
+                slot = Armor.ArmorSlot.values()[rand.nextInt(0, 4)];
+                generatedArmor = new Armor(UUID.randomUUID(), slot, "Generated Armor", qualityToUse);
+            }
+        }
+        if (entity != null) {
                 generatedArmor.setItemName(entity.getEntityName() + "'s " + " " + qualityToUse.name().toLowerCase() + " " + generatedArmor.getArmorSlot().name().toLowerCase());
                 entity.getInventory().addItem(generatedArmor);
                 entity.equipArmor(generatedArmor);

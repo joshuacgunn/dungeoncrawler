@@ -32,7 +32,7 @@ public class EntityTypeAdapter implements JsonSerializer<Entity>, JsonDeserializ
 
         // Current location
         if (src.getCurrentLocation() != null) {
-            result.addProperty("currentLocationUUID", src.getCurrentLocation().getLocationUUID().toString());
+            result.addProperty("currentLocationUUID", src.getCurrentLocation().toString());
         }
 
         // Current weapon
@@ -123,7 +123,7 @@ public class EntityTypeAdapter implements JsonSerializer<Entity>, JsonDeserializ
         if (jsonObject.has("currentLocationUUID")) {
             UUID locationUUID = UUID.fromString(jsonObject.get("currentLocationUUID").getAsString());
             if (Location.locationMap.containsKey(locationUUID)) {
-                entity.setCurrentLocation(Location.locationMap.get(locationUUID));
+                entity.setCurrentLocation(locationUUID);
             }
         }
 
@@ -131,10 +131,8 @@ public class EntityTypeAdapter implements JsonSerializer<Entity>, JsonDeserializ
         if (jsonObject.has("currentWeaponUUID")) {
             UUID weaponUUID = UUID.fromString(jsonObject.get("currentWeaponUUID").getAsString());
             if (Item.itemMap.containsKey(weaponUUID)) {
-                Item item = Item.itemMap.get(weaponUUID);
-                if (item instanceof Weapon) {
-                    entity.setCurrentWeapon((Weapon) item);
-                }
+                Weapon weapon = (Weapon) Item.itemMap.get(weaponUUID);
+                entity.setCurrentWeapon(weapon);
             }
         }
 

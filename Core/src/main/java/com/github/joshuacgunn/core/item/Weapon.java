@@ -180,6 +180,7 @@ public class Weapon extends Item {
             Entity entity = inventory.getOwner();
             generatedWeapon.setItemName(entity.getEntityName() + "s " + quality.name().toLowerCase() + " Weapon");
             entity.addItem(generatedWeapon);
+            entity.setCurrentWeapon(generatedWeapon);
         } else {
             generatedWeapon.setItemName("A " + quality.name() + " Weapon");
             container.addItem(generatedWeapon);

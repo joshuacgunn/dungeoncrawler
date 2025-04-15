@@ -154,9 +154,9 @@ public class EntityDTOTypeAdapter implements JsonSerializer<EntityDTO>, JsonDese
         }
 
         // Handle current weapon
-        if (jsonObject.has("currentWeapon")) {
-            dto.setCurrentWeaponUUID(context.deserialize(
-                    jsonObject.get("currentWeapon"), WeaponDTO.class));
+        if (jsonObject.has("currentWeaponUUID")) {
+            dto.setCurrentWeaponUUID(UUID.fromString(jsonObject.get("currentWeaponUUID").getAsString()));
+
         }
 
         // Handle armors list

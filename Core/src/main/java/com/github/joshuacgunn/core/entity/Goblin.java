@@ -21,13 +21,12 @@ public class Goblin extends Enemy {
     Random rand = new Random();
     public Goblin(UUID uuid) {
         super("Goblin", uuid, new Random().nextFloat(25.0f, 35.0f));
-        final int armorPieces = rand.nextInt(1, 4);
+        final int armorPieces = rand.nextInt(1, 3);
 
         for (int i = 0; i < armorPieces; i++) {
             generateArmor(0, 1, this.getInventory());
         }
 
-        Weapon weapon = Weapon.generateWeapon(0, 3, this.getInventory());
-        this.currentWeapon = weapon;
+        Weapon.generateWeapon(0, 2, this.getInventory());
     }
 }
