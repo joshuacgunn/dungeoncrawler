@@ -12,11 +12,16 @@ public class Town extends Location {
     private int shopCount;
     private ArrayList<Shop> shopsInTown = new ArrayList<>();
 
-    public Town(String name, UUID uuid, boolean isNew) {
-        super(name, uuid);
+    public Town(UUID uuid, boolean isNew) {
+        super(generateTownName(), uuid);
         if (isNew) {
             this.shopCount = Math.max(1, new Random().nextInt(Shop.ShopType.values().length)+1);
-            this.shopsInTown = generateShops();
+            // If shopcount is only 1, generate a tavern. Wouldn't want to live somewhere you couldn't drink right?
+            if (shopCount == 1) {
+                shopsInTown.add(new Shop(Shop.ShopType.TAVERN, UUID.randomUUID(), new NPC(new Faker().name().firstName(), UUID.randomUUID())));
+            } else {
+                this.shopsInTown = generateShops();
+            }
         }
     }
 
@@ -55,5 +60,21 @@ public class Town extends Location {
             i++;
         }
         return shops;
+    }
+
+    public static String generateTownName() {
+        Random rand = new Random();
+        float nameChance = rand.nextFloat();
+        Faker faker = new Faker();
+
+        if (nameChance < 0.25f) {
+            return faker.pokemon().location();
+        } else if (nameChance < .5f) {
+            return faker.gameOfThrones().city();
+        } else if (nameChance < .75f) {
+            return faker.witcher().location();
+        } else {
+            return faker.lordOfTheRings().location();
+        }
     }
 }

@@ -1,3 +1,4 @@
+import com.github.javafaker.Faker;
 import com.github.joshuacgunn.core.entity.Entity;
 import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.item.Weapon;
@@ -17,6 +18,7 @@ public class Test {
         try {
             Player player = createPlayer();
             SaveManager.saveState(player);
+            Faker faker = new Faker();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -30,7 +32,7 @@ public class Test {
             Weapon weapon = generateWeapon(3, 3, player.getInventory());
             player.setCurrentWeapon(weapon);
             for (int i = 0; i < 5; i ++) {
-                Town town = new Town("TestTown", UUID.randomUUID(), true);
+                Town town = new Town(UUID.randomUUID(), true);
             }
             generateArmor(3, 3, player.getInventory());
             return player;
