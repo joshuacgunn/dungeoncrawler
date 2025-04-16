@@ -40,7 +40,8 @@ public interface TownMapper {
 
     @Mapping(target="locationMap", ignore = true)
     default Town townDtoToTown(TownDTO townDTO) {
-        Town town = new Town(townDTO.getTownName(), townDTO.getTownUUID(), townDTO.getShopCount(), false);
+        Town town = new Town(townDTO.getTownName(), townDTO.getTownUUID(), false);
+        town.setShopCount(townDTO.getShopCount());
 
         ArrayList<Shop> shopsInTown = new ArrayList<>();
         for (ShopDTO shopDTO : townDTO.getShopsInTown()) {

@@ -1,19 +1,21 @@
 package com.github.joshuacgunn.core.location;
 
 import com.github.javafaker.Faker;
+import com.github.joshuacgunn.core.entity.Entity;
 import com.github.joshuacgunn.core.entity.NPC;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.UUID;
 
 public class Town extends Location {
     private int shopCount;
     private ArrayList<Shop> shopsInTown = new ArrayList<>();
 
-    public Town(String name, UUID uuid, int shopCount, boolean isNew) {
+    public Town(String name, UUID uuid, boolean isNew) {
         super(name, uuid);
-        this.shopCount = shopCount;
         if (isNew) {
+            this.shopCount = Math.max(1, new Random().nextInt(Shop.ShopType.values().length)+1);
             this.shopsInTown = generateShops();
         }
     }
@@ -26,6 +28,10 @@ public class Town extends Location {
         return this.shopCount;
     }
 
+    public void setShopCount(int shopCount) {
+        this.shopCount = shopCount;
+    }
+
     public void setShopsInTown(ArrayList<Shop> shopsInTown) {
         this.shopsInTown = shopsInTown;
     }
@@ -33,11 +39,20 @@ public class Town extends Location {
     public ArrayList<Shop> generateShops() {
         Faker faker = new Faker();
         ArrayList<Shop> shops = new ArrayList<>();
-        for (int i = 0; i < shopCount; i++) {
+        int i = 0;
+        outerloop: while (i < shopCount) {
             NPC npc = new NPC(faker.name().firstName(), UUID.randomUUID());
-            Shop shop = new Shop(Shop.ShopType.BLACKSMITH, UUID.randomUUID(), npc); // Blacksmith is a placeholder name
+            Shop.ShopType shopToMake = Shop.ShopType.values()[new Random().nextInt(Shop.ShopType.values().length)];
+            for (Shop shop : shops) {
+                if (shop.getShopType() == shopToMake) {
+                    Entity.entityMap.remove(npc.getEntityUUID());
+                    continue outerloop;
+                }
+            }
+            Shop shop = new Shop(shopToMake, UUID.randomUUID(), npc);
             npc.setCurrentLocation(shop.locationUUID);
             shops.add(shop);
+            i++;
         }
         return shops;
     }

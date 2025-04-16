@@ -29,7 +29,9 @@ public class Test {
             player.setCurrentLocation(dungeon.getLocationUUID());
             Weapon weapon = generateWeapon(3, 3, player.getInventory());
             player.setCurrentWeapon(weapon);
-            Town town = new Town("TestTown", UUID.randomUUID(), 2, true);
+            for (int i = 0; i < 5; i ++) {
+                Town town = new Town("TestTown", UUID.randomUUID(), true);
+            }
             generateArmor(3, 3, player.getInventory());
             return player;
         } else {

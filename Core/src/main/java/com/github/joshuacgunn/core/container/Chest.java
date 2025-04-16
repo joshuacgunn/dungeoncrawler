@@ -127,8 +127,8 @@ public class Chest extends Container{
             }
         }
 
-        // If somehow we ended up with no items, mark chest as not present
-        if (items.isEmpty() || parentFloor.getDifficultyRating() < 3) {
+        // Remove chest if certain requirements are not met (floor # below 3, floor too easy)
+        if (items.isEmpty() || parentFloor.getDifficultyRating() < 3 || (random.nextFloat() * parentFloor.getDifficultyRating() / 3) < 0.75f) {
             parentFloor.setHasChest(false);
         }
 

@@ -241,24 +241,7 @@ public interface EntityMapper {
 
     default Enemy enemyDtoToEnemy(EnemyDTO dto) {
         if (dto == null) return null;
-//        if (dto.getEntityName().equalsIgnoreCase("GOBLIN")) {
-//            Goblin goblin = new Goblin(dto.getEntityUUID(), false);
-//            goblin.setEntityHp(dto.getEntityHp());
-//            goblin.setDeathStatus(dto.isDead());
-//            return goblin;
-//        } else if (dto.getEntityName().equalsIgnoreCase("ORC")) {
-//            Orc orc = new Orc(dto.getEntityUUID(), false);
-//            orc.setEntityHp(dto.getEntityHp());
-//            orc.setDeathStatus(dto.isDead());
-//            return orc;
-//        } else if (dto.getEntityName().equalsIgnoreCase("TROLL")) {
-//            Troll troll = new Troll(dto.getEntityUUID(), false);
-//            troll.setEntityHp(dto.getEntityHp());
-//            troll.setDeathStatus(dto.isDead());
-//            return troll;
-//        }
-        Enemy enemy = new Enemy(Enemy.EnemyType.valueOf(dto.getEntityName().toUpperCase()), dto.getEntityUUID(), false) {
-        };
+        Enemy enemy = new Enemy(Enemy.EnemyType.valueOf(dto.getEntityName().toUpperCase()), dto.getEntityUUID(), false);
         enemy.setDeathStatus(dto.isDead());
         return enemy;
     }
