@@ -4,7 +4,6 @@ import com.github.joshuacgunn.core.container.Inventory;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
 import com.github.joshuacgunn.core.item.Weapon;
-import com.github.joshuacgunn.core.location.Location;
 
 import java.util.*;
 

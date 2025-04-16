@@ -70,8 +70,8 @@ public class Chest extends Container{
      * @param locked Whether the chest is locked and requires a key
      * @param parentFloor The dungeon floor this chest belongs to
      */
-    public Chest(ChestRarity chestRarity, boolean locked, DungeonFloor parentFloor) {
-        super(UUID.randomUUID(),  "Chest");
+    public Chest(ChestRarity chestRarity, UUID uuid, boolean locked, DungeonFloor parentFloor) {
+        super(uuid,  "Chest");
         this.containerName = chestRarity + " Chest";
         this.chestRarity = chestRarity;
         this.locked = locked;
@@ -128,7 +128,7 @@ public class Chest extends Container{
         }
 
         // If somehow we ended up with no items, mark chest as not present
-        if (items.isEmpty() || parentFloor.getDifficultyRating() < 5) {
+        if (items.isEmpty() || parentFloor.getDifficultyRating() < 3) {
             parentFloor.setHasChest(false);
         }
 

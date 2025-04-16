@@ -35,7 +35,7 @@ public class Town extends Location {
         ArrayList<Shop> shops = new ArrayList<>();
         for (int i = 0; i < shopCount; i++) {
             NPC npc = new NPC(faker.name().firstName(), UUID.randomUUID());
-            Shop shop = new Shop("Blacksmith", UUID.randomUUID(), npc);
+            Shop shop = new Shop("Blacksmith at " + this.getLocationName(), UUID.randomUUID(), npc); // Blacksmith is a placeholder name
             npc.setCurrentLocation(shop.locationUUID);
             shops.add(shop);
         }

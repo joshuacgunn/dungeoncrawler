@@ -24,7 +24,7 @@ public class Player extends Entity {
 
     private PlayerStats playerStats;
 
-    private PlayerClass playerClass;
+    private final PlayerClass playerClass;
 
     /**
      * Creates a new player with the specified name and UUID.
@@ -39,6 +39,71 @@ public class Player extends Entity {
         this.entityHp = MAX_HP;
         this.playerClass = playerClass;
         this.playerStats = initializeStats();
+    }
+
+    /**
+     * Gets the weapon the player currently has equipped.
+     *
+     * @return The currently equipped weapon, or null if no weapon is equipped
+     */
+    public Weapon getCurrentWeapon() {
+        return this.currentWeapon;
+    }
+
+    public PlayerStats getPlayerStats() {
+        return this.playerStats;
+    }
+
+    public void setPlayerStats(PlayerStats playerStats) {
+        this.playerStats = playerStats;
+    }
+
+    public PlayerClass getPlayerClass() {
+        return this.playerClass;
+    }
+
+    /**
+     * Equips a weapon for the player to use.
+     *
+     * @param weapon The weapon to equip
+     */
+    public void setCurrentWeapon(Weapon weapon) {
+        this.currentWeapon = weapon;
+    }
+
+    public void equipWeapon(Weapon weapon) {
+        if (currentWeapon != null) {
+            this.currentWeapon = null;
+        }
+        this.currentWeapon = weapon;
+    }
+
+    public void unEquipWeapon() {
+        if (!(this.currentWeapon == null)) {
+            this.currentWeapon = null;
+        }
+
+    }
+
+    public float calculateWeaponDamage() {
+        float baseDamage = currentWeapon.getWeaponDamage();
+
+        float strengthBonus = playerStats.getStrength() * 0.1f;
+
+        float classBonus = 0f;
+
+        switch(playerClass) {
+            case PALADIN:
+                classBonus = playerStats.getStrength() * 0.03f;
+                break;
+            case WIZARD:
+                classBonus = playerStats.getIntelligence() * 0.05f;
+                break;
+            case ROGUE:
+                classBonus = playerStats.getDexterity() * 0.05f;
+                break;
+        }
+        return baseDamage * (1f + strengthBonus + classBonus);
     }
 
     private PlayerStats initializeStats() {
@@ -80,28 +145,6 @@ public class Player extends Entity {
         return stats;
     }
 
-    /**
-     * Gets the weapon the player currently has equipped.
-     *
-     * @return The currently equipped weapon, or null if no weapon is equipped
-     */
-    public Weapon getCurrentWeapon() {
-        return this.currentWeapon;
-    }
-
-    /**
-     * Equips a weapon for the player to use.
-     *
-     * @param weapon The weapon to equip
-     */
-    public void setCurrentWeapon(Weapon weapon) {
-        this.currentWeapon = weapon;
-    }
-
-    public PlayerClass getPlayerClass() {
-        return this.playerClass;
-    }
-
     public String getPlayerStatsString() {
         return String.format(
                 "Player Stats for %s (%s):\n" +
@@ -127,11 +170,5 @@ public class Player extends Entity {
         );
     }
 
-    public PlayerStats getPlayerStats() {
-        return this.playerStats;
-    }
 
-    public void setPlayerStats(PlayerStats playerStats) {
-        this.playerStats = playerStats;
-    }
 }

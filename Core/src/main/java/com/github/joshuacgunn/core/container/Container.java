@@ -43,6 +43,10 @@ public abstract class Container {
         return containerUUID;
     }
 
+    public void setContainerUUID(UUID uuid) {
+        this.containerUUID = uuid;
+    }
+
     /**
      * Adds an item to this container.
      *

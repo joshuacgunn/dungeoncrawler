@@ -1,3 +1,4 @@
+import com.github.joshuacgunn.core.entity.Entity;
 import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.item.Weapon;
 import com.github.joshuacgunn.core.location.Dungeon;
@@ -37,6 +38,10 @@ public class Test {
             return player;
         } else {
             SaveManager.loadState();
+            for (Entity entity : Entity.entityMap.values()) {
+                System.out.println(entity.getEntityName());
+                System.out.println(Location.locationMap.get(entity.getCurrentLocation()).getLocationName());
+            }
             return SaveManager.loadPlayer();
         }
     }

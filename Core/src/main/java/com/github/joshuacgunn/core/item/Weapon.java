@@ -36,31 +36,19 @@ public class Weapon extends Item {
      * Each quality level has different values for damage, armor penetration, and durability.
      */
     public enum WeaponQuality {
-        /** Lowest quality with minimal damage and durability */
-        RUSTED(0.2f, 0.0f, 0.4f),
+        RUSTED(12f, 0.0f, 0.4f),      // ~14.4 damage (12.2-16.6)
+        DULL(16f, 0.1f, 1.0f),        // ~24 damage (20.4-27.6)
+        JAGGED(20f, 0.2f, 1.4f),      // ~38 damage (32.3-43.7)
+        TEMPERED(24f, 0.3f, 1.9f),    // ~52.8 damage (44.9-60.7)
+        RAZOR(28f, 0.4f, 2.4f),       // ~78.4 damage (66.6-90.2)
+        MASTERFUL(30f, 0.45f, 2.7f),    // ~95 damage
+        EXQUISITE(32f, 0.5f, 3.0f),     // ~112 damage (95.2-128.8)
+        LEGENDARY(36f, 0.55f, 3.5f);    // ~140 damage
 
-        /** Poor quality with low damage and durability */
-        DULL(0.5f, 0.1f, 1.0f),
-
-        /** Below average quality with moderate damage */
-        JAGGED(0.9f, 0.2f, 1.4f),
-
-        /** Average quality with balanced stats */
-        TEMPERED(1.2f, 0.3f, 1.9f),
-
-        /** High quality with good damage and armor penetration */
-        RAZOR(1.8f, 0.4f, 2.4f),
-
-        /** Highest quality with excellent stats in all categories */
-        EXQUISITE(2.5f, 0.5f, 3.0f);
-
-        /** Damage multiplier for this quality level */
         public final float damage;
 
-        /** Armor penetration value for this quality level */
         public final float armorPen;
 
-        /** Durability multiplier for this quality level */
         public final float durabilityMult;
 
         /**
@@ -201,27 +189,27 @@ public class Weapon extends Item {
     public void updateAttributes() {
         Random rand = new Random();
 
-        // Base damage calculation
-        // Start with base damage of 15 and multiply by quality damage factor
-        float baseDamage = 15f * weaponQuality.damage;
+        // Base damage from quality
+        float baseDamage = weaponQuality.damage;
 
-        // Add small random variation (±15%) to make weapons of same quality slightly different
+        // Add variation (±15%)
         float variationFactor = 0.85f + (rand.nextFloat() * 0.3f);
-        this.weaponDamage = Math.round(baseDamage * variationFactor);
 
-        // Calculate armor penetration (how much of target's armor is bypassed)
-        // Base value from quality (0% to 50%) plus small random variation
+        // Apply weapon-type and scaling multiplier (missing previously)
+        float qualityMultiplier = 1.0f + (0.2f * weaponQuality.ordinal());
+
+        this.weaponDamage = Math.round(baseDamage * variationFactor * qualityMultiplier);
+
+        // Calculate armor penetration
         float baseArmorPen = weaponQuality.armorPen;
-        float penVariation = rand.nextFloat() * 0.05f; // ±5% variation
+        float penVariation = rand.nextFloat() * 0.05f;
 
-        // Higher quality weapons get positive variation, lower quality get negative
         if (weaponQuality.ordinal() > WeaponQuality.TEMPERED.ordinal()) {
-            this.armorPenetration = Math.min(baseArmorPen + penVariation, 0.6f); // Cap at 60%
+            this.armorPenetration = Math.min(baseArmorPen + penVariation, 0.6f);
         } else {
-            this.armorPenetration = Math.max(baseArmorPen - penVariation, 0f); // Minimum 0%
+            this.armorPenetration = Math.max(baseArmorPen - penVariation, 0f);
         }
 
-        // Update durability based on quality
-        this.weaponDurability = 100f * weaponQuality.durabilityMult;
+        this.weaponDurability = 30f * weaponQuality.durabilityMult;
     }
 }

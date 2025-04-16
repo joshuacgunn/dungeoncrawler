@@ -81,6 +81,7 @@ public interface DungeonMapper {
             floor.setDifficultyRating(floor.calculateDifficulty());
 
             if (floorDTO.hasChest()) {
+                floor.getChest().setContainerUUID(floorDTO.getChest().getChestUUID());
                 floor.setHasChest(true);
                 for (UUID itemDTO : floorDTO.getChest().getChestContents()) {
                     Item item = Item.itemMap.get(itemDTO);

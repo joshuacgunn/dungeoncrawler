@@ -2,9 +2,6 @@ package com.github.joshuacgunn.core.location;
 
 import com.github.joshuacgunn.core.container.Chest;
 import com.github.joshuacgunn.core.entity.Enemy;
-import com.github.joshuacgunn.core.entity.Goblin;
-import com.github.joshuacgunn.core.entity.Orc;
-import com.github.joshuacgunn.core.entity.Troll;
 
 import java.util.*;
 
@@ -48,7 +45,7 @@ public class DungeonFloor extends Location{
      * @param skipEnemyGeneration If true, enemies will not be generated automatically
      */
     public DungeonFloor(UUID floorUUID, Dungeon parentDungeon, int floorNumber, boolean skipEnemyGeneration) {
-        super("Floor " + floorNumber, floorUUID );
+        super("Floor " + floorNumber + " in " + parentDungeon.getLocationName(), floorUUID );
         this.floorNumber = floorNumber;
         this.parentDungeon = parentDungeon;
         if (!skipEnemyGeneration) {
@@ -59,34 +56,53 @@ public class DungeonFloor extends Location{
         }
         this.difficultyRating = calculateDifficulty();
         this.hasChest = true;
-        this.chest = new Chest(Chest.ChestRarity.COMMON, false, this);
+        this.chest = new Chest(Chest.ChestRarity.COMMON, UUID.randomUUID(), false,this);
     }
 
     private void generateEnemies() {
         ArrayList<Enemy> enemies = new ArrayList<>();
 
-        int baseEnemyCount = 2 + (int)(floorNumber * 0.5);
+        // Base scaling formula with logarithmic growth
+        int baseEnemyCount = 1 + (int)(Math.log(floorNumber + 1) * 2);
 
-        int variableCount = rand.nextInt(3);
-        int enemyCount = baseEnemyCount + variableCount;
+        // More significant random variation (0-3 for early floors, more for deeper floors)
+        int variationRange = 1 + (int)(floorNumber / 5);
+        int variableCount = rand.nextInt(variationRange + 1);
 
-        Random rand = new Random();
-        float floorBonus = (floorNumber * 10) / 200.0f;
+        // Every 5th floor gets a difficulty spike (mini-boss floors)
+        boolean isBossFloor = floorNumber % 5 == 0 && floorNumber > 0;
+        int bossFloorBonus = isBossFloor ? 1 : 0;
 
-        for (int i = 0; i < enemyCount; i++) {
-            float generateChance = rand.nextFloat(0, 1.0f - floorBonus) + floorBonus;
-            if (generateChance < .6f || floorNumber < 3) {
-                Goblin goblin = new Goblin(UUID.randomUUID(), true);
-                enemies.add(goblin);
-            } else if (generateChance < .75f || floorNumber < 4) {
-                Orc orc = new Orc(UUID.randomUUID(), true);
-                enemies.add(orc);
-            } else if (generateChance < .9f) {
-                Troll troll = new Troll(UUID.randomUUID(), true);
-                enemies.add(troll);
+        // Calculate max enemy count with sensible upper limit
+        int calculatedCount = baseEnemyCount + variableCount + bossFloorBonus;
+        int hardCap = 10; // Never exceed this many enemies
+
+        int maxEnemyCount = Math.min(calculatedCount, hardCap);
+
+        // Generate enemies based on the calculated count
+        for (int i = 0; i < maxEnemyCount; i++) {
+            // Your existing enemy type selection logic
+            float generateChance = rand.nextFloat();
+            float floorProgress = Math.min(floorNumber / 15.0f, 0.9f); // Floor difficulty factor
+
+            if (floorNumber < 3 && generateChance < 0.4f - (floorProgress * 0.3f)) {
+                enemies.add(Enemy.createEnemy(Enemy.EnemyType.GOBLIN, UUID.randomUUID(), true));
+            } else if (generateChance < 0.7f - (floorProgress * 0.2f)) {
+                enemies.add(Enemy.createEnemy(Enemy.EnemyType.ORC, UUID.randomUUID(), true));
+            } else if (generateChance < 0.9f) {
+                enemies.add(Enemy.createEnemy(Enemy.EnemyType.TROLL, UUID.randomUUID(), true));
+            } else {
+                // Small chance for rarer enemy type (once you add more types)
+                enemies.add(Enemy.createEnemy(Enemy.EnemyType.TROLL, UUID.randomUUID(), true));
             }
         }
+
         this.enemiesOnFloor = enemies;
+
+        // Update enemy locations
+        for (Enemy enemy : enemiesOnFloor) {
+            enemy.setCurrentLocation(this.locationUUID);
+        }
     }
 
     /**
@@ -133,6 +149,10 @@ public class DungeonFloor extends Location{
      */
     public void setDifficultyRating(float rating) {
         this.difficultyRating = rating;
+    }
+
+    public void setChest(Chest chest) {
+        this.chest = chest;
     }
 
     /**

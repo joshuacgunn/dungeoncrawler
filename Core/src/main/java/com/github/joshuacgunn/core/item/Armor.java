@@ -12,9 +12,9 @@ public class Armor extends Item {
     private float armorDefense;
 
     public enum ArmorQuality {
-        FLIMSY(7f, 1),
-        WORN(12f, 3),
-        DECENT(15f, 4),
+        FLIMSY(5f, 1),
+        WORN(7f, 3),
+        DECENT(14f, 4),
         STURDY(19f, 5),
         HARDENED(26f, 6),
         FINE(30f, 7),
@@ -30,10 +30,10 @@ public class Armor extends Item {
         }
     }
     public enum ArmorSlot {
-        HELMET(1.3f),
+        HELMET(1.1f),
         CHESTPLATE(1.8f),
         LEGGINGS(1.6f),
-        BOOTS(1.2f);
+        BOOTS(1.1f);
 
         public final float defenseMult;
 
@@ -113,11 +113,12 @@ public class Armor extends Item {
         Armor generatedArmor = new Armor(UUID.randomUUID(), slot, "Generated Armor", qualityToUse);
         if (entity != null && entity.armors.containsKey(generatedArmor.getArmorSlot())) {
             while (entity.armors.containsKey(generatedArmor.getArmorSlot())) {
+                Item.itemMap.remove(generatedArmor.getItemUUID(), generatedArmor);
                 slot = Armor.ArmorSlot.values()[rand.nextInt(0, 4)];
                 generatedArmor = new Armor(UUID.randomUUID(), slot, "Generated Armor", qualityToUse);
-                if (entity.armors.containsKey(generatedArmor.getArmorSlot())) {
-                    Item.itemMap.remove(generatedArmor.getItemUUID());
-                }
+//                if (entity.armors.containsKey(generatedArmor.getArmorSlot())) {
+//                    Item.itemMap.remove(generatedArmor.getItemUUID(), generatedArmor);
+//                }
             }
         }
         if (entity != null) {
