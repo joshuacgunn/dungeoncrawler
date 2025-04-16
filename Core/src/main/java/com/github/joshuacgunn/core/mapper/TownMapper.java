@@ -30,6 +30,7 @@ public interface TownMapper {
             shopDTO.setShopOwnerUUID(shop.getShopOwner().getEntityUUID());
             shopDTO.setShopUUID(shop.getLocationUUID());
             shopDTO.setShopName(shop.getLocationName());
+            shopDTO.setShopType(shop.getShopType());
 
             shopsInTown.add(shopDTO);
         }
@@ -43,7 +44,7 @@ public interface TownMapper {
 
         ArrayList<Shop> shopsInTown = new ArrayList<>();
         for (ShopDTO shopDTO : townDTO.getShopsInTown()) {
-            Shop shop = new Shop(shopDTO.getShopName(), shopDTO.getShopUUID(), (NPC) Entity.entityMap.get(shopDTO.getShopOwnerUUID()));
+            Shop shop = new Shop(shopDTO.getShopType(), shopDTO.getShopUUID(), (NPC) Entity.entityMap.get(shopDTO.getShopOwnerUUID()));
             shopsInTown.add(shop);
         }
         town.setShopsInTown(shopsInTown);

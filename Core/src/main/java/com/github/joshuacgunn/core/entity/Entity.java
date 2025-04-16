@@ -92,6 +92,10 @@ public abstract class Entity {
         return currentLocation;
     }
 
+    public void setEntityName(String name) {
+        this.entityName = name;
+    }
+
     /**
      * Sets the player's current dungeon.
      *

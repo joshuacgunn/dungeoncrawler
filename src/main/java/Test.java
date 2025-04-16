@@ -17,10 +17,6 @@ public class Test {
         try {
             Player player = createPlayer();
             SaveManager.saveState(player);
-            Dungeon dungeon = (Dungeon) Location.locationMap.get(player.getCurrentLocation());
-//            for (Enemy enemy : dungeon.getCurrentFloor().getEnemiesOnFloor()) {
-//                System.out.println(enemy.getEntityName() + " " + enemy.getEntityUUID());
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

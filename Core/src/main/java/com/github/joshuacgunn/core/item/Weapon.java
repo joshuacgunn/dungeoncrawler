@@ -8,55 +8,55 @@ import java.util.Random;
 import java.util.UUID;
 
 /**
- * Represents a weapon item in the game.
- * <p>
- * The Weapon class extends the base Item class and adds weapon-specific properties
- * such as damage, durability, and armor penetration. Weapons can be equipped by entities
- * for combat and have varying qualities that affect their combat effectiveness.
- * <p>
- * Weapons have quality levels that determine their base damage, armor penetration capabilities,
- * and durability multipliers. Higher quality weapons generally deal more damage and have better
- * armor penetration.
+ * Represents a weapon used for combat in the game world.
+ *
+ * Weapons have various attributes including damage, durability, and armor penetration.
+ * These attributes are determined by the weapon's quality level, which ranges from
+ * RUSTED (lowest) to LEGENDARY (highest).
  */
 public class Weapon extends Item {
-    /** The amount of damage this weapon deals */
+    /** Base damage this weapon inflicts in combat */
     private float weaponDamage;
 
-    /** The durability of this weapon, representing how long it can be used before breaking */
+    /** Current durability points before the weapon breaks */
     private float weaponDurability;
 
-    /** How much of the target's armor this weapon can bypass, as a percentage */
+    /** Percentage of target's armor that this weapon bypasses (0.0 to 1.0) */
     private float armorPenetration;
 
-    /** The quality level of this weapon, affecting its stats */
+    /** Quality tier of this weapon, affecting its base stats */
     private final WeaponQuality weaponQuality;
 
     /**
-     * Defines the possible quality levels for weapons and their associated stat multipliers.
-     * Each quality level has different values for damage, armor penetration, and durability.
+     * Defines weapon quality tiers and their corresponding base attributes.
+     * Higher quality weapons have progressively better damage, armor penetration,
+     * and durability values.
      */
     public enum WeaponQuality {
-        RUSTED(12f, 0.0f, 0.4f),      // ~14.4 damage (12.2-16.6)
-        DULL(16f, 0.1f, 1.0f),        // ~24 damage (20.4-27.6)
-        JAGGED(20f, 0.2f, 1.4f),      // ~38 damage (32.3-43.7)
-        TEMPERED(24f, 0.3f, 1.9f),    // ~52.8 damage (44.9-60.7)
-        RAZOR(28f, 0.4f, 2.4f),       // ~78.4 damage (66.6-90.2)
-        MASTERFUL(30f, 0.45f, 2.7f),    // ~95 damage
-        EXQUISITE(32f, 0.5f, 3.0f),     // ~112 damage (95.2-128.8)
-        LEGENDARY(36f, 0.55f, 3.5f);    // ~140 damage
+        RUSTED(7f, 0.0f, 0.4f),
+        DULL(14f, 0.1f, 1.0f),
+        JAGGED(17f, 0.2f, 1.4f),
+        TEMPERED(22f, 0.3f, 1.9f),
+        RAZOR(25f, 0.4f, 2.4f),
+        MASTERFUL(29f, 0.45f, 2.7f),
+        EXQUISITE(33f, 0.5f, 3.0f),
+        LEGENDARY(37f, 0.55f, 3.5f);
 
+        /** Base damage value for this quality tier */
         public final float damage;
 
+        /** Base armor penetration for this quality tier */
         public final float armorPen;
 
+        /** Durability multiplier for this quality tier */
         public final float durabilityMult;
 
         /**
-         * Creates a new weapon quality level with the specified stat values.
+         * Initializes a weapon quality tier with specific attribute values.
          *
-         * @param damage Base damage multiplier for this quality
-         * @param armorPen Armor penetration value for this quality
-         * @param durabilityMult Durability multiplier for this quality
+         * @param damage Base damage for weapons of this quality
+         * @param armorPen Base armor penetration (0.0 to 1.0)
+         * @param durabilityMult Multiplier applied to base durability
          */
         WeaponQuality(float damage, float armorPen, float durabilityMult) {
             this.damage = damage;
@@ -66,11 +66,11 @@ public class Weapon extends Item {
     }
 
     /**
-     * Creates a new weapon with the specified properties.
+     * Creates a new weapon with specified name, ID, and quality.
      *
-     * @param itemName The name of the weapon
-     * @param itemUUID The unique identifier for the weapon
-     * @param quality The quality of the weapon, used for damage, armor penetration, and durability
+     * @param itemName Name of the weapon
+     * @param itemUUID Unique identifier for this weapon instance
+     * @param quality Quality tier affecting weapon stats
      */
     public Weapon(String itemName, UUID itemUUID, WeaponQuality quality) {
         super(itemName, itemUUID);
@@ -80,83 +80,75 @@ public class Weapon extends Item {
     }
 
     /**
-     * Gets the base damage value of this weapon.
+     * Returns the weapon's current damage value.
      *
-     * @return The weapon's damage value
+     * @return Calculated damage value
      */
     public float getWeaponDamage() {
         return weaponDamage;
     }
 
     /**
-     * Gets the current durability of this weapon.
+     * Returns the weapon's current durability.
      *
-     * @return The weapon's durability value
+     * @return Current durability points
      */
     public float getWeaponDurability() {
         return weaponDurability;
     }
 
     /**
-     * Gets the quality level of this weapon.
+     * Returns this weapon's quality tier.
      *
-     * @return The weapon's quality enum value
+     * @return The WeaponQuality enum value
      */
     public WeaponQuality getWeaponQuality() {
         return this.weaponQuality;
     }
 
     /**
-     * Sets the damage value for this weapon.
+     * Sets the weapon's damage to a specific value.
      *
-     * @param damage The new damage value to set
+     * @param damage New damage value
      */
     public void setWeaponDamage(float damage) {
         this.weaponDamage = damage;
     }
 
     /**
-     * Sets the durability for this weapon.
+     * Sets the weapon's durability to a specific value.
      *
-     * @param durability The new durability value to set
+     * @param durability New durability value
      */
     public void setWeaponDurability(float durability) {
         this.weaponDurability = durability;
     }
 
     /**
-     * Gets the armor penetration value of this weapon.
+     * Returns the weapon's armor penetration rate.
      *
-     * @return The weapon's armor penetration value
+     * @return Armor penetration as a decimal (0.0 to 1.0)
      */
     public float getArmorPenetration() {
         return armorPenetration;
     }
 
     /**
-     * Sets the armor penetration value for this weapon.
+     * Sets the weapon's armor penetration rate.
      *
-     * @param armorPenetration The new armor penetration value to set
+     * @param armorPenetration New armor penetration value (0.0 to 1.0)
      */
     public void setArmorPenetration(float armorPenetration) {
         this.armorPenetration = armorPenetration;
     }
 
     /**
-     * Generates a weapon with random quality between the specified minimum and maximum quality levels.
-     * <p>
-     * This static factory method creates a new Weapon instance with a random quality level
-     * selected from the WeaponQuality enum values. The quality is randomly chosen between
-     * the minQuality (inclusive) and maxQuality (inclusive) indices of the WeaponQuality enum.
-     * <p>
-     * The generated weapon is automatically added to the provided container. If the container
-     * is an Inventory, the weapon name will include the owner's name (e.g., "Goblin's dull Weapon").
-     * Otherwise, the weapon name will use a generic prefix (e.g., "A DULL Weapon").
+     * Creates a random weapon with quality between specified bounds and adds it to a container.
      *
-     * @param minQuality The minimum quality level index (inclusive) from WeaponQuality enum
-     * @param maxQuality The maximum quality level index (inclusive) from WeaponQuality enum
-     * @param container The container to which the generated weapon will be added
-     * @return The newly generated Weapon instance with random quality
+     * @param minQuality Minimum quality index (inclusive)
+     * @param maxQuality Maximum quality index (inclusive)
+     * @param container Container to add the weapon to
+     * @return The generated weapon
      */
     public static Weapon generateWeapon(int minQuality, int maxQuality, Container container) {
         Random rand = new Random();
@@ -177,14 +169,15 @@ public class Weapon extends Item {
     }
 
     /**
-     * Updates the weapon's attributes based on its quality level.
-     * Sets the weapon's damage and armor penetration values according to
-     * the corresponding values in its WeaponQuality.
-     */
-    /**
-     * Updates the weapon's attributes based on its quality level.
-     * Calculates weapon damage and armor penetration with a balanced approach
-     * that includes base values, quality multipliers and some randomness.
+     * Calculates and updates weapon statistics based on quality tier.
+     *
+     * This method determines final weapon damage by applying:
+     * - Base damage from the weapon quality
+     * - Random variation (±15%)
+     * - Quality tier scaling multiplier
+     *
+     * It also calculates armor penetration with quality-appropriate
+     * randomized values and sets durability based on quality multipliers.
      */
     public void updateAttributes() {
         Random rand = new Random();

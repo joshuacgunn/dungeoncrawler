@@ -1,7 +1,5 @@
 package com.github.joshuacgunn.core.entity;
 
-
-
 public class PlayerStats {
     private int strength;
     private int dexterity;

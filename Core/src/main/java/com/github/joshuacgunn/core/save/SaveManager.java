@@ -1,7 +1,9 @@
 package com.github.joshuacgunn.core.save;
 
 import com.github.joshuacgunn.core.dto.*;
+import com.github.joshuacgunn.core.entity.Enemy;
 import com.github.joshuacgunn.core.entity.Entity;
+import com.github.joshuacgunn.core.entity.NPC;
 import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
@@ -13,7 +15,6 @@ import com.github.joshuacgunn.core.mapper.DungeonMapper;
 import com.github.joshuacgunn.core.mapper.EntityMapper;
 import com.github.joshuacgunn.core.mapper.ItemMapper;
 import com.github.joshuacgunn.core.mapper.TownMapper;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.io.FileUtils;
 
@@ -88,34 +89,59 @@ public abstract class SaveManager {
 
     public static void saveEntities() {
         createDirectories();
-        List<EntityDTO> entityDTOs = new ArrayList<>();
+        List<NpcDTO> npcDTOs = new ArrayList<>();
+        List<EnemyDTO> enemyDTOS = new ArrayList<>();
 
         // Get all entities except player (which is saved separately)
         for (Entity entity : Entity.getEntities()) {
-            if (!(entity instanceof Player)) {
-                entityDTOs.add(EntityMapper.INSTANCE.entityToEntityDTO(entity));
+            if (entity instanceof NPC) {
+                npcDTOs.add((NpcDTO) EntityMapper.INSTANCE.entityToEntityDTO(entity));
+            } else if (entity instanceof Enemy) {
+                enemyDTOS.add((EnemyDTO) EntityMapper.INSTANCE.entityToEntityDTO(entity));
             }
         }
 
-        try (Writer writer = new FileWriter(SAVE_DIRECTORY + "entities_snapshot.json", false)) {
-            writer.write(GSON.toJson(entityDTOs));
+        try (Writer writer = new FileWriter(SAVE_DIRECTORY + "NPCs_snapshot.json", false)) {
+            writer.write(GSON.toJson(npcDTOs));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try (Writer writer = new FileWriter(SAVE_DIRECTORY + "enemies_snapshot.json", false)) {
+            writer.write(GSON.toJson(enemyDTOS));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static void loadEntities() {
-        try (Reader reader = new FileReader(SAVE_DIRECTORY + "entities_snapshot.json")) {
+        try (Reader reader = new FileReader(SAVE_DIRECTORY + "NPCs_snapshot.json")) {
             // Use TypeToken for proper generic type handling
-            Type listType = new TypeToken<List<EntityDTO>>(){}.getType();
-            List<EntityDTO> entityDTOs = GSON.fromJson(reader, listType);
+            Type listType = new TypeToken<List<NpcDTO>>(){}.getType();
+            List<NpcDTO> npcDTOs = GSON.fromJson(reader, listType);
 
             // Clear existing entities
-            Entity.entityMap.clear();
+            Entity.entityMap.values().removeIf(e -> e instanceof NPC);
 
             // Create entities from DTOs
-            for (EntityDTO dto : entityDTOs) {
-                EntityMapper.INSTANCE.entityDtoToEntity(dto);
+            for (NpcDTO npcDTO : npcDTOs) {
+                EntityMapper.INSTANCE.entityDtoToEntity(npcDTO);
+            }
+        } catch (IOException e) {
+            // Handle empty file case
+            if (e instanceof FileNotFoundException || e.getMessage().contains("empty")) {
+                System.err.println("No entities file found or empty file. Starting with empty entities.");
+                return;
+            }
+            throw new RuntimeException(e);
+        }
+        try (Reader reader = new FileReader(SAVE_DIRECTORY + "enemies_snapshot.json")) {
+            Type listType = new TypeToken<List<EnemyDTO>>(){}.getType();
+            List<EnemyDTO> enemyDTOS = GSON.fromJson(reader, listType);
+
+            Entity.entityMap.values().removeIf(e -> e instanceof Enemy);
+
+            for (EnemyDTO enemyDTO : enemyDTOS) {
+                EntityMapper.INSTANCE.entityDtoToEntity(enemyDTO);
             }
         } catch (IOException e) {
             // Handle empty file case
@@ -237,11 +263,13 @@ public abstract class SaveManager {
 
         try (Writer writer = new FileWriter(SAVE_DIRECTORY + "armors_snapshot.json")) {
             writer.write(GSON.toJson(armorDTOs));
+            Item.itemMap.values().removeIf(e -> e instanceof Armor);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         try (Writer writer = new FileWriter(SAVE_DIRECTORY + "weapons_snapshot.json")) {
             writer.write(GSON.toJson(weaponDTOS));
+            Item.itemMap.values().removeIf(e -> e instanceof Weapon);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

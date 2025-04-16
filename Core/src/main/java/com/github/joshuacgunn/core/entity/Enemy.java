@@ -18,7 +18,7 @@ public class Enemy extends Entity {
      */
     public enum EnemyType {
         KOBOLD("Kobold", 30.0f, 40.0f, 0, 2, 0, 1, 0, 1),
-        GOBLIN("Goblin", 45.0f, 55.0f, 1, 3, 0, 1, 0, 2),
+        GOBLIN("Goblin", 45.0f, 55.0f, 1, 3, 0, 1, 1, 2),
         ORC("Orc", 50.0f, 70.0f, 2, 3, 1, 3, 2, 3),
         OGRE("Ogre", 70.0f, 80.0f, 2, 4, 2, 3, 2, 4),
         TROLL("Troll", 80.0f, 100.0f, 2, 4, 3, 4, 3, 4),
