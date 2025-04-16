@@ -3,7 +3,9 @@ package com.github.joshuacgunn.core.save;
 import com.github.joshuacgunn.core.dto.*;
 import com.github.joshuacgunn.core.entity.Entity;
 import com.github.joshuacgunn.core.entity.Player;
+import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
+import com.github.joshuacgunn.core.item.Weapon;
 import com.github.joshuacgunn.core.location.Dungeon;
 import com.github.joshuacgunn.core.location.Location;
 import com.github.joshuacgunn.core.location.Town;
@@ -11,6 +13,7 @@ import com.github.joshuacgunn.core.mapper.DungeonMapper;
 import com.github.joshuacgunn.core.mapper.EntityMapper;
 import com.github.joshuacgunn.core.mapper.ItemMapper;
 import com.github.joshuacgunn.core.mapper.TownMapper;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.io.FileUtils;
 
@@ -199,11 +202,20 @@ public abstract class SaveManager {
     }
 
     public static void loadItems() {
-        try (Reader reader = new FileReader(SAVE_DIRECTORY + "items_snapshot.json")) {
-            ItemDTO[] itemDTOs = GSON.fromJson(reader, ItemDTO[].class);
+        try (Reader reader = new FileReader(SAVE_DIRECTORY + "armors_snapshot.json")) {
+            ArmorDTO[] armorDTOS = GSON.fromJson(reader, ArmorDTO[].class);
 
             // Create items from DTOs
-            for (ItemDTO dto : itemDTOs) {
+            for (ArmorDTO dto : armorDTOS) {
+                ItemMapper.INSTANCE.itemDtoToItem(dto);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try (Reader reader = new FileReader(SAVE_DIRECTORY + "weapons_snapshot.json")) {
+            WeaponDTO[] weaponDTOS = GSON.fromJson(reader, WeaponDTO[].class);
+
+            for (WeaponDTO dto : weaponDTOS) {
                 ItemMapper.INSTANCE.itemDtoToItem(dto);
             }
         } catch (IOException e) {
@@ -213,14 +225,23 @@ public abstract class SaveManager {
 
     public static void saveItems() {
         createDirectories();
-        List<ItemDTO> itemDTOs = new ArrayList<>();
+        List<ArmorDTO> armorDTOs = new ArrayList<>();
+        List<WeaponDTO> weaponDTOS = new ArrayList<>();
 
-        for (Item item : Item.getItems()) {
-            itemDTOs.add(ItemMapper.INSTANCE.itemToItemDTO(item));
+        for (Armor armor : Item.getItemsByType(Armor.class)) {
+            armorDTOs.add((ArmorDTO) ItemMapper.INSTANCE.itemToItemDTO((armor)));
+        }
+        for (Weapon weapon : Item.getItemsByType(Weapon.class)) {
+            weaponDTOS.add((WeaponDTO) ItemMapper.INSTANCE.itemToItemDTO(weapon));
         }
 
-        try (Writer writer = new FileWriter(SAVE_DIRECTORY + "items_snapshot.json")) {
-            writer.write(GSON.toJson(itemDTOs));
+        try (Writer writer = new FileWriter(SAVE_DIRECTORY + "armors_snapshot.json")) {
+            writer.write(GSON.toJson(armorDTOs));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try (Writer writer = new FileWriter(SAVE_DIRECTORY + "weapons_snapshot.json")) {
+            writer.write(GSON.toJson(weaponDTOS));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
