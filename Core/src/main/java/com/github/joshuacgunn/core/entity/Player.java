@@ -1,6 +1,7 @@
 package com.github.joshuacgunn.core.entity;
 
 import com.github.joshuacgunn.core.item.Weapon;
+import com.github.joshuacgunn.core.systems.PlayerStats;
 
 import java.util.UUID;
 

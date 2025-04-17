@@ -26,11 +26,13 @@ public class ItemDTOTypeAdapter implements JsonSerializer<ItemDTO>, JsonDeserial
             result.addProperty("weaponDurability", weaponDTO.getWeaponDurability());
             result.addProperty("armorPenetration", weaponDTO.getArmorPenetration());
             result.addProperty("weaponQuality", weaponDTO.getWeaponQuality().name());
+            result.addProperty("weaponMaterial", weaponDTO.getWeaponMaterial().name());
         } else if (src instanceof ArmorDTO armorDTO) {
             result.addProperty("itemType", "Armor");
             result.addProperty("armorDefense", armorDTO.getArmorDefense());
-            result.addProperty("slot", armorDTO.getSlot().name());
-            result.addProperty("quality", armorDTO.getQuality().name());
+            result.addProperty("armorSlot", armorDTO.getArmorSlot().name());
+            result.addProperty("armorQuality", armorDTO.getArmorQuality().name());
+            result.addProperty("armorMaterial", armorDTO.getArmorMaterial().name());
         } else {
             result.addProperty("itemType", "Item");
         }
@@ -51,6 +53,14 @@ public class ItemDTOTypeAdapter implements JsonSerializer<ItemDTO>, JsonDeserial
                 dto = new WeaponDTO();
                 if (jsonObject.has("weaponDamage")) {
                     ((WeaponDTO) dto).setWeaponDamage(jsonObject.get("weaponDamage").getAsFloat());
+                }
+                if (jsonObject.has("weaponMaterial")) {
+                    try {
+                        String materialStr = jsonObject.get("weaponMaterial").getAsString();
+                        ((WeaponDTO) dto).setWeaponMaterial(Weapon.WeaponMaterial.valueOf(materialStr));
+                    } catch (IllegalArgumentException e) {
+                        System.err.println("Invalid weapon material value: " + jsonObject.get("weaponMaterial").getAsString());
+                    }
                 }
                 if (jsonObject.has("weaponDurability")) {
                     ((WeaponDTO) dto).setWeaponDurability(jsonObject.get("weaponDurability").getAsFloat());
@@ -75,24 +85,34 @@ public class ItemDTOTypeAdapter implements JsonSerializer<ItemDTO>, JsonDeserial
                 }
 
                 // Safely parse armor slot
-                if (jsonObject.has("slot")) {
+                if (jsonObject.has("armorSlot")) {
                     try {
-                        String slotStr = jsonObject.get("slot").getAsString();
-                        ((ArmorDTO) dto).setSlot(Armor.ArmorSlot.valueOf(slotStr));
+                        String slotStr = jsonObject.get("armorSlot").getAsString();
+                        ((ArmorDTO) dto).setArmorSlot(Armor.ArmorSlot.valueOf(slotStr));
                     } catch (IllegalArgumentException e) {
                         // Handle invalid enum value
-                        System.err.println("Invalid armor slot value: " + jsonObject.get("slot").getAsString());
+                        System.err.println("Invalid armor slot value: " + jsonObject.get("armorSlot").getAsString());
+                    }
+                }
+
+                if (jsonObject.has("armorMaterial")) {
+                    try {
+                        String materialStr = jsonObject.get("armorMaterial").getAsString();
+                        ((ArmorDTO) dto).setArmorMaterial(Armor.ArmorMaterial.valueOf(materialStr));
+                    } catch (IllegalArgumentException e) {
+                        // Handle invalid enum value
+                        System.err.println("Invalid armor slot value: " + jsonObject.get("armorMaterial").getAsString());
                     }
                 }
 
                 // Safely parse armor quality
-                if (jsonObject.has("quality")) {
+                if (jsonObject.has("armorQuality")) {
                     try {
-                        String qualityStr = jsonObject.get("quality").getAsString();
-                        ((ArmorDTO) dto).setQuality(Armor.ArmorQuality.valueOf(qualityStr));
+                        String qualityStr = jsonObject.get("armorQuality").getAsString();
+                        ((ArmorDTO) dto).setArmorQuality(Armor.ArmorQuality.valueOf(qualityStr));
                     } catch (IllegalArgumentException e) {
                         // Handle invalid enum value
-                        System.err.println("Invalid armor quality value: " + jsonObject.get("quality").getAsString());
+                        System.err.println("Invalid armor quality value: " + jsonObject.get("armorQuality").getAsString());
                     }
                 }
                 break;

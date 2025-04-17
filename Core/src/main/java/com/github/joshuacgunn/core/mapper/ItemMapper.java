@@ -23,6 +23,7 @@ public interface ItemMapper {
             dto.setItemName(weapon.getItemName());
             dto.setItemUUID(weapon.getItemUUID());
             dto.setWeaponQuality(weapon.getWeaponQuality());
+            dto.setWeaponMaterial(weapon.getWeaponMaterial());
             dto.setWeaponDamage(weapon.getWeaponDamage());
             dto.setWeaponDurability(weapon.getWeaponDurability());
             dto.setArmorPenetration(weapon.getArmorPenetration());
@@ -33,8 +34,9 @@ public interface ItemMapper {
             dto.setItemName(armor.getItemName());
             dto.setItemUUID(armor.getItemUUID());
             dto.setArmorDefense(armor.getArmorDefense());
-            dto.setSlot(armor.getArmorSlot());
-            dto.setQuality(armor.getArmorQuality());
+            dto.setArmorSlot(armor.getArmorSlot());
+            dto.setArmorQuality(armor.getArmorQuality());
+            dto.setArmorMaterial(armor.getArmorMaterial());
             dto.setItemType("Armor"); // Explicitly set type
             return dto;
         } else {
@@ -54,7 +56,8 @@ public interface ItemMapper {
             Weapon weapon = new Weapon(
                     weaponDTO.getItemName(),
                     weaponDTO.getItemUUID(),
-                    weaponDTO.getWeaponQuality()
+                    weaponDTO.getWeaponQuality(),
+                    weaponDTO.getWeaponMaterial()
             );
             weapon.setWeaponDamage(weaponDTO.getWeaponDamage());
             weapon.setArmorPenetration(weaponDTO.getArmorPenetration());
@@ -64,9 +67,10 @@ public interface ItemMapper {
         } if (dto instanceof ArmorDTO armorDTO) {
             Armor armor = new Armor(
                     armorDTO.getItemUUID(),
-                    armorDTO.getSlot(),
+                    armorDTO.getArmorSlot(),
                     armorDTO.getItemName(),
-                    armorDTO.getQuality()
+                    armorDTO.getArmorQuality(),
+                    armorDTO.getArmorMaterial()
                     );
             armor.setArmorDefense(armorDTO.getArmorDefense());
             return armor;

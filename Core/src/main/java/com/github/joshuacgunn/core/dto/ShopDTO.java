@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class ShopDTO {
     private String shopName;
-    private UUID ShopUUID;
+    private UUID shopUUID;
     private UUID shopOwner;
     private Shop.ShopType shopType;
     private List<UUID> npcsInShop;
@@ -21,11 +21,11 @@ public class ShopDTO {
     }
 
     public UUID getShopUUID() {
-        return ShopUUID;
+        return shopUUID;
     }
 
     public void setShopUUID(UUID shopUUID) {
-        this.ShopUUID = shopUUID;
+        this.shopUUID = shopUUID;
     }
 
     public UUID getShopOwnerUUID() {

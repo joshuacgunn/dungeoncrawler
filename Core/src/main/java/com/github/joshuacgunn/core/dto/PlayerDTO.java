@@ -1,7 +1,7 @@
 package com.github.joshuacgunn.core.dto;
 
 import com.github.joshuacgunn.core.entity.Player;
-import com.github.joshuacgunn.core.entity.PlayerStats;
+import com.github.joshuacgunn.core.systems.PlayerStats;
 
 /**
  * PlayerDTO extends EntityDTO to add player-specific properties.

@@ -11,6 +11,21 @@ import java.util.Random;
 public class Armor extends Item {
     private float armorDefense;
 
+    public enum ArmorMaterial {
+        LEATHER(0.5f),
+        BONE(0.8f),
+        IRON(1.0f),
+        STEEL(1.2f),
+        MITHRIL(1.5f),
+        CELESTIUM(1.8f);
+
+        private final float baseDefenseMultiplier;
+
+        ArmorMaterial(float baseDefenseMultiplier) {
+            this.baseDefenseMultiplier = baseDefenseMultiplier;
+        }
+    }
+
     public enum ArmorQuality {
         FLIMSY(5f, 1),
         WORN(7f, 3),
@@ -41,8 +56,9 @@ public class Armor extends Item {
             this.defenseMult = defenseMult;
         }
     }
-    public ArmorSlot armorSlot;
-    public ArmorQuality armorQuality;
+    private ArmorSlot armorSlot;
+    private ArmorQuality armorQuality;
+    private ArmorMaterial armorMaterial;
     Random rand = new Random();
     /**
      * Creates a new item and registers it in the global item map.
@@ -50,10 +66,11 @@ public class Armor extends Item {
      * @param slot         the armorSlot of the armor piece
      * @param itemUUID     The unique identifier for the item
      */
-    public Armor(UUID itemUUID, ArmorSlot slot, String name, ArmorQuality armorQuality) {
+    public Armor(UUID itemUUID, ArmorSlot slot, String name, ArmorQuality armorQuality, ArmorMaterial armorMaterial) {
         super(name, itemUUID);
         this.armorSlot = slot;
         this.armorQuality = armorQuality;
+        this.armorMaterial = armorMaterial;
         updateArmorDefense();
     }
 
@@ -71,6 +88,10 @@ public class Armor extends Item {
 
     public ArmorQuality getArmorQuality() {
         return armorQuality;
+    }
+
+    public ArmorMaterial getArmorMaterial() {
+        return armorMaterial;
     }
 
     public void setArmorDefense(float value) {
@@ -91,7 +112,7 @@ public class Armor extends Item {
         // Add small random variation (±10%) to make identical armor pieces slightly different
         float variationFactor = 0.6f + (rand.nextFloat() * 0.2f);
 
-        return Math.round((baseDefense * variationFactor));
+        return Math.round(((baseDefense * armorMaterial.baseDefenseMultiplier) * variationFactor));
     }
 
     /**
@@ -109,23 +130,39 @@ public class Armor extends Item {
             entity = inventory.getOwner();
         }
         Armor.ArmorQuality qualityToUse = Armor.ArmorQuality.values()[rand.nextInt(minQuality, maxQuality +1)];
+
+        Armor.ArmorMaterial materialToUse;
+
+        if (qualityToUse.ordinal() < ArmorQuality.STURDY.ordinal()) {
+            materialToUse = ArmorMaterial.values()[rand.nextInt(3)];
+        } else if (qualityToUse.ordinal() < ArmorQuality.EXQUISITE.ordinal()) {
+            materialToUse = ArmorMaterial.values()[2 + rand.nextInt(2)];
+        } else {
+            materialToUse = ArmorMaterial.values()[4 + rand.nextInt(2)];
+        }
+
         Armor.ArmorSlot slot = Armor.ArmorSlot.values()[rand.nextInt(0, 4)];
-        Armor generatedArmor = new Armor(UUID.randomUUID(), slot, "Generated Armor", qualityToUse);
+
+        Armor generatedArmor = new Armor(UUID.randomUUID(), slot, "Generated Armor", qualityToUse, materialToUse);
+
         if (entity != null && entity.armors.containsKey(generatedArmor.getArmorSlot())) {
+            Item.itemMap.remove(generatedArmor);
             while (entity.armors.containsKey(generatedArmor.getArmorSlot())) {
+                if (entity.armors.containsKey(generatedArmor.getArmorSlot())) {
+                    Item.itemMap.remove(generatedArmor);
+                }
                 Item.itemMap.remove(generatedArmor.getItemUUID(), generatedArmor);
                 slot = Armor.ArmorSlot.values()[rand.nextInt(0, 4)];
-                generatedArmor = new Armor(UUID.randomUUID(), slot, "Generated Armor", qualityToUse);
-//                if (entity.armors.containsKey(generatedArmor.getArmorSlot())) {
-//                    Item.itemMap.remove(generatedArmor.getItemUUID(), generatedArmor);
-//                }
+                generatedArmor = new Armor(UUID.randomUUID(), slot, "Generated Armor", qualityToUse, materialToUse);
             }
         }
+
         if (entity != null) {
-                generatedArmor.setItemName(entity.getEntityName() + "'s " + " " + qualityToUse.name().toLowerCase() + " " + generatedArmor.getArmorSlot().name().toLowerCase());
+                generatedArmor.setItemName(entity.getEntityName() + "'s " + generatedArmor.armorQuality.name().toLowerCase() + " " + generatedArmor.armorMaterial.name().toLowerCase() + " " + generatedArmor.getArmorSlot().name().toLowerCase());
                 entity.getInventory().addItem(generatedArmor);
                 entity.equipArmor(generatedArmor);
-        } else if (container instanceof Chest){
+        } else if (container instanceof Chest) {
+            generatedArmor.setItemName(generatedArmor.armorQuality.name().toLowerCase() + " " + generatedArmor.armorMaterial.name().toLowerCase() + " armor");
             container.addItem(generatedArmor);
         }
         return generatedArmor;

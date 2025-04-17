@@ -7,6 +7,7 @@ public class WeaponDTO extends ItemDTO {
     private float weaponDurability;
     private float armorPenetration;
     private Weapon.WeaponQuality weaponQuality;
+    private Weapon.WeaponMaterial weaponMaterial;
 
     public WeaponDTO() {
         super();
@@ -19,6 +20,14 @@ public class WeaponDTO extends ItemDTO {
 
     public void setWeaponDamage(float damage) {
         this.weaponDamage = damage;
+    }
+
+    public Weapon.WeaponMaterial getWeaponMaterial() {
+        return weaponMaterial;
+    }
+
+    public void setWeaponMaterial(Weapon.WeaponMaterial weaponMaterial) {
+        this.weaponMaterial = weaponMaterial;
     }
 
     public float getWeaponDurability() {

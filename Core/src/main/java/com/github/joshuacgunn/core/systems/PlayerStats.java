@@ -1,4 +1,4 @@
-package com.github.joshuacgunn.core.entity;
+package com.github.joshuacgunn.core.systems;
 
 public class PlayerStats {
     private int strength;

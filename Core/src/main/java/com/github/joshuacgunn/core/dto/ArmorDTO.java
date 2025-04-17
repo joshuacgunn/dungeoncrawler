@@ -3,8 +3,9 @@ package com.github.joshuacgunn.core.dto;
 import com.github.joshuacgunn.core.item.Armor;
 
 public class ArmorDTO extends ItemDTO {
-    private Armor.ArmorSlot slot;
-    private Armor.ArmorQuality quality;
+    private Armor.ArmorSlot armorSlot;
+    private Armor.ArmorQuality armorQuality;
+    private Armor.ArmorMaterial armorMaterial;
     private float armorDefense;
 
     public ArmorDTO() {
@@ -12,12 +13,20 @@ public class ArmorDTO extends ItemDTO {
         this.setItemType("Armor");
     }
 
-    public Armor.ArmorSlot getSlot() {
-        return this.slot;
+    public Armor.ArmorMaterial getArmorMaterial() {
+        return armorMaterial;
     }
 
-    public void setSlot(Armor.ArmorSlot slot) {
-        this.slot = slot;
+    public void setArmorMaterial(Armor.ArmorMaterial armorMaterial) {
+        this.armorMaterial = armorMaterial;
+    }
+
+    public Armor.ArmorSlot getArmorSlot() {
+        return this.armorSlot;
+    }
+
+    public void setArmorSlot(Armor.ArmorSlot armorSlot) {
+        this.armorSlot = armorSlot;
     }
 
     public float getArmorDefense() {
@@ -32,11 +41,11 @@ public class ArmorDTO extends ItemDTO {
         return getItemName();
     }
 
-    public Armor.ArmorQuality getQuality() {
-        return quality;
+    public Armor.ArmorQuality getArmorQuality() {
+        return armorQuality;
     }
 
-    public void setQuality(Armor.ArmorQuality quality) {
-        this.quality = quality;
+    public void setArmorQuality(Armor.ArmorQuality armorQuality) {
+        this.armorQuality = armorQuality;
     }
 }
