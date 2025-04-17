@@ -59,6 +59,7 @@ public interface TownMapper {
             for (UUID npcUUID : shopDTO.getNpcsInShop()) {
                 npcsInShop.add((NPC) Entity.entityMap.get(npcUUID));
             }
+            shop.setNpcsInShop(npcsInShop);
         }
         town.setShopsInTown(shopsInTown);
         return town;

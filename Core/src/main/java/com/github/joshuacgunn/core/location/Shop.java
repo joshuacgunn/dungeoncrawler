@@ -51,6 +51,10 @@ public class Shop extends Location {
         return npcsInShop;
     }
 
+    public void setNpcsInShop(List<NPC> npcsInShop) {
+        this.npcsInShop = npcsInShop;
+    }
+
     public List<NPC> generateNPCs() {
         Faker faker = new Faker();
 
