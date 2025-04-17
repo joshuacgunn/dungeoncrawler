@@ -2,6 +2,7 @@ package com.github.joshuacgunn.core.dto;
 
 import com.github.joshuacgunn.core.location.Shop;
 
+import java.util.List;
 import java.util.UUID;
 
 public class ShopDTO {
@@ -9,6 +10,7 @@ public class ShopDTO {
     private UUID ShopUUID;
     private UUID shopOwner;
     private Shop.ShopType shopType;
+    private List<UUID> npcsInShop;
 
     public String getShopName() {
         return shopName;
@@ -40,5 +42,13 @@ public class ShopDTO {
 
     public Shop.ShopType getShopType() {
         return shopType;
+    }
+
+    public List<UUID> getNpcsInShop() {
+        return npcsInShop;
+    }
+
+    public void setNpcsInShop(List<UUID> npcsInShop) {
+        this.npcsInShop = npcsInShop;
     }
 }

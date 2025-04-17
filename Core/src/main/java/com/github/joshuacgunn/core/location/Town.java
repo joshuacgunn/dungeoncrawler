@@ -18,7 +18,10 @@ public class Town extends Location {
             this.shopCount = Math.max(1, new Random().nextInt(Shop.ShopType.values().length)+1);
             // If shopcount is only 1, generate a tavern. Wouldn't want to live somewhere you couldn't drink right?
             if (shopCount == 1) {
-                shopsInTown.add(new Shop(Shop.ShopType.TAVERN, UUID.randomUUID(), new NPC(new Faker().name().firstName(), UUID.randomUUID())));
+                NPC npc = new NPC(new Faker().name().firstName(), UUID.randomUUID());
+                Shop shop = new Shop(Shop.ShopType.TAVERN, UUID.randomUUID(), npc, true);
+                npc.setCurrentLocation(shop.getLocationUUID());
+                shopsInTown.add(shop);
             } else {
                 this.shopsInTown = generateShops();
             }
@@ -54,7 +57,7 @@ public class Town extends Location {
                     continue outerloop;
                 }
             }
-            Shop shop = new Shop(shopToMake, UUID.randomUUID(), npc);
+            Shop shop = new Shop(shopToMake, UUID.randomUUID(), npc, true);
             npc.setCurrentLocation(shop.locationUUID);
             shops.add(shop);
             i++;
