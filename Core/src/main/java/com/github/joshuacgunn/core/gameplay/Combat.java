@@ -18,12 +18,13 @@ public class Combat implements GameState{
 
     private int currentAction;
 
+    private Scanner scanner = new Scanner(System.in);
+
+
     public Combat(Player player, Enemy enemy) {
         this.currentEnemy = enemy;
         this.player = player;
-        while (isInCombat) {
-            handleGameState();
-        }
+        handleGameState();
     }
 
     @Override
@@ -32,8 +33,10 @@ public class Combat implements GameState{
             handleInput();
         }
         if (player.isAlive()) {
-            changeState(GameStateType.EXPLORING);
+            scanner.close();
             System.out.println("You have survived!");
+            changeState(GameStateType.EXPLORING);
+
         } else {
             System.out.println("You died!");
         }
@@ -45,16 +48,24 @@ public class Combat implements GameState{
             case 1:
                 currentEnemy.takeDamage(player.calculateWeaponDamage());
                 player.takeDamage(currentEnemy.getCurrentWeapon().getWeaponDamage());
+
                 if (currentEnemy.getEntityHp() < player.calculateWeaponDamage()) {
                     System.out.println(currentEnemy.getEntityName() + " took " + player.calculateWeaponDamage() + " damage and died!");
+                    isInCombat = false;
+                    break;
                 } else {
                     System.out.println(currentEnemy.getEntityName() + " took " + player.calculateWeaponDamage() + " damage.");
                 }
+
                 if (player.getEntityHp() < currentEnemy.getCurrentWeapon().getWeaponDamage()) {
                     System.out.println(player.getEntityName() + " took " + currentEnemy.getCurrentWeapon().getWeaponDamage() + " damage and died!");
+                    isInCombat = false;
+                    break;
                 } else {
                     System.out.println(player.getEntityName() + " took " + currentEnemy.getCurrentWeapon().getWeaponDamage() + " damage.");
                 }
+
+                break;
             case 2:
                 for (Item item: player.getInventory().getItems()) {
                     System.out.println(item.getItemName());
@@ -67,6 +78,7 @@ public class Combat implements GameState{
                         System.out.println("    Slot: " + ((Armor) item).getArmorSlot());
                     }
                 }
+
                 if (!player.getInventory().getItems().isEmpty()) {
                     System.out.println("Armor:");
                     for (Armor armor : player.getArmors()) {
@@ -76,11 +88,12 @@ public class Combat implements GameState{
                         System.out.println("    Slot: " + armor.getArmorSlot().name().toLowerCase());
                     }
                 }
+                break;
             case 3:
-
-
+                break;
             case 4:
                 isInCombat = false;
+                break;
         }
     }
 
@@ -91,7 +104,6 @@ public class Combat implements GameState{
         System.out.println("2. Open inventory");
         System.out.println("3. Drink Potion (not available as of this release)");
         System.out.println("4. Run");
-        Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
         switch (input) {
             case "1":
