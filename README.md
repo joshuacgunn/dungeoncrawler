@@ -1,7 +1,7 @@
 # Terminal RPG Rewrite
 This is the rewrite of a previous project I was working on. I did this because the old project had many, *many* critical flaws in the code. This new version is simpler, more intuitive, and has more dynamic code for future updates. 
 
-# Current State of the Project
+# Current State of the Project (04/18)
 Everything works that is currently coded (at least from my personal testing). Gradle has been implemented but there's no build as of 04/15 (I'm still learning gradle and don't know how to use it that much).  There is now a way to test out a beta version of the combat system!. There is a [`Test.java`](https://github.com/joshuacgunn/RPG-rewrite/blob/main/src/main/java/Test.java) that I will continue to use to test my code logic. It will always include saving/loading showcases, and can be used to see how data is saved, and now includes a playable combat demo.
 
 # Future Plans
