@@ -9,9 +9,6 @@ import com.github.joshuacgunn.core.entity.*;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
 import com.github.joshuacgunn.core.item.Weapon;
-import com.github.joshuacgunn.core.location.Dungeon;
-import com.github.joshuacgunn.core.location.Location;
-import com.github.joshuacgunn.core.location.Town;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -56,7 +53,7 @@ public interface EntityMapper {
         dto.setEntityUUID(entity.getEntityUUID());
         dto.setEntityHp(entity.getEntityHp());
         dto.setEntityDefense(entity.getEntityDefense());
-        dto.setDead(entity.getDeathStatus());
+        dto.setAlive(entity.isAlive());
         if (entity.getCurrentLocation() != null) {
             dto.setCurrentLocationUUID(entity.getCurrentLocation());
         }
@@ -176,7 +173,7 @@ public interface EntityMapper {
         }
 
         // Set common entity properties that weren't set in the constructor
-        entity.setDeathStatus(dto.isDead());
+        entity.setDeathStatus(dto.isAlive());
         entity.setEntityHp(dto.getEntityHp());
 
         // Handle armors
@@ -242,7 +239,7 @@ public interface EntityMapper {
     default Enemy enemyDtoToEnemy(EnemyDTO dto) {
         if (dto == null) return null;
         Enemy enemy = new Enemy(Enemy.EnemyType.valueOf(dto.getEntityName().toUpperCase()), dto.getEntityUUID(), false);
-        enemy.setDeathStatus(dto.isDead());
+        enemy.setDeathStatus(dto.isAlive());
         return enemy;
     }
 

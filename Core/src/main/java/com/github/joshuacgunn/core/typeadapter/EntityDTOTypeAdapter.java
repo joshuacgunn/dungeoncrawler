@@ -4,7 +4,6 @@ import com.github.joshuacgunn.core.dto.*;
 import com.github.joshuacgunn.core.entity.NPC;
 import com.github.joshuacgunn.core.entity.Player;
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -38,7 +37,7 @@ public class EntityDTOTypeAdapter implements JsonSerializer<EntityDTO>, JsonDese
         result.addProperty("entityName", src.getEntityName());
         result.addProperty("entityUUID", src.getEntityUUID().toString());
         result.addProperty("entityHp", src.getEntityHp());
-        result.addProperty("isDead", src.isDead());
+        result.addProperty("isAlive", src.isAlive());
         result.addProperty("entityDefense", src.getEntityDefense());
         result.addProperty("entityType", src.getEntityType());
 
@@ -148,8 +147,8 @@ public class EntityDTOTypeAdapter implements JsonSerializer<EntityDTO>, JsonDese
         dto.setEntityUUID(UUID.fromString(jsonObject.get("entityUUID").getAsString()));
         dto.setEntityHp(jsonObject.get("entityHp").getAsFloat());
 
-        if (jsonObject.has("isDead")) {
-            dto.setDead(jsonObject.get("isDead").getAsBoolean());
+        if (jsonObject.has("isAlive")) {
+            dto.setAlive(jsonObject.get("isAlive").getAsBoolean());
         }
 
         if (jsonObject.has("currentLocationUUID")) {

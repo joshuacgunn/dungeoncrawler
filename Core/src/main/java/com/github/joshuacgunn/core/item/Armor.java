@@ -98,6 +98,14 @@ public class Armor extends Item {
         this.armorDefense = value;
     }
 
+    /**
+     * Updates the armor's defense value based on its quality and slot.
+     * Should be called after changing either quality or slot.
+     */
+    public void updateArmorDefense() {
+        this.armorDefense = calculateDefense();
+    }
+
 
     /**
      * Calculates the total defense value for this armor piece based on its quality
@@ -115,13 +123,11 @@ public class Armor extends Item {
         return Math.round(((baseDefense * armorMaterial.baseDefenseMultiplier) * variationFactor));
     }
 
-    /**
-     * Updates the armor's defense value based on its quality and slot.
-     * Should be called after changing either quality or slot.
-     */
-    public void updateArmorDefense() {
-        this.armorDefense = calculateDefense();
+    private float calculateDurability() {
+        float baseDurability = armorQuality.durabilityMultiplier * armorMaterial.baseDefenseMultiplier;
+        return 0.5f;
     }
+
 
     public static Armor generateArmor(int minQuality, int maxQuality, Container container) {
         final Random rand = new Random();

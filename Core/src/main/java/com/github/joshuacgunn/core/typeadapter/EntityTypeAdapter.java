@@ -27,7 +27,7 @@ public class EntityTypeAdapter implements JsonSerializer<Entity>, JsonDeserializ
         result.addProperty("entityName", src.getEntityName());
         result.addProperty("entityUUID", src.getEntityUUID().toString());
         result.addProperty("entityHp", src.getEntityHp());
-        result.addProperty("isDead", src.getDeathStatus());
+        result.addProperty("isAlive", src.isAlive());
         result.addProperty("entityDefense", src.getEntityDefense());
 
         // Current location
@@ -116,8 +116,8 @@ public class EntityTypeAdapter implements JsonSerializer<Entity>, JsonDeserializ
             entity.setEntityHp(jsonObject.get("entityHp").getAsFloat());
         }
 
-        if (jsonObject.has("isDead")) {
-            entity.setDeathStatus(jsonObject.get("isDead").getAsBoolean());
+        if (jsonObject.has("isAlive")) {
+            entity.setDeathStatus(jsonObject.get("isAlive").getAsBoolean());
         }
 
         // Set current location if present

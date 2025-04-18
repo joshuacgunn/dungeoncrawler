@@ -13,7 +13,7 @@ public class EntityDTO {
     private String entityName;
     private UUID entityUUID;
     private float entityHp;
-    private boolean isDead;
+    private boolean isAlive;
     private UUID currentLocationUUID;
     private float entityDefense;
     private UUID currentWeaponUUID;
@@ -64,12 +64,12 @@ public class EntityDTO {
         this.entityHp = entityHp;
     }
 
-    public boolean isDead() {
-        return isDead;
+    public boolean isAlive() {
+        return isAlive;
     }
 
-    public void setDead(boolean dead) {
-        isDead = dead;
+    public void setAlive(boolean alive) {
+        isAlive = alive;
     }
 
     public float getEntityDefense() {

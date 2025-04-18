@@ -40,7 +40,7 @@ public abstract class Entity {
     /**
      * Indicates whether the entity is dead.
      */
-    protected boolean isDead;
+    protected boolean isAlive = true;
 
     /**
      * The dungeon the player is currently in
@@ -169,18 +169,18 @@ public abstract class Entity {
     public void takeDamage(float damage) {
         if (damage > this.entityHp) {
             this.entityHp = 0;
-            this.isDead = true;
+            this.isAlive = false;
         } else {
             this.entityHp -= damage;
         }
     }
 
-    public boolean getDeathStatus() {
-        return this.isDead;
+    public boolean isAlive() {
+        return this.isAlive;
     }
 
     public void setDeathStatus(boolean status) {
-        this.isDead = status;
+        this.isAlive = status;
     }
 
     public float getEntityDefense() {

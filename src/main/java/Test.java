@@ -1,6 +1,8 @@
-import com.github.javafaker.Faker;
+import com.github.joshuacgunn.core.entity.Enemy;
 import com.github.joshuacgunn.core.entity.Entity;
 import com.github.joshuacgunn.core.entity.Player;
+import com.github.joshuacgunn.core.gameplay.Combat;
+import com.github.joshuacgunn.core.gameplay.GameStateType;
 import com.github.joshuacgunn.core.item.Weapon;
 import com.github.joshuacgunn.core.location.Dungeon;
 import com.github.joshuacgunn.core.location.Location;
@@ -18,7 +20,12 @@ public class Test {
         try {
             Player player = createPlayer();
             SaveManager.saveState(player);
-            Faker faker = new Faker();
+            Enemy enemy = null;
+            if (Location.locationMap.get(player.getCurrentLocation()) instanceof Dungeon) {
+                Dungeon dungeon = (Dungeon) Location.locationMap.get(player.getCurrentLocation());
+                enemy = dungeon.getFloors().get(0).getEnemiesOnFloor().get(0);
+            }
+            Combat combat = new Combat(player, enemy);
         } catch (Exception e) {
             e.printStackTrace();
         }
