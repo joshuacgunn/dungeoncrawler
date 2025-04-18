@@ -63,6 +63,8 @@ public class Player extends Entity {
         return this.playerClass;
     }
 
+
+
     /**
      * Equips a weapon for the player to use.
      *

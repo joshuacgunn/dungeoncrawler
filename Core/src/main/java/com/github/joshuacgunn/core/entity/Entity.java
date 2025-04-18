@@ -4,6 +4,9 @@ import com.github.joshuacgunn.core.container.Inventory;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
 import com.github.joshuacgunn.core.item.Weapon;
+import com.github.joshuacgunn.core.location.Dungeon;
+import com.github.joshuacgunn.core.location.DungeonFloor;
+import com.github.joshuacgunn.core.location.Location;
 
 import java.util.*;
 
@@ -170,6 +173,10 @@ public abstract class Entity {
         if (damage > this.entityHp) {
             this.entityHp = 0;
             this.isAlive = false;
+//            if (this instanceof Enemy) {
+//                DungeonFloor dungeonFloor = (DungeonFloor) Location.locationMap.get(this.currentLocation);
+//                dungeonFloor.getEnemiesOnFloor().remove(this);
+//            }
         } else {
             this.entityHp -= damage;
         }
@@ -185,6 +192,10 @@ public abstract class Entity {
 
     public float getEntityDefense() {
         return this.entityDefense;
+    }
+
+    public Location getEntityLocation() {
+        return Location.locationMap.get(this.currentLocation);
     }
 
     /**

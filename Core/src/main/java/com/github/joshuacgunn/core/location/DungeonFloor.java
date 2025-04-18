@@ -75,7 +75,13 @@ public class DungeonFloor extends Location{
      * @return List of enemies on this floor
      */
     public ArrayList<? extends Enemy> getEnemiesOnFloor() {
-        return this.enemiesOnFloor;
+        ArrayList<Enemy> aliveEnemies = new ArrayList<>();
+        for (Enemy enemy : enemiesOnFloor) {
+            if (enemy.isAlive()) {
+                aliveEnemies.add(enemy);
+            }
+        }
+        return aliveEnemies;
     }
 
     /**
@@ -223,6 +229,5 @@ public class DungeonFloor extends Location{
         // Round to one decimal place
         return Math.round(difficulty * 10) / 100.0f;
     }
-
 
 }

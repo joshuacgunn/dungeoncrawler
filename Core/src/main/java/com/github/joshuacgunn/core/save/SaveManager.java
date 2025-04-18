@@ -96,7 +96,7 @@ public abstract class SaveManager {
         for (Entity entity : Entity.getEntities()) {
             if (entity instanceof NPC) {
                 npcDTOs.add((NpcDTO) EntityMapper.INSTANCE.entityToEntityDTO(entity));
-            } else if (entity instanceof Enemy) {
+            } else if (entity instanceof Enemy && entity.isAlive()) {
                 enemyDTOS.add((EnemyDTO) EntityMapper.INSTANCE.entityToEntityDTO(entity));
             }
         }
@@ -141,7 +141,9 @@ public abstract class SaveManager {
             Entity.entityMap.values().removeIf(e -> e instanceof Enemy);
 
             for (EnemyDTO enemyDTO : enemyDTOS) {
-                EntityMapper.INSTANCE.entityDtoToEntity(enemyDTO);
+                if (enemyDTO.isAlive()) {
+                    EntityMapper.INSTANCE.entityDtoToEntity(enemyDTO);
+                }
             }
         } catch (IOException e) {
             // Handle empty file case

@@ -12,6 +12,7 @@ public class PlayerDTO extends EntityDTO {
 
     public PlayerStats playerStats;
 
+
     public PlayerDTO() {
         super();
         this.setEntityType("Player");

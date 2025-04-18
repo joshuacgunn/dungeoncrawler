@@ -68,11 +68,14 @@ public class Dungeon extends Location {
         }
     }
 
-    public void clearFloor() {
-        currentFloor = floors.get(currentFloor.getFloorNumber() - 2);
+    public boolean clearFloor() {
+        System.out.println("You cleared floor " + currentFloor.getFloorNumber() + ", moving to floor " + (currentFloor.getFloorNumber() + 2) + " in the dungeon.");
+        currentFloor = floors.get(currentFloor.getFloorNumber());
         if (currentFloor != null && currentFloor.getFloorNumber() <= 1) {
             isCleared = true;
+            return true;
         }
+        return false;
     }
 
     /**
@@ -82,6 +85,10 @@ public class Dungeon extends Location {
      */
     public List<DungeonFloor> getFloors() {
         return floors;
+    }
+
+    public float getDifficultyRating() {
+        return difficultyRating;
     }
 
     /**
@@ -102,6 +109,10 @@ public class Dungeon extends Location {
         this.currentFloor = currentFloor;
     }
 
+    public void setDifficultyRating(float rating) {
+        this.difficultyRating = rating;
+    }
+
     /**
      * Retrieves a dungeon floor by its floor number.
      *
@@ -115,9 +126,5 @@ public class Dungeon extends Location {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public void setDifficultyRating(float rating) {
-        this.difficultyRating = rating;
     }
 }

@@ -106,6 +106,7 @@ public interface EntityMapper {
             dto.setCurrentLocationUUID(player.getCurrentLocation());
         }
 
+
         dto.setPlayerClass(player.getPlayerClass());
 
         dto.setPlayerStats(player.getPlayerStats());
@@ -214,6 +215,7 @@ public interface EntityMapper {
         if (dto == null) return null;
 
         Player player = new Player(dto.getEntityName(), dto.getEntityUUID(), dto.getPlayerClass());
+
 
         player.setPlayerStats(dto.getPlayerStats());
 
