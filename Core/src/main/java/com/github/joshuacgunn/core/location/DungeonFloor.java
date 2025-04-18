@@ -59,52 +59,6 @@ public class DungeonFloor extends Location{
         this.chest = new Chest(Chest.ChestRarity.COMMON, UUID.randomUUID(), false,this);
     }
 
-    private void generateEnemies() {
-        ArrayList<Enemy> enemies = new ArrayList<>();
-
-        // Base scaling formula with logarithmic growth
-        int baseEnemyCount = 1 + (int)(Math.log(floorNumber + 1) * 2);
-
-        // More significant random variation (0-3 for early floors, more for deeper floors)
-        int variationRange = 1 + (int)(floorNumber / 5);
-        int variableCount = rand.nextInt(variationRange + 1);
-
-        // Every 5th floor gets a difficulty spike (mini-boss floors)
-        boolean isBossFloor = floorNumber % 5 == 0 && floorNumber > 0;
-        int bossFloorBonus = isBossFloor ? 1 : 0;
-
-        // Calculate max enemy count with sensible upper limit
-        int calculatedCount = baseEnemyCount + variableCount + bossFloorBonus;
-        int hardCap = 10; // Never exceed this many enemies
-
-        int maxEnemyCount = Math.min(calculatedCount, hardCap);
-
-        // Generate enemies based on the calculated count
-        for (int i = 0; i < maxEnemyCount; i++) {
-            // Your existing enemy type selection logic
-            float generateChance = rand.nextFloat();
-            float floorProgress = Math.min(floorNumber / 15.0f, 0.9f); // Floor difficulty factor
-
-            if (floorNumber < 3 && generateChance < 0.4f - (floorProgress * 0.3f)) {
-                enemies.add(Enemy.createEnemy(Enemy.EnemyType.GOBLIN, UUID.randomUUID(), true));
-            } else if (generateChance < 0.7f - (floorProgress * 0.2f)) {
-                enemies.add(Enemy.createEnemy(Enemy.EnemyType.ORC, UUID.randomUUID(), true));
-            } else if (generateChance < 0.9f) {
-                enemies.add(Enemy.createEnemy(Enemy.EnemyType.TROLL, UUID.randomUUID(), true));
-            } else {
-                // Small chance for rarer enemy type (once you add more types)
-                enemies.add(Enemy.createEnemy(Enemy.EnemyType.TROLL, UUID.randomUUID(), true));
-            }
-        }
-
-        this.enemiesOnFloor = enemies;
-
-        // Update enemy locations
-        for (Enemy enemy : enemiesOnFloor) {
-            enemy.setCurrentLocation(this.locationUUID);
-        }
-    }
-
     /**
      * Sets the list of enemies on this floor.
      * Used primarily for loading saved game states.
@@ -156,57 +110,6 @@ public class DungeonFloor extends Location{
     }
 
     /**
-     * Calculates the difficulty rating of this floor based on multiple factors:
-     * - Floor number (deeper floors are more difficult)
-     * - Enemy statistics (HP, damage, defense)
-     * - Number of enemies
-     * - Variety of enemy types
-     *
-     * @return The calculated difficulty rating as a float
-     */
-    public float calculateDifficulty() {
-        // Handle empty enemy list case
-        if (enemiesOnFloor.isEmpty()) {
-            return 0.0f;
-        }
-
-        // Base difficulty starts with the floor number
-        float difficulty = floorNumber * 0.2f;
-
-        // Total stats across all enemies
-        float totalHp = 0;
-        float totalDamage = 0;
-        float totalDefense = 0;
-
-        // Count different enemy types for variety bonus
-        Set<String> enemyTypes = new HashSet<>();
-
-        for (Enemy enemy : enemiesOnFloor) {
-            totalHp += enemy.getEntityHp();
-            totalDamage += enemy.getCurrentWeapon().getWeaponDamage();
-            totalDefense += enemy.getEntityDefense();
-            enemyTypes.add(enemy.getClass().getSimpleName());
-        }
-
-        // Calculate average stats but don't divide by enemy count
-        float hpFactor = totalHp / 100f;
-        float damageFactor = totalDamage / 25f;
-        float defenseFactor = totalDefense / 25f;
-
-        // Number of enemies is a multiplier rather than divisor
-        float enemyCountFactor = 0.75f + (enemiesOnFloor.size() * 0.25f);
-
-        // Variety bonus (more types = more difficult)
-        float varietyBonus = (enemyTypes.size() - 1) * 0.15f;
-
-        // Combine factors
-        difficulty += (hpFactor + damageFactor + defenseFactor) * enemyCountFactor + varietyBonus;
-
-        // Round to one decimal place
-        return Math.round(difficulty * 10) / 100.0f;
-    }
-
-    /**
      * Gets the current difficulty rating of this floor.
      *
      * @return The difficulty rating
@@ -241,4 +144,85 @@ public class DungeonFloor extends Location{
     public Chest getChest() {
         return chest;
     }
+
+    private void generateEnemies() {
+        ArrayList<Enemy> enemies = new ArrayList<>();
+        Random rand = new Random();
+
+        if (floorNumber == 1) {
+            for (int i = 0; i < rand.nextInt(3, 5); i++) {
+                Enemy enemy = Enemy.createEnemy(Enemy.EnemyType.values()[rand.nextInt(0, 4)], UUID.randomUUID(), true);
+                enemies.add(enemy);
+            }
+        } else {
+            int previousFloorDifficulty = (int) Math.ceil(parentDungeon.getFloors().get(floorNumber - 2).difficultyRating);
+            int previousHighestEnemy = 0;
+
+            for (Enemy enemy : parentDungeon.getFloors().get(floorNumber - 2).getEnemiesOnFloor()) {
+                if (enemy.getType().ordinal() > previousHighestEnemy) {
+                    previousHighestEnemy = enemy.getType().ordinal();
+                }
+            }
+
+            for (int i = 0; i < Math.min(Math.floor(this.floorNumber * 1.3), Math.ceil(previousFloorDifficulty*1.9)) + 1; i++) {
+                Enemy enemy = Enemy.createEnemy(Enemy.EnemyType.values()[rand.nextInt(Math.max(0, previousHighestEnemy-1), Math.min(Enemy.EnemyType.values().length-2, previousHighestEnemy+1))] , UUID.randomUUID(), true);
+                enemies.add(enemy);
+            }
+        }
+        enemiesOnFloor = enemies;
+    }
+
+
+    /**
+     * Calculates the difficulty rating of this floor based on multiple factors:
+     * - Floor number (deeper floors are more difficult)
+     * - Enemy statistics (HP, damage, defense)
+     * - Number of enemies
+     * - Variety of enemy types
+     *
+     * @return The calculated difficulty rating as a float
+     */
+    public float calculateDifficulty() {
+        // Handle empty enemy list case
+        if (enemiesOnFloor.isEmpty()) {
+            return 0.0f;
+        }
+
+        // Base difficulty starts with the floor number
+        float difficulty = floorNumber * 0.2f;
+
+        // Total stats across all enemies
+        float totalHp = 0;
+        float totalDamage = 0;
+        float totalDefense = 0;
+
+        // Count different enemy types for variety bonus
+        Set<String> enemyTypes = new HashSet<>();
+
+        for (Enemy enemy : enemiesOnFloor) {
+            totalHp += enemy.getEntityHp();
+            totalDamage += enemy.getCurrentWeapon().getWeaponDamage();
+            totalDefense += enemy.getEntityDefense();
+            enemyTypes.add(enemy.getClass().getSimpleName());
+        }
+
+        // Calculate average stats but don't divide by enemy count
+        float hpFactor = totalHp / 60f;
+        float damageFactor = totalDamage / 25f;
+        float defenseFactor = totalDefense / 25f;
+
+        // Number of enemies is a multiplier rather than divisor
+        float enemyCountFactor = 0.75f + (enemiesOnFloor.size() * 0.25f);
+
+        // Variety bonus (more types = more difficult)
+        float varietyBonus = (enemyTypes.size() - 1) * 0.15f;
+
+        // Combine factors
+        difficulty += (hpFactor + damageFactor + defenseFactor) * enemyCountFactor + varietyBonus;
+
+        // Round to one decimal place
+        return Math.round(difficulty * 10) / 100.0f;
+    }
+
+
 }

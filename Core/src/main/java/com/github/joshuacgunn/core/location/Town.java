@@ -69,15 +69,47 @@ public class Town extends Location {
         Random rand = new Random();
         float nameChance = rand.nextFloat();
         Faker faker = new Faker();
+        boolean generated = false;
 
-        if (nameChance < 0.25f) {
-            return faker.pokemon().location();
-        } else if (nameChance < .5f) {
-            return faker.gameOfThrones().city();
-        } else if (nameChance < .75f) {
-            return faker.witcher().location();
-        } else {
-            return faker.lordOfTheRings().location();
+        outerloop: while (!generated) {
+            if (nameChance < 0.25f) {
+                String name = faker.pokemon().location();
+                for (Town town : Location.getLocationsByType(Town.class)) {
+                    if (name.equals(town.getLocationName())) {
+                        continue outerloop;
+                    }
+                }
+                generated = true;
+                return name;
+            } else if (nameChance < .5f) {
+                String name = faker.gameOfThrones().city();
+                for (Town town : Location.getLocationsByType(Town.class)) {
+                    if (name.equals(town.getLocationName())) {
+                        continue outerloop;
+                    }
+                }
+                generated = true;
+                return name;
+            } else if (nameChance < .75f) {
+                String name = faker.witcher().location();
+                for (Town town : Location.getLocationsByType(Town.class)) {
+                    if (name.equals(town.getLocationName())) {
+                        continue outerloop;
+                    }
+                }
+                generated = true;
+                return name;
+            } else {
+                String name = faker.lordOfTheRings().location();
+                for (Town town : Location.getLocationsByType(Town.class)) {
+                    if (name.equals(town.getLocationName())) {
+                        continue outerloop;
+                    }
+                }
+                generated = true;
+                return name;
+            }
         }
+        return null;
     }
 }
