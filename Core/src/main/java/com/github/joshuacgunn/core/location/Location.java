@@ -1,5 +1,8 @@
 package com.github.joshuacgunn.core.location;
 
+import com.github.joshuacgunn.core.item.Item;
+import org.reflections.Reflections;
+
 import java.util.*;
 
 /**
@@ -69,5 +72,25 @@ public abstract class Location {
 
     public void setLocationName(String locationName) {
         this.locationName = locationName;
+    }
+
+    public static Location generateLocation() {
+        Random rand = new Random();
+        try {
+            Reflections reflection = new Reflections("com.github.joshuacgunn");
+            Set<Class<? extends Location>> locationClasses = reflection.getSubTypesOf(Location.class);
+
+            int extendedClasses = locationClasses.size();
+            float generatePercent = (100.0f / extendedClasses) / 100.0f;
+            float chanceToGenerate = rand.nextFloat();
+
+            if (chanceToGenerate < 0.5f) {
+                return new Dungeon(Dungeon.generateDungeonName(), UUID.randomUUID(), true);
+            } else {
+                return new Town(UUID.randomUUID(), true);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

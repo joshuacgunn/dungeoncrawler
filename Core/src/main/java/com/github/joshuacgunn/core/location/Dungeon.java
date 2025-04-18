@@ -11,10 +11,14 @@ import java.util.Random;
  * Extends the base Location class and provides dungeon-specific functionality.
  */
 public class Dungeon extends Location {
-    /** List of all floors in this dungeon */
+    /**
+     * List of all floors in this dungeon
+     */
     private List<DungeonFloor> floors = new ArrayList<>();
 
-    /** Reference to the current floor the player is on */
+    /**
+     * Reference to the current floor the player is on
+     */
     private DungeonFloor currentFloor;
 
     public boolean isCleared;
@@ -40,13 +44,23 @@ public class Dungeon extends Location {
             if (floorsToMake < .2f) {
                 addFloor();
             } else if (floorsToMake < .45f) {
-                addFloor(); addFloor();
+                addFloor();
+                addFloor();
             } else if (floorsToMake < .85f) {
-                addFloor(); addFloor(); addFloor();
+                addFloor();
+                addFloor();
+                addFloor();
             } else if (floorsToMake < .94) {
-                addFloor();addFloor();addFloor();addFloor();
+                addFloor();
+                addFloor();
+                addFloor();
+                addFloor();
             } else {
-                addFloor();addFloor();addFloor();addFloor();addFloor();
+                addFloor();
+                addFloor();
+                addFloor();
+                addFloor();
+                addFloor();
             }
         }
         for (DungeonFloor floor : floors) {
@@ -126,5 +140,26 @@ public class Dungeon extends Location {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String generateDungeonName() {
+        Random rand = new Random();
+
+        String[] prefixes = {
+                "Forgotten", "Ancient", "Cursed", "Haunted", "Shadow",
+                "Forsaken", "Twisted", "Endless", "Blighted", "Infernal",
+                "Corrupted", "Forbidden", "Desecrated", "Eldritch", "Sunless",
+                "Shattered", "Accursed", "Abyssal", "Nightmarish", "Decrepit"
+        };
+
+        String[] locations = {
+                "Catacombs", "Labyrinth", "Ruins", "Caverns", "Temple",
+                "Crypt", "Depths", "Stronghold", "Sanctum", "Vault",
+                "Mines", "Halls", "Citadel", "Pit", "Chambers",
+                "Spire", "Tombs", "Fortress", "Dungeon", "Necropolis"
+        };
+
+        return prefixes[rand.nextInt(prefixes.length)] + " " +
+                locations[rand.nextInt(locations.length)];
     }
 }

@@ -1,24 +1,38 @@
 package com.github.joshuacgunn.core.gameplay;
 
-import com.github.joshuacgunn.core.entity.Enemy;
 import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.location.Location;
 
-import java.util.UUID;
 
 public class GameLoop {
     private GameState currentGameState;
     private GameState previousGameState;
     private boolean isRunning = true;
-    private Player player;
+    private final Player player;
 
     public GameLoop(Player player) {
         this.player = player;
         Location playerLocation = player.getEntityLocation();
+        
+        // Initialize the appropriate game state based on player location
         if (playerLocation instanceof com.github.joshuacgunn.core.location.Dungeon) {
             this.currentGameState = new DungeonState(this);
+        } else if (playerLocation instanceof com.github.joshuacgunn.core.location.Town) {
+            this.currentGameState = new TownState(this);
+        } else if (playerLocation instanceof com.github.joshuacgunn.core.location.Shop) {
+            this.currentGameState = new ShopState(this);
         }
-        while (isRunning) {
+        
+        // Ensure the game state is properly initialized
+        if (this.currentGameState == null) {
+            throw new IllegalStateException("Could not determine initial game state from player location: " + playerLocation);
+        }
+        
+        // Set initial game state
+        player.setGameState(this.currentGameState);
+        
+        // Main game loop
+        while (isRunning && currentGameState != null) {
             this.currentGameState.handleGameState();
         }
     }
@@ -45,5 +59,10 @@ public class GameLoop {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public static GameLoop createGameLoop(Player player) {
+        Location playerLocation = player.getEntityLocation();
+        return new GameLoop(player);
     }
 }

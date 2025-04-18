@@ -17,7 +17,6 @@ public class Test {
     public static void main(String[] args) {
         try {
             Player player = createPlayer();
-            Enemy enemy = new Enemy(Enemy.EnemyType.GOBLIN, UUID.randomUUID(), true);
             GameLoop gameLoop = new GameLoop(player);
             SaveManager.saveState(player);
         } catch (Exception e) {

@@ -3,8 +3,8 @@ package com.github.joshuacgunn.core.gameplay;
 import com.github.joshuacgunn.core.entity.Enemy;
 import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.location.Dungeon;
+import com.github.joshuacgunn.core.mechanics.GameEvents;
 
-import java.util.Random;
 import java.util.Scanner;
 
 public class DungeonState implements GameState {
@@ -14,7 +14,6 @@ public class DungeonState implements GameState {
     private boolean inDungeon = true;
     private int currentAction;
     private Dungeon whichDungeon;
-    private Random rand = new Random();
 
     public DungeonState(GameLoop parentLoop) {
         this.parentLoop = parentLoop;
@@ -25,19 +24,18 @@ public class DungeonState implements GameState {
         }
     }
 
-
-
     @Override
     public void handleGameState() {
         while (inDungeon) {
             update();
         }
         System.out.println("You have left the dungeon");
-        parentLoop.setRunning(false);
+        GameEvents.switchGameStates(player, new ExploringState(parentLoop));
     }
 
     @Override
     public void update() {
+//        Random rand = new Random();
         System.out.println("You are in the dungeon, what is your next move?");
         System.out.println("1. Attack an enemy");
         System.out.println("2. Try to sneak past to the next floor");
@@ -46,11 +44,13 @@ public class DungeonState implements GameState {
         handleInput();
         switch (currentAction) {
             case 1:
-                Enemy enemy = whichDungeon.getCurrentFloor().getEnemiesOnFloor().get(rand.nextInt(0, whichDungeon.getCurrentFloor().getEnemiesOnFloor().size() - 1));
+                Enemy enemy = whichDungeon.getCurrentFloor().getEnemiesOnFloor().get(0);
                 CombatState combatState = new CombatState(enemy, parentLoop);
-                parentLoop.setPreviousGameState(this);
-                parentLoop.setCurrentGameState(combatState);
+                GameEvents.switchGameStates(player, combatState);
                 combatState.handleGameState();
+                break;
+            case 3:
+                GameEvents.showInventory(player);
                 break;
             case 4:
                 inDungeon = false;
@@ -75,5 +75,15 @@ public class DungeonState implements GameState {
                 currentAction = 4;
                 break;
         }
+    }
+
+    @Override
+    public String getGameStateName() {
+        return "DungeonState";
+    }
+
+    @Override
+    public GameLoop getParentLoop() {
+        return this.parentLoop;
     }
 }

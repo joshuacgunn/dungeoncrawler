@@ -1,9 +1,11 @@
 package com.github.joshuacgunn.core.entity;
 
+import com.github.joshuacgunn.core.gameplay.GameState;
 import com.github.joshuacgunn.core.item.Weapon;
-import com.github.joshuacgunn.core.systems.PlayerStats;
+import com.github.joshuacgunn.core.mechanics.PlayerStats;
 
 import java.util.UUID;
+import java.util.Scanner;
 
 /**
  * Represents a player character in the game.
@@ -24,8 +26,9 @@ public class Player extends Entity {
     }
 
     private PlayerStats playerStats;
-
     private final PlayerClass playerClass;
+    private GameState gameState;
+    private GameState previousGameState;
 
     /**
      * Creates a new player with the specified name and UUID.
@@ -49,6 +52,22 @@ public class Player extends Entity {
      */
     public Weapon getCurrentWeapon() {
         return this.currentWeapon;
+    }
+
+    public GameState getGameState() {
+        return this.gameState;
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
+
+    public GameState getPreviousGameState() {
+        return this.previousGameState;
+    }
+
+    public void setPreviousGameState(GameState previousGameState) {
+        this.previousGameState = previousGameState;
     }
 
     public PlayerStats getPlayerStats() {
@@ -173,5 +192,22 @@ public class Player extends Entity {
         );
     }
 
+    public static Player createPlayer() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Welcome to Dungeon Crawler!");
+        System.out.println("What is your name?");
+        String name = scanner.nextLine();
+        System.out.println("What class would you like to play as?");
+        System.out.println("1. Rogue");
+        System.out.println("2. Wizard");
+        System.out.println("3. Paladin");
+        int playerClass = scanner.nextInt();
+        scanner.nextLine();
+        UUID uuid = UUID.randomUUID();
+        PlayerClass playerClassEnum = PlayerClass.values()[playerClass - 1];
+        Player player = new Player(name, uuid, playerClassEnum);
+        System.out.println(player.getPlayerStatsString());
+        return player;
+    }
 
 }

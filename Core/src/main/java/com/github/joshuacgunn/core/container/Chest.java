@@ -160,7 +160,7 @@ public class Chest extends Container{
     @SuppressWarnings("unchecked")
     public <T extends Item> T generateItem() {
         try {
-            Reflections reflection = new Reflections("com.joshuacgunn");
+            Reflections reflection = new Reflections("com.github.joshuacgunn");
             Set<Class<? extends Item>> itemClasses = reflection.getSubTypesOf(Item.class);
             int extendedClasses = 0;
             for (Class<?> itemClass : itemClasses) {

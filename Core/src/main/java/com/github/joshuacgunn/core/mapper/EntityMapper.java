@@ -6,6 +6,9 @@ import com.github.joshuacgunn.core.dto.NpcDTO;
 import com.github.joshuacgunn.core.dto.PlayerDTO;
 import com.github.joshuacgunn.core.dto.InventoryDTO;
 import com.github.joshuacgunn.core.entity.*;
+import com.github.joshuacgunn.core.gameplay.CombatState;
+import com.github.joshuacgunn.core.gameplay.DungeonState;
+import com.github.joshuacgunn.core.gameplay.GameLoop;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
 import com.github.joshuacgunn.core.item.Weapon;
@@ -106,6 +109,13 @@ public interface EntityMapper {
             dto.setCurrentLocationUUID(player.getCurrentLocation());
         }
 
+        if (player.getGameState() != null) {
+            dto.setGameState(player.getGameState().getGameStateName());
+        }
+
+        if (player.getPreviousGameState() != null) {
+            dto.setPreviousGameState(player.getPreviousGameState() != null ? player.getPreviousGameState().getGameStateName() : null);
+        }
 
         dto.setPlayerClass(player.getPlayerClass());
 
@@ -216,7 +226,6 @@ public interface EntityMapper {
 
         Player player = new Player(dto.getEntityName(), dto.getEntityUUID(), dto.getPlayerClass());
 
-
         player.setPlayerStats(dto.getPlayerStats());
 
         player.getPlayerStats().setStrength(dto.getPlayerStats().getStrength());
@@ -225,6 +234,16 @@ public interface EntityMapper {
         player.getPlayerStats().setLuck(dto.getPlayerStats().getLuck());
         player.getPlayerStats().setCharisma(dto.getPlayerStats().getCharisma());
         player.getPlayerStats().setVitality(dto.getPlayerStats().getVitality());
+
+//        String gameStateName = dto.getGameState();
+//
+//        GameLoop gameLoop = GameLoop.createGameLoop(player);
+//
+//        switch (gameStateName) {
+//            case "DungeonState":
+//                player.setGameState(new DungeonState(gameLoop));
+//        }
+
 
         return player;
     }
