@@ -3,14 +3,11 @@ package com.github.joshuacgunn.core.mechanics;
 import com.github.joshuacgunn.core.entity.Entity;
 import com.github.joshuacgunn.core.entity.NPC;
 import com.github.joshuacgunn.core.entity.Player;
-import com.github.joshuacgunn.core.gameplay.ExploringState;
 import com.github.joshuacgunn.core.gameplay.GameState;
 import com.github.joshuacgunn.core.gameplay.TownState;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
-import com.github.joshuacgunn.core.location.Location;
 import com.github.joshuacgunn.core.location.Town;
-import com.github.joshuacgunn.core.location.World;
 import com.github.joshuacgunn.core.save.SaveManager;
 import com.github.joshuacgunn.core.gameplay.GameLoop;
 
@@ -153,8 +150,7 @@ public abstract class GameEvents {
             } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.Shop shop) {
                 System.out.println("You are currently in the shop " + shop.getLocationName() + ".");
             }
-        }
-        else {
+        } else {
             System.out.println("You are currently exploring the world. Have fun!");
         }
     }
@@ -162,11 +158,12 @@ public abstract class GameEvents {
     public static void initializeGame() {
         clearConsole();
         Player player;
+        boolean isNewGame;
         if (new File("backups/saves/").exists()) {
-            SaveManager.loadState();
+            isNewGame = false;
+        } else {
+            isNewGame = true;
         }
-
-        boolean isNewGame = !(new File("saves/player_save.json").exists());
 
         if (isNewGame) {
             player = Player.createPlayer();

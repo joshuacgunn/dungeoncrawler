@@ -1,10 +1,8 @@
 package com.github.joshuacgunn.core.gameplay;
 
-import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.mechanics.GameEvents;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
@@ -37,7 +35,6 @@ public class MainMenuState implements GameState {
                         """);
         handleGameState();
     }
-
 
     @Override
     public void handleGameState() {

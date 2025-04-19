@@ -41,7 +41,7 @@ public abstract class SaveManager {
     }
 
     public static Player loadState() {
-        if (new File(BACKUP_DIRECTORY + "saves/").exists() && !(new File(SAVE_DIRECTORY + "player_save.json").exists())) {
+        if (!(new File(SAVE_DIRECTORY).exists()) && new File(BACKUP_DIRECTORY + "saves/").exists()) {
             loadBackup();
         }
 
