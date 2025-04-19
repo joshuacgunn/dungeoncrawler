@@ -18,7 +18,6 @@ public class GameLoop {
         // Initialize the appropriate game state based on player location
         initializeGameState(playerLocation);
         player.setGameState(this.currentGameState);
-        SaveManager.saveState(player);
 
         // Main game loop - simplified
         if (currentGameState != null) {
@@ -35,10 +34,6 @@ public class GameLoop {
             this.currentGameState = new ShopState(this);
         } else {
             this.currentGameState = new ExploringState(this);
-        }
-
-        if (this.currentGameState == null) {
-            throw new IllegalStateException("Could not determine initial game state from player location: " + playerLocation);
         }
     }
 

@@ -31,9 +31,16 @@ public class TownState implements GameState {
         } else {
             townSize = "small";
         }
-        if (parentLoop.getPreviousGameState() != null && parentLoop.getPreviousGameState().getGameStateName().equals("ExploringState")) {
-            System.out.println("You have entered " + whichTown.getLocationName() + ", a " + townSize + " town with a " + getShopsInTown());
+        if (player.getGameState() == null) {
+            // This is a new game
+            System.out.println("You have entered " + whichTown.getLocationName() +
+                    ", a " + townSize + " town with a " + getShopsInTown());
+        } else if (player.getPreviousGameState().getGameStateName().equals("ExploringState")) {
+            // Player came from exploring
+            System.out.println("You have entered " + whichTown.getLocationName() +
+                    ", a " + townSize + " town with a " + getShopsInTown());
         } else {
+            // This is a loaded game
             GameEvents.loadGameGreet(player);
         }
     }

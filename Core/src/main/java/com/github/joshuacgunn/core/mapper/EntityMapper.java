@@ -62,37 +62,40 @@ public interface EntityMapper {
             dto.setCurrentLocationUUID(entity.getCurrentLocation().getLocationUUID());
         }
 
-        if (entity.getInventory() != null) {
+        // Handle inventory items with null check
+        if (entity.getInventory() != null && entity.getInventory().getItems() != null) {
             InventoryDTO inventoryDTO = new InventoryDTO();
             List<UUID> itemUUIDList = new ArrayList<>();
 
             for (Item item : entity.getInventory().getItems()) {
-                itemUUIDList.add(item.getItemUUID());
+                if (item != null) {  // Add null check here
+                    itemUUIDList.add(item.getItemUUID());
+                }
             }
 
             inventoryDTO.setItemUUIDs(itemUUIDList);
             dto.setInventory(inventoryDTO);
         }
 
-
-        // Handle armor items
+        // Handle armor items with null check
         if (entity.getArmors() != null) {
             List<UUID> armorUUIDList = new ArrayList<>();
             for (Item item : entity.getArmors()) {
-                if (item instanceof Armor) {
+                if (item instanceof Armor && item != null) {  // Add null check here
                     armorUUIDList.add(item.getItemUUID());
                 }
             }
             dto.setEquippedArmorUUIDs(armorUUIDList);
         }
 
-        // Handle current weapon
+        // Handle current weapon with null check
         if (entity.getCurrentWeapon() != null) {
             dto.setCurrentWeaponUUID(entity.getCurrentWeapon().getItemUUID());
         }
 
         return dto;
     }
+
 
     /**
      * Converts an Entity to a Player-specific DTO.
@@ -250,25 +253,24 @@ public interface EntityMapper {
 
         String gameStateName = dto.getGameState();
 
-        GameLoop gameLoop = GameLoop.createGameLoop(player);
-
-        if (gameStateName != null) {
-            switch (gameStateName) {
-                case "DungeonState":
-                    player.setGameState(new DungeonState(gameLoop));
-                    break;
-                case "ExploringState":
-                    player.setGameState(new ExploringState(gameLoop));
-                    break;
-                case "TownState":
-                    player.setGameState(new TownState(gameLoop));
-                    break;
-                case "ShopState":
-                    player.setGameState(new ShopState(gameLoop));
-                    break;
-            }
-        }
-
+//        GameLoop gameLoop = GameLoop.createGameLoop(player);
+//
+//        if (gameStateName != null) {
+//            switch (gameStateName) {
+//                case "DungeonState":
+//                    player.setGameState(new DungeonState(gameLoop));
+//                    break;
+//                case "ExploringState":
+//                    player.setGameState(new ExploringState(gameLoop));
+//                    break;
+//                case "TownState":
+//                    player.setGameState(new TownState(gameLoop));
+//                    break;
+//                case "ShopState":
+//                    player.setGameState(new ShopState(gameLoop));
+//                    break;
+//            }
+//        }
 //        if (previousGameStateName != null) {
 //            switch (previousGameStateName) {
 //                case "DungeonState":

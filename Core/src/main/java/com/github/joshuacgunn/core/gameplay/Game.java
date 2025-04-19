@@ -11,16 +11,24 @@ import java.util.UUID;
 public class Game {
     public static void main(String[] args) {
         Player player;
-        if (!(new File("saves/player_save.json").exists()) && !(new File("saves/player_save.json").isDirectory())) {
+        boolean isNewGame = !(new File("saves/player_save.json").exists());
+
+        if (isNewGame) {
             player = Player.createPlayer();
             Town startingTown = new Town(UUID.randomUUID(), true);
             player.setCurrentLocation(startingTown);
-            SaveManager.saveState(player);
         } else {
             SaveManager.loadState();
             player = SaveManager.loadPlayer();
         }
+
         player.setCurrentWeapon(Weapon.generateWeapon(0, 7, player.getInventory()));
+
+        // Only save after the game loop if it's a new game
+        if (isNewGame) {
+            SaveManager.saveState(player);
+        }
+
         GameLoop gameLoop = new GameLoop(player);
     }
 }

@@ -183,6 +183,7 @@ public abstract class SaveManager {
             try (Reader reader = new FileReader(chosenFile)) {
                 // Read specifically as PlayerDTO rather than EntityDTO
                 PlayerDTO dto = GSON.fromJson(reader, PlayerDTO.class);
+                Player player = (Player) EntityMapper.INSTANCE.entityDtoToEntity(dto);
                 return (Player) EntityMapper.INSTANCE.entityDtoToEntity(dto);
             } catch (IOException e) {
                 e.printStackTrace();
