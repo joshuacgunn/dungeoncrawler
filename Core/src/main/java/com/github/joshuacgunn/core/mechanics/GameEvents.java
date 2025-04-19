@@ -3,20 +3,24 @@ package com.github.joshuacgunn.core.mechanics;
 import com.github.joshuacgunn.core.entity.Entity;
 import com.github.joshuacgunn.core.entity.NPC;
 import com.github.joshuacgunn.core.entity.Player;
+import com.github.joshuacgunn.core.gameplay.ExploringState;
 import com.github.joshuacgunn.core.gameplay.GameState;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
+import com.github.joshuacgunn.core.location.Location;
 import com.github.joshuacgunn.core.location.Town;
+import com.github.joshuacgunn.core.location.World;
 import com.github.joshuacgunn.core.save.SaveManager;
 import com.github.joshuacgunn.core.gameplay.GameLoop;
 
-public abstract class GameEvents {
+import java.util.UUID;
 
+public abstract class GameEvents {
     public static void showInventory(Entity entity) {
         System.out.println("Your inventory:");
         for (Item item : entity.getInventory().getItems()) {
             if (!(item.getItemUUID().equals(entity.getCurrentWeapon().getItemUUID()))) {
-            System.out.println(item.getItemName());
+                System.out.println(item.getItemName());
             }
         }
         if (entity.getCurrentWeapon() != null) {
@@ -44,14 +48,14 @@ public abstract class GameEvents {
         if (player == null || newGameState == null) {
             throw new IllegalArgumentException("Player and new game state cannot be null");
         }
-        
+
         GameState currentState = player.getGameState();
         if (currentState == null) {
             // If there's no current state, just set the new one
             player.setGameState(newGameState);
             return;
         }
-        
+
         GameLoop parentLoop = currentState.getParentLoop();
         if (parentLoop != null) {
             if (parentLoop.getPreviousGameState() != null) {
@@ -59,7 +63,7 @@ public abstract class GameEvents {
             }
             parentLoop.setCurrentGameState(newGameState);
         }
-        
+
         player.setPreviousGameState(currentState);
         player.setGameState(newGameState);
         SaveManager.saveState(player);
@@ -133,17 +137,18 @@ public abstract class GameEvents {
     }
 
     public static void loadGameGreet(Player player) {
-            System.out.println("Welcome back, " + player.getEntityName() + "!");
-            if (player.getCurrentLocation() != null) {
-                if (player.getCurrentLocation() instanceof Town town) {
-                    System.out.println("You are currently in the town of " + town.getLocationName() + ".");
-                } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.World) {
-                    System.out.println("You are currently exploring the world. Have fun!");
-                } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.Dungeon dungeon) {
-                    System.out.println("You are currently in the dungeon " + dungeon.getLocationName() + ", on floor " + dungeon.getCurrentFloor() + ".");
-                } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.Shop shop) {
-                    System.out.println("You are currently in the shop " + shop.getLocationName() + ".");
-                }
+        System.out.println("Welcome back, " + player.getEntityName() + "!");
+        if (player.getCurrentLocation() != null) {
+            if (player.getCurrentLocation() instanceof Town town) {
+                System.out.println("You are currently in the town of " + town.getLocationName() + ".");
+            } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.World) {
+                System.out.println("You are currently exploring the world. Have fun!");
+            } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.Dungeon dungeon) {
+                System.out.println("You are currently in the dungeon " + dungeon.getLocationName() + ", on floor " + dungeon.getCurrentFloor() + ".");
+            } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.Shop shop) {
+                System.out.println("You are currently in the shop " + shop.getLocationName() + ".");
             }
         }
     }
+
+}

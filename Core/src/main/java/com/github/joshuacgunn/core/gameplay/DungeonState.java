@@ -37,7 +37,7 @@ public class DungeonState implements GameState {
         }
         if (inGame) {
             System.out.println("You have left the dungeon");
-            GameEvents.switchGameStates(player, new ExploringState(parentLoop));
+            GameEvents.switchGameStates(player, new ExploringState(parentLoop, true));
             player.setCurrentLocation(new World(UUID.randomUUID()));
         } else {
             GameEvents.leaveGame(player, parentLoop);

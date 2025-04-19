@@ -2,8 +2,6 @@ package com.github.joshuacgunn.core.gameplay;
 
 import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.location.Location;
-import com.github.joshuacgunn.core.save.SaveManager;
-
 
 public class GameLoop {
     private GameState currentGameState;
@@ -11,17 +9,29 @@ public class GameLoop {
     private boolean isRunning = true;
     private final Player player;
 
-    public GameLoop(Player player) {
+    public GameLoop(Player player, boolean handleState) {
         this.player = player;
         Location playerLocation = player.getCurrentLocation();
 
-        // Initialize the appropriate game state based on player location
-        initializeGameState(playerLocation);
-        player.setGameState(this.currentGameState);
+        if (!handleState) {
+            // For loading saved games - use existing state if available
+            if (player.getGameState() != null) {
+                this.currentGameState = player.getGameState();
+                this.previousGameState = player.getPreviousGameState();
+            } else {
+                // Initialize state if none exists
+                initializeGameState(playerLocation);
+                player.setGameState(this.currentGameState);
+            }
+        } else {
+            // For new games or when explicitly handling state
+            initializeGameState(playerLocation);
+            player.setGameState(this.currentGameState);
 
-        // Main game loop - simplified
-        if (currentGameState != null) {
-            currentGameState.handleGameState();
+            // Only handle game state if explicitly requested
+            if (this.currentGameState != null) {
+                this.currentGameState.handleGameState();
+            }
         }
     }
 
@@ -33,14 +43,14 @@ public class GameLoop {
         } else if (playerLocation instanceof com.github.joshuacgunn.core.location.Shop) {
             this.currentGameState = new ShopState(this);
         } else {
-            this.currentGameState = new ExploringState(this);
+            this.currentGameState = new ExploringState(this, true);
         }
     }
 
     public void stopGame() {
         this.isRunning = false;
         this.currentGameState = null;
-        System.exit(0);  // Add this line to force exit
+        System.exit(0);
     }
 
     public void setCurrentGameState(GameState currentGameState) {
@@ -68,6 +78,12 @@ public class GameLoop {
     }
 
     public static GameLoop createGameLoop(Player player) {
-        return new GameLoop(player);
+        return new GameLoop(player, false);
+    }
+
+    public void startGameLoop() {
+        if (this.currentGameState != null) {
+            this.currentGameState.handleGameState();
+        }
     }
 }

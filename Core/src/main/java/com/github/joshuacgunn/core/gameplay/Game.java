@@ -18,8 +18,7 @@ public class Game {
             Town startingTown = new Town(UUID.randomUUID(), true);
             player.setCurrentLocation(startingTown);
         } else {
-            SaveManager.loadState();
-            player = SaveManager.loadPlayer();
+            player = SaveManager.loadState();
         }
 
         player.setCurrentWeapon(Weapon.generateWeapon(0, 7, player.getInventory()));
@@ -29,6 +28,7 @@ public class Game {
             SaveManager.saveState(player);
         }
 
-        GameLoop gameLoop = new GameLoop(player);
+        GameLoop gameLoop = new GameLoop(player, false);
+        gameLoop.startGameLoop();
     }
 }

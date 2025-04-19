@@ -40,13 +40,13 @@ public abstract class SaveManager {
         backupSave();
     }
 
-    public static void loadState() {
+    public static Player loadState() {
         // The order of this is critical for functionality. It will not work if changed.
         loadItems();
         loadEntities();
         loadDungeons();
         loadTowns();
-        loadPlayer();
+        return loadPlayer();
     }
 
     public static void createDirectories() {

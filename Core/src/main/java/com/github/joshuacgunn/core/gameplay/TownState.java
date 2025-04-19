@@ -16,6 +16,7 @@ public class TownState implements GameState {
     private int currentAction;
     private boolean inTown = true;
     private boolean inGame = true;
+    private boolean inShop = false;
     private final Town whichTown;
     Scanner scanner = new Scanner(System.in);
 
@@ -35,7 +36,7 @@ public class TownState implements GameState {
             // This is a new game
             System.out.println("You have entered " + whichTown.getLocationName() +
                     ", a " + townSize + " town with a " + getShopsInTown());
-        } else if (player.getPreviousGameState().getGameStateName().equals("ExploringState")) {
+        } else if (player.getPreviousGameState() != null) {
             // Player came from exploring
             System.out.println("You have entered " + whichTown.getLocationName() +
                     ", a " + townSize + " town with a " + getShopsInTown());
@@ -52,9 +53,15 @@ public class TownState implements GameState {
         }
         if (inGame) {
             System.out.println("You have left the town");
-            GameEvents.switchGameStates(player, new ExploringState(parentLoop));
             player.setCurrentLocation(new World(UUID.randomUUID()));
-            parentLoop.getCurrentGameState().handleGameState();
+            player.setPreviousGameState(this);
+            ExploringState exploringState = new ExploringState(parentLoop, true);
+            GameEvents.switchGameStates(player, exploringState);
+            exploringState.handleGameState();
+        } else if (inShop) {
+            ShopState shopState = new ShopState(parentLoop);
+            GameEvents.switchGameStates(player, shopState);
+
         } else {
             GameEvents.leaveGame(player, parentLoop);
         }
@@ -82,9 +89,8 @@ public class TownState implements GameState {
                 handleInput();
                 player.setCurrentLocation(whichTown.getShopsInTown().get(currentAction-1));
                 System.out.println("You have entered " + whichTown.getShopsInTown().get(currentAction-1).getLocationName());
-                ShopState shopState = new ShopState(parentLoop);
-                GameEvents.switchGameStates(player, shopState);
-                shopState.handleGameState();
+                inTown = false;
+                inShop = true;
                 break;
             case 2:
                 inTown = false;

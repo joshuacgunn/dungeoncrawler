@@ -221,21 +221,15 @@ public interface EntityMapper {
         return entity;
     }
 
-    /**
-     * Converts a PlayerDTO to a Player entity.
-     *
-     * @param dto the player DTO to convert
-     * @return the player entity
-     */
     default Player playerDtoToPlayer(PlayerDTO dto) {
         if (dto == null) return null;
 
         Player player = new Player(dto.getEntityName(), dto.getEntityUUID(), dto.getPlayerClass());
 
         player.setPlayerStats(dto.getPlayerStats());
-
         player.setPlayerLevel(dto.getPlayerLevel());
-
+        
+        // Set player stats
         player.getPlayerStats().setStrength(dto.getPlayerStats().getStrength());
         player.getPlayerStats().setDexterity(dto.getPlayerStats().getDexterity());
         player.getPlayerStats().setIntelligence(dto.getPlayerStats().getIntelligence());
@@ -249,35 +243,37 @@ public interface EntityMapper {
             player.setCurrentLocation(new World(UUID.randomUUID()));
         }
 
+        // Create GameLoop without handling state
+        GameLoop gameLoop = new GameLoop(player, false);
+
+        // Set game states based on saved data
+        String gameStateName = dto.getGameState();
         String previousGameStateName = dto.getPreviousGameState();
 
-        String gameStateName = dto.getGameState();
+        if (gameStateName != null) {
+            switch (gameStateName) {
+                case "DungeonState":
+                    player.setGameState(new DungeonState(gameLoop));
+                    break;
+                case "ExploringState":
+                    player.setGameState(new ExploringState(gameLoop, false));
+                    break;
+                case "TownState":
+                    player.setGameState(new TownState(gameLoop));
+                    break;
+                case "ShopState":
+                    player.setGameState(new ShopState(gameLoop));
+                    break;
+            }
+        }
 
-//        GameLoop gameLoop = GameLoop.createGameLoop(player);
-//
-//        if (gameStateName != null) {
-//            switch (gameStateName) {
-//                case "DungeonState":
-//                    player.setGameState(new DungeonState(gameLoop));
-//                    break;
-//                case "ExploringState":
-//                    player.setGameState(new ExploringState(gameLoop));
-//                    break;
-//                case "TownState":
-//                    player.setGameState(new TownState(gameLoop));
-//                    break;
-//                case "ShopState":
-//                    player.setGameState(new ShopState(gameLoop));
-//                    break;
-//            }
-//        }
 //        if (previousGameStateName != null) {
 //            switch (previousGameStateName) {
 //                case "DungeonState":
 //                    player.setPreviousGameState(new DungeonState(gameLoop));
 //                    break;
 //                case "ExploringState":
-//                    player.setPreviousGameState(new ExploringState(gameLoop));
+//                    player.setPreviousGameState(new ExploringState(gameLoop, false));
 //                    break;
 //                case "TownState":
 //                    player.setPreviousGameState(new TownState(gameLoop));
@@ -285,12 +281,11 @@ public interface EntityMapper {
 //                case "ShopState":
 //                    player.setPreviousGameState(new ShopState(gameLoop));
 //                    break;
-//            }
 //        }
+//    }
 
-
-        return player;
-    }
+    return player;
+}
 
     default NPC npcDtotoNPC(NpcDTO dto) {
 
