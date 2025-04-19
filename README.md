@@ -1,4 +1,4 @@
-# Terminal RPG Rewrite
+# Dungeoncrawler
 This is the rewrite of a previous project I was working on. I did this because the old project had many, *many* critical flaws in the code. This new version is simpler, more intuitive, and has more dynamic code for future updates. 
 
 # Current State of the Project (04/18)
