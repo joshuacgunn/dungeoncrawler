@@ -11,22 +11,20 @@ import java.util.Scanner;
 import java.util.UUID;
 
 public class DungeonState implements GameState {
-    private GameLoop parentLoop;
-    private Player player;
+    private final GameLoop parentLoop;
+    private final Player player;
     public Scanner scanner = new Scanner(System.in);
     private boolean inDungeon = true;
     private boolean inGame = true;
     private int currentAction;
-    private Dungeon whichDungeon;
+    private final Dungeon whichDungeon;
 
-    public DungeonState(GameLoop parentLoop) {
+    public DungeonState(GameLoop parentLoop, boolean isNew) {
         this.parentLoop = parentLoop;
         this.player = parentLoop.getPlayer();
         this.whichDungeon = (Dungeon) player.getCurrentLocation();
-        if (parentLoop.getPreviousGameState() != null && parentLoop.getPreviousGameState().getGameStateName().equals("ExploringState")) {
+        if (isNew) {
             System.out.println("You have entered " + whichDungeon.getLocationName() + ", a dungeon with " + whichDungeon.getFloors().size() + " floors, and a difficulty of " + whichDungeon.getDifficultyRating());
-        } else {
-            GameEvents.loadGameGreet(player);
         }
     }
 
@@ -47,7 +45,7 @@ public class DungeonState implements GameState {
     @Override
     public void update() {
         if (!inDungeon) return;
-        System.out.println("You are in the dungeon, on floor " + whichDungeon.getCurrentFloor() + ", what is your next move?");
+        System.out.println("What would you like to do?");
         System.out.println("0. Leave the game");
         System.out.println("1. Attack an enemy");
         System.out.println("2. Try to sneak past to the next floor");
@@ -76,6 +74,7 @@ public class DungeonState implements GameState {
 
     @Override
     public void handleInput() {
+        System.out.print("Choice: ");
         String input = scanner.nextLine();
         switch (input) {
             case "0":
@@ -92,6 +91,10 @@ public class DungeonState implements GameState {
                 break;
             case "4":
                 currentAction = 4;
+                break;
+            default:
+                System.out.println("Invalid input");
+                handleInput();
                 break;
         }
     }

@@ -22,12 +22,15 @@ public class ExploringState implements GameState {
     public ExploringState(GameLoop parentLoop, boolean isNew) {
         this.parentLoop = parentLoop;
         this.player = parentLoop.getPlayer();
+
         if (isNew) {
             if (player.getPreviousGameState() != null) {
                 System.out.println("You begin exploring the world...");
-            } else if (player.getPreviousGameState() instanceof TownState || player.getPreviousGameState() instanceof DungeonState) {
-                System.out.println("You begin exploring the world...");
-            } else {
+            }
+//            else if (player.getPreviousGameState() instanceof TownState || player.getPreviousGameState() instanceof DungeonState) {
+//                System.out.println("You begin exploring the world...");
+//            }
+            else {
                 GameEvents.loadGameGreet(player);
             }
         }
@@ -83,7 +86,7 @@ public class ExploringState implements GameState {
                 isExploring = false;
                 player.setCurrentLocation(towns.get(townIndex-1));
                 player.setPreviousGameState(this);
-                TownState townState = new TownState(parentLoop);
+                TownState townState = new TownState(parentLoop, true);
                 GameEvents.switchGameStates(player, townState);
                 townState.handleGameState();
                 break;
@@ -117,33 +120,45 @@ public class ExploringState implements GameState {
                 isExploring = false;
                 player.setCurrentLocation(dungeons.get(dungeonIndex-1));
                 player.setPreviousGameState(this);
-                DungeonState dungeonState = new DungeonState(parentLoop);
+                DungeonState dungeonState = new DungeonState(parentLoop, true);
                 GameEvents.switchGameStates(player, dungeonState);
                 dungeonState.handleGameState();
                 break;
             case 3:
-                System.out.println("Searching for a new place to go...");
-                try {
-                    TimeUnit.SECONDS.sleep(new Random().nextInt(4, 8));
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                System.out.print("Searching for a new place to go");
+                int totalTime = new Random().nextInt(3, 6);
+                for (int seconds = 0; seconds < totalTime; seconds++) {
+                    for (int dots = 0; dots < 4; dots++) {
+                        if (dots == 0) {
+                            System.out.print("");
+                        } else {
+                            System.out.print(".");
+                        }
+                        try {
+                            TimeUnit.MILLISECONDS.sleep(500);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    System.out.print("\b\b\b   \b\b\b");
                 }
+                System.out.println("...");
                 Location newLocation = Location.generateLocation();
-                System.out.println("You found a new place to go to: " + newLocation.getLocationName());
+                System.out.println("You found a new " + newLocation.getClass().getSimpleName().toLowerCase() + " to go to: " + newLocation.getLocationName());
                 System.out.println("Would you like to go there? (y/n)");
                 String input = scanner.nextLine();
                 if (newLocation instanceof Town && input.equalsIgnoreCase("y") ) {
                     isExploring = false;
                     player.setCurrentLocation(newLocation);
                     player.setPreviousGameState(this);
-                    TownState townState1 = new TownState(parentLoop);
+                    TownState townState1 = new TownState(parentLoop, true);
                     GameEvents.switchGameStates(player, townState1);
                     townState1.handleGameState();
                 } else if (newLocation instanceof Dungeon && input.equalsIgnoreCase("y") ) {
                     isExploring = false;
                     player.setCurrentLocation(newLocation);
                     player.setPreviousGameState(this);
-                    DungeonState dungeonState1 = new DungeonState(parentLoop);
+                    DungeonState dungeonState1 = new DungeonState(parentLoop, true);
                     GameEvents.switchGameStates(player, dungeonState1);
                     dungeonState1.handleGameState();
                 } else {
@@ -157,6 +172,7 @@ public class ExploringState implements GameState {
 
     @Override
     public void handleInput() {
+        System.out.print("Choice: ");
         String input = scanner.nextLine();
         switch (input) {
             case "0":
@@ -170,6 +186,10 @@ public class ExploringState implements GameState {
                 break;
             case "3":
                 currentAction = 3;
+                break;
+            default:
+                System.out.println("Invalid input");
+                handleInput();
                 break;
         }
     }

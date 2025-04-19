@@ -16,6 +16,8 @@ import com.github.joshuacgunn.core.gameplay.GameLoop;
 import java.util.UUID;
 
 public abstract class GameEvents {
+
+
     public static void showInventory(Entity entity) {
         System.out.println("Your inventory:");
         for (Item item : entity.getInventory().getItems()) {
@@ -144,7 +146,7 @@ public abstract class GameEvents {
             } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.World) {
                 System.out.println("You are currently exploring the world. Have fun!");
             } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.Dungeon dungeon) {
-                System.out.println("You are currently in the dungeon " + dungeon.getLocationName() + ", on floor " + dungeon.getCurrentFloor() + ".");
+                System.out.println("You are currently in the dungeon " + dungeon.getLocationName() + ", on floor " + dungeon.getCurrentFloor().getFloorNumber() + ".");
             } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.Shop shop) {
                 System.out.println("You are currently in the shop " + shop.getLocationName() + ".");
             }

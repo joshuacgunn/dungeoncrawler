@@ -9,7 +9,7 @@ import com.github.joshuacgunn.core.mechanics.GameEvents;
 import java.util.Scanner;
 
 public class ShopState implements GameState {
-    private GameLoop parentLoop;
+    private final GameLoop parentLoop;
     private final Shop whichShop;
     private int currentAction;
     private boolean inShop = true;
@@ -52,7 +52,7 @@ public class ShopState implements GameState {
                 }
             }
             player.setPreviousGameState(this);
-            TownState townState = new TownState(parentLoop);
+            TownState townState = new TownState(parentLoop, true);
             GameEvents.switchGameStates(player, townState);
             townState.handleGameState();
         } else {
@@ -83,6 +83,7 @@ public class ShopState implements GameState {
 
     @Override
     public void handleInput() {
+        System.out.print("Choice: ");
         String input = scanner.nextLine();
         switch (input) {
             case "1":
@@ -90,6 +91,10 @@ public class ShopState implements GameState {
                 break;
             case "2":
                 currentAction = 2;
+                break;
+            default:
+                System.out.println("Invalid input");
+                handleInput();
                 break;
         }
     }

@@ -17,18 +17,12 @@ public class Game {
             player = Player.createPlayer();
             Town startingTown = new Town(UUID.randomUUID(), true);
             player.setCurrentLocation(startingTown);
+            player.setCurrentWeapon(Weapon.generateWeapon(0, 7, player.getInventory()));
         } else {
             player = SaveManager.loadState();
         }
 
-        player.setCurrentWeapon(Weapon.generateWeapon(0, 7, player.getInventory()));
-
-        // Only save after the game loop if it's a new game
-        if (isNewGame) {
-            SaveManager.saveState(player);
-        }
-
-        GameLoop gameLoop = new GameLoop(player, false);
+        GameLoop gameLoop = new GameLoop(player, isNewGame);
         gameLoop.startGameLoop();
     }
 }

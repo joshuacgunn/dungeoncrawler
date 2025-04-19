@@ -8,12 +8,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.Scanner;
 
 public class CombatState implements GameState {
-    private Player player;
-    private Enemy enemy;
+    private final Player player;
+    private final Enemy enemy;
     public Scanner scanner = new Scanner(System.in);
     private boolean inCombat = true;
     private int currentAction;
-    private GameLoop parentLoop;
+    private final GameLoop parentLoop;
 
     public CombatState(Enemy enemy, GameLoop parentLoop) {
         this.player = parentLoop.getPlayer();
@@ -79,6 +79,7 @@ public class CombatState implements GameState {
 
     @Override
     public void handleInput() {
+        System.out.print("Choice: ");
         String input = scanner.nextLine();
         switch (input) {
             case "1":

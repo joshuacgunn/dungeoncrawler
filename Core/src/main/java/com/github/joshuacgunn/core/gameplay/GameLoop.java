@@ -2,6 +2,10 @@ package com.github.joshuacgunn.core.gameplay;
 
 import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.location.Location;
+import com.github.joshuacgunn.core.mechanics.GameEvents;
+import com.github.joshuacgunn.core.save.SaveManager;
+
+import java.io.File;
 
 /**
  * Manages the game's main loop and state transitions.
@@ -23,35 +27,42 @@ public class GameLoop {
 
     /** The player associated with this game loop */
     private final Player player;
+    private final boolean isNewGame;
 
     /**
      * Creates a new GameLoop instance.
      *
      * @param player The player associated with this game loop
-     * @param handleState If true, immediately starts handling the game state
      */
-    public GameLoop(Player player, boolean handleState) {
+    public GameLoop(Player player, boolean isNewGame) {
         this.player = player;
+        this.isNewGame = isNewGame;
         Location playerLocation = player.getCurrentLocation();
 
-        if (!handleState) {
-            // For loading saved games - use existing state if available
-            if (player.getGameState() != null) {
-                this.currentGameState = player.getGameState();
-                this.previousGameState = player.getPreviousGameState();
-            } else {
-                // Initialize state if none exists
-                initializeGameState(playerLocation);
-                player.setGameState(this.currentGameState);
-            }
-        } else {
-            // For new games or when explicitly handling state
-            initializeGameState(playerLocation);
-            player.setGameState(this.currentGameState);
+        if (!isNewGame) {
+            GameEvents.loadGameGreet(player);
+        }
 
-            // Only handle game state if explicitly requested
-            if (this.currentGameState != null) {
-                this.currentGameState.handleGameState();
+        initializeGameState(playerLocation);
+
+        if (!isNewGame && player.getGameStateName() != null) {
+            // Create the actual state objects for the game
+            String stateName = player.getGameStateName();
+            if (stateName != null) {
+                switch (stateName) {
+                    case "DungeonState":
+                        player.setGameState(new DungeonState(this, false));
+                        break;
+                    case "ExploringState":
+                        player.setGameState(new ExploringState(this, false));
+                        break;
+                    case "TownState":
+                        player.setGameState(new TownState(this, false));
+                        break;
+                    case "ShopState":
+                        player.setGameState(new ShopState(this));
+                        break;
+                }
             }
         }
     }
@@ -63,13 +74,13 @@ public class GameLoop {
      */
     private void initializeGameState(Location playerLocation) {
         if (playerLocation instanceof com.github.joshuacgunn.core.location.Dungeon) {
-            this.currentGameState = new DungeonState(this);
+            this.currentGameState = new DungeonState(this, isNewGame);
         } else if (playerLocation instanceof com.github.joshuacgunn.core.location.Town) {
-            this.currentGameState = new TownState(this);
+            this.currentGameState = new TownState(this, isNewGame);
         } else if (playerLocation instanceof com.github.joshuacgunn.core.location.Shop) {
             this.currentGameState = new ShopState(this);
         } else {
-            this.currentGameState = new ExploringState(this, true);
+            this.currentGameState = new ExploringState(this, isNewGame);
         }
     }
 

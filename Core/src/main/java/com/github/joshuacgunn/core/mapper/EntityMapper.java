@@ -134,7 +134,6 @@ public interface EntityMapper {
         dto.getPlayerStats().setCharisma(player.getPlayerStats().getCharisma());
         dto.getPlayerStats().setVitality(player.getPlayerStats().getVitality());
 
-
         return dto;
     }
 
@@ -194,27 +193,30 @@ public interface EntityMapper {
         entity.setEntityHp(dto.getEntityHp());
 
         // Handle armors
-        if (dto.getEquippedArmorUUIDs() != null) {
-            for (UUID armorUUID : dto.getEquippedArmorUUIDs()) {
-                Item armor = Item.itemMap.get(armorUUID);
-                entity.equipArmor((Armor) armor);
-            }
-        }
-
-        if (dto.getCurrentWeaponUUID() != null) {
-            Item weapon = Item.itemMap.get(dto.getCurrentWeaponUUID());
-            entity.setCurrentWeapon((Weapon) weapon);
-        }
-
-        if (dto.getCurrentLocationUUID() != null) {
-            entity.setCurrentLocation(Location.locationMap.get(dto.getCurrentLocationUUID()));
-        }
 
         if (dto.getInventory() != null && dto.getInventory().getItemUUIDs() != null) {
             for (UUID itemUUID : dto.getInventory().getItemUUIDs()) {
                 Item item = Item.itemMap.get(itemUUID);
                 entity.getInventory().addItem(item);
             }
+        }
+
+        if (dto.getCurrentWeaponUUID() != null) {
+            Weapon weapon = (Weapon) Item.itemMap.get(dto.getCurrentWeaponUUID());
+            entity.setCurrentWeapon(weapon);
+        }
+
+        if (!dto.getEquippedArmorUUIDs().isEmpty() && dto.getEquippedArmorUUIDs() != null) {
+            for (UUID armorUUID : dto.getEquippedArmorUUIDs()) {
+                Armor armor = (Armor) Item.itemMap.get(armorUUID);
+                if (armor != null) {  // Add this null check
+                    entity.equipArmor(armor);
+                }
+            }
+        }
+
+        if (dto.getCurrentLocationUUID() != null) {
+            entity.setCurrentLocation(Location.locationMap.get(dto.getCurrentLocationUUID()));
         }
 
         // Handle current weapon
@@ -243,47 +245,12 @@ public interface EntityMapper {
             player.setCurrentLocation(new World(UUID.randomUUID()));
         }
 
-        // Create GameLoop without handling state
-        GameLoop gameLoop = new GameLoop(player, false);
-
-        // Set game states based on saved data
-        String gameStateName = dto.getGameState();
-        String previousGameStateName = dto.getPreviousGameState();
-
-        if (gameStateName != null) {
-            switch (gameStateName) {
-                case "DungeonState":
-                    player.setGameState(new DungeonState(gameLoop));
-                    break;
-                case "ExploringState":
-                    player.setGameState(new ExploringState(gameLoop, false));
-                    break;
-                case "TownState":
-                    player.setGameState(new TownState(gameLoop));
-                    break;
-                case "ShopState":
-                    player.setGameState(new ShopState(gameLoop));
-                    break;
-            }
+        if (dto.getGameState() != null) {
+            player.setGameStateName(dto.getGameState());
         }
-
-//        if (previousGameStateName != null) {
-//            switch (previousGameStateName) {
-//                case "DungeonState":
-//                    player.setPreviousGameState(new DungeonState(gameLoop));
-//                    break;
-//                case "ExploringState":
-//                    player.setPreviousGameState(new ExploringState(gameLoop, false));
-//                    break;
-//                case "TownState":
-//                    player.setPreviousGameState(new TownState(gameLoop));
-//                    break;
-//                case "ShopState":
-//                    player.setPreviousGameState(new ShopState(gameLoop));
-//                    break;
-//        }
-//    }
-
+        if (dto.getPreviousGameState() != null) {
+            player.setPreviousGameStateName(dto.getPreviousGameState());
+        }
     return player;
 }
 

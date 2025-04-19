@@ -130,7 +130,7 @@ public class EntityTypeAdapter implements JsonSerializer<Entity>, JsonDeserializ
 
         // Set current weapon if present
         if (jsonObject.has("currentWeaponUUID")) {
-            UUID weaponUUID = UUID.fromString(jsonObject.get("currentWeaponUUID").getAsString());
+            UUID weaponUUID = UUID.fromString(jsonObject.get("currentWeaponUUID").toString());
             if (Item.itemMap.containsKey(weaponUUID)) {
                 Weapon weapon = (Weapon) Item.itemMap.get(weaponUUID);
                 entity.setCurrentWeapon(weapon);

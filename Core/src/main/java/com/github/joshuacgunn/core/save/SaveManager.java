@@ -43,9 +43,11 @@ public abstract class SaveManager {
     public static Player loadState() {
         // The order of this is critical for functionality. It will not work if changed.
         loadItems();
+
         loadEntities();
         loadDungeons();
         loadTowns();
+
         return loadPlayer();
     }
 
@@ -266,13 +268,11 @@ public abstract class SaveManager {
 
         try (Writer writer = new FileWriter(SAVE_DIRECTORY + "armors_snapshot.json")) {
             writer.write(GSON.toJson(armorDTOs));
-            Item.itemMap.values().removeIf(e -> e instanceof Armor);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         try (Writer writer = new FileWriter(SAVE_DIRECTORY + "weapons_snapshot.json")) {
             writer.write(GSON.toJson(weaponDTOS));
-            Item.itemMap.values().removeIf(e -> e instanceof Weapon);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

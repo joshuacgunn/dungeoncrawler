@@ -7,6 +7,7 @@ import com.github.joshuacgunn.core.location.World;
 import com.github.joshuacgunn.core.mechanics.GameEvents;
 import com.github.joshuacgunn.core.save.SaveManager;
 
+import javax.print.attribute.HashPrintJobAttributeSet;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -20,29 +21,26 @@ public class TownState implements GameState {
     private final Town whichTown;
     Scanner scanner = new Scanner(System.in);
 
-    public TownState(GameLoop parentLoop) {
+    public TownState(GameLoop parentLoop, boolean isNew) {
         this.parentLoop = parentLoop;
         this.player = parentLoop.getPlayer();
         this.whichTown = (Town) player.getCurrentLocation();
-        String townSize;
-        if (whichTown.getShopsInTown().size() == 3) {
-            townSize = "large";
-        } else if (whichTown.getShopsInTown().size() == 2) {
-            townSize = "medium";
-        } else {
-            townSize = "small";
+
+        // isNew is true for new games, false for loaded games
+        if (isNew) {
+            String townSize = getTownSize();
+            System.out.println("You have entered " + whichTown.getLocationName() +
+                    ", a " + townSize + " town with a " + getShopsInTown());
         }
-        if (player.getGameState() == null) {
-            // This is a new game
-            System.out.println("You have entered " + whichTown.getLocationName() +
-                    ", a " + townSize + " town with a " + getShopsInTown());
-        } else if (player.getPreviousGameState() != null) {
-            // Player came from exploring
-            System.out.println("You have entered " + whichTown.getLocationName() +
-                    ", a " + townSize + " town with a " + getShopsInTown());
+    }
+
+    private String getTownSize() {
+        if (whichTown.getShopsInTown().size() == 3) {
+            return "large";
+        } else if (whichTown.getShopsInTown().size() == 2) {
+            return "medium";
         } else {
-            // This is a loaded game
-            GameEvents.loadGameGreet(player);
+            return "small";
         }
     }
 
@@ -100,6 +98,7 @@ public class TownState implements GameState {
 
     @Override
     public void handleInput() {
+        System.out.print("Choice: ");
         String input = scanner.nextLine();
         switch (input) {
             case "0":

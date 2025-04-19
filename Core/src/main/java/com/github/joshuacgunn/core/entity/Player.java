@@ -27,6 +27,8 @@ public class Player extends Entity {
 
     private PlayerStats playerStats;
     private final PlayerClass playerClass;
+    private String gameStateName;
+    private String previousGameStateName;
     private GameState gameState;
     private GameState previousGameState;
     private int playerLevel;
@@ -62,6 +64,22 @@ public class Player extends Entity {
 
     public void setPlayerLevel(int playerLevel) {
         this.playerLevel = playerLevel;
+    }
+
+    public String getGameStateName() {
+        return this.gameStateName;
+    }
+
+    public void setGameStateName(String gameState) {
+        this.gameStateName = gameState;
+    }
+
+    public String getPreviousGameStateName() {
+        return previousGameStateName;
+    }
+
+    public void setPreviousGameStateName(String previousGameStateName) {
+        this.previousGameStateName = previousGameStateName;
     }
 
     public GameState getGameState() {
