@@ -1,7 +1,9 @@
 package com.github.joshuacgunn.core.gameplay;
 
 import com.github.joshuacgunn.core.entity.Player;
+import com.github.joshuacgunn.core.location.Location;
 import com.github.joshuacgunn.core.location.Shop;
+import com.github.joshuacgunn.core.location.Town;
 import com.github.joshuacgunn.core.mechanics.GameEvents;
 
 import java.util.Scanner;
@@ -17,7 +19,7 @@ public class ShopState implements GameState {
     public ShopState(GameLoop parentLoop) {
         this.parentLoop = parentLoop;
         this.player = parentLoop.getPlayer();
-        this.whichShop = (Shop) parentLoop.getPlayer().getEntityLocation();
+        this.whichShop = (Shop) parentLoop.getPlayer().getCurrentLocation();
         if (parentLoop.getPreviousGameState() != this) {
             System.out.println(whichShop.getShopOwner().getEntityName() + ": " + GameEvents.npcDialogue(whichShop.getShopOwner(), 1));
         }
@@ -31,11 +33,21 @@ public class ShopState implements GameState {
         }
         System.out.println(whichShop.getShopOwner().getEntityName() + ": " + GameEvents.npcDialogue(whichShop.getShopOwner(), 2));
         System.out.println("You have left the shop");
-        GameEvents.switchGameStates(player, parentLoop.getPreviousGameState());
+        for (Town town : Location.getLocationsByType(Town.class) ) {
+            for (Shop shop : town.getShopsInTown()) {
+                if (shop.equals(player.getCurrentLocation())) {
+                    player.setCurrentLocation(town);
+                }
+            }
+        }
+        TownState townState = new TownState(parentLoop);
+        GameEvents.switchGameStates(player, townState);
+        townState.handleGameState();
     }
 
     @Override
     public void update() {
+        if (!inShop) return;
         System.out.println("What would you like to do?");
         System.out.println("1. Buy an item");
         System.out.println("2. Leave the shop");

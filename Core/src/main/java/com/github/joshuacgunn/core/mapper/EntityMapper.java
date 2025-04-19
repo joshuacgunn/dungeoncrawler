@@ -6,12 +6,13 @@ import com.github.joshuacgunn.core.dto.NpcDTO;
 import com.github.joshuacgunn.core.dto.PlayerDTO;
 import com.github.joshuacgunn.core.dto.InventoryDTO;
 import com.github.joshuacgunn.core.entity.*;
-import com.github.joshuacgunn.core.gameplay.CombatState;
-import com.github.joshuacgunn.core.gameplay.DungeonState;
-import com.github.joshuacgunn.core.gameplay.GameLoop;
+import com.github.joshuacgunn.core.gameplay.*;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
 import com.github.joshuacgunn.core.item.Weapon;
+import com.github.joshuacgunn.core.location.Location;
+import com.github.joshuacgunn.core.location.Town;
+import com.github.joshuacgunn.core.location.World;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -58,7 +59,7 @@ public interface EntityMapper {
         dto.setEntityDefense(entity.getEntityDefense());
         dto.setAlive(entity.isAlive());
         if (entity.getCurrentLocation() != null) {
-            dto.setCurrentLocationUUID(entity.getCurrentLocation());
+            dto.setCurrentLocationUUID(entity.getCurrentLocation().getLocationUUID());
         }
 
         if (entity.getInventory() != null) {
@@ -106,7 +107,7 @@ public interface EntityMapper {
 
         // Handle current dungeon
         if (player.getCurrentLocation() != null) {
-            dto.setCurrentLocationUUID(player.getCurrentLocation());
+            dto.setCurrentLocationUUID(player.getCurrentLocation().getLocationUUID());
         }
 
         if (player.getGameState() != null) {
@@ -118,6 +119,8 @@ public interface EntityMapper {
         }
 
         dto.setPlayerClass(player.getPlayerClass());
+
+        dto.setPlayerLevel(player.getPlayerLevel() );
 
         dto.setPlayerStats(player.getPlayerStats());
 
@@ -201,7 +204,7 @@ public interface EntityMapper {
         }
 
         if (dto.getCurrentLocationUUID() != null) {
-            entity.setCurrentLocation(dto.getCurrentLocationUUID());
+            entity.setCurrentLocation(Location.locationMap.get(dto.getCurrentLocationUUID()));
         }
 
         if (dto.getInventory() != null && dto.getInventory().getItemUUIDs() != null) {
@@ -228,6 +231,8 @@ public interface EntityMapper {
 
         player.setPlayerStats(dto.getPlayerStats());
 
+        player.setPlayerLevel(dto.getPlayerLevel());
+
         player.getPlayerStats().setStrength(dto.getPlayerStats().getStrength());
         player.getPlayerStats().setDexterity(dto.getPlayerStats().getDexterity());
         player.getPlayerStats().setIntelligence(dto.getPlayerStats().getIntelligence());
@@ -235,13 +240,50 @@ public interface EntityMapper {
         player.getPlayerStats().setCharisma(dto.getPlayerStats().getCharisma());
         player.getPlayerStats().setVitality(dto.getPlayerStats().getVitality());
 
-//        String gameStateName = dto.getGameState();
-//
-//        GameLoop gameLoop = GameLoop.createGameLoop(player);
-//
-//        switch (gameStateName) {
-//            case "DungeonState":
-//                player.setGameState(new DungeonState(gameLoop));
+        if (Location.locationMap.containsKey(dto.getCurrentLocationUUID())) {
+            player.setCurrentLocation(Location.locationMap.get(dto.getCurrentLocationUUID()));
+        } else {
+            player.setCurrentLocation(new World(UUID.randomUUID()));
+        }
+
+        String previousGameStateName = dto.getPreviousGameState();
+
+        String gameStateName = dto.getGameState();
+
+        GameLoop gameLoop = GameLoop.createGameLoop(player);
+
+        if (gameStateName != null) {
+            switch (gameStateName) {
+                case "DungeonState":
+                    player.setGameState(new DungeonState(gameLoop));
+                    break;
+                case "ExploringState":
+                    player.setGameState(new ExploringState(gameLoop));
+                    break;
+                case "TownState":
+                    player.setGameState(new TownState(gameLoop));
+                    break;
+                case "ShopState":
+                    player.setGameState(new ShopState(gameLoop));
+                    break;
+            }
+        }
+
+//        if (previousGameStateName != null) {
+//            switch (previousGameStateName) {
+//                case "DungeonState":
+//                    player.setPreviousGameState(new DungeonState(gameLoop));
+//                    break;
+//                case "ExploringState":
+//                    player.setPreviousGameState(new ExploringState(gameLoop));
+//                    break;
+//                case "TownState":
+//                    player.setPreviousGameState(new TownState(gameLoop));
+//                    break;
+//                case "ShopState":
+//                    player.setPreviousGameState(new ShopState(gameLoop));
+//                    break;
+//            }
 //        }
 
 

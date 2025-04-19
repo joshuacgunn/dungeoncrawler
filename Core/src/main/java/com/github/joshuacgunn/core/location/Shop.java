@@ -67,7 +67,7 @@ public class Shop extends Location {
         for (int i = 0; i <= npcsToGenerate; i++) {
             NPC npc = new NPC(faker.name().firstName(), UUID.randomUUID());
             npcsToReturn.add(npc);
-            npc.setCurrentLocation(this.locationUUID);
+            npc.setCurrentLocation(this);
         }
 
         return npcsToReturn;

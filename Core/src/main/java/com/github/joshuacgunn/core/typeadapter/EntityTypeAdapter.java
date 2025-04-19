@@ -124,7 +124,7 @@ public class EntityTypeAdapter implements JsonSerializer<Entity>, JsonDeserializ
         if (jsonObject.has("currentLocationUUID")) {
             UUID locationUUID = UUID.fromString(jsonObject.get("currentLocationUUID").getAsString());
             if (Location.locationMap.containsKey(locationUUID)) {
-                entity.setCurrentLocation(locationUUID);
+                entity.setCurrentLocation(Location.locationMap.get(locationUUID));
             }
         }
 

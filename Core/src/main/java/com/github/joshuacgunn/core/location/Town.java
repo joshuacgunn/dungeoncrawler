@@ -20,7 +20,7 @@ public class Town extends Location {
             if (shopCount == 1) {
                 NPC npc = new NPC(new Faker().name().firstName(), UUID.randomUUID());
                 Shop shop = new Shop(Shop.ShopType.TAVERN, UUID.randomUUID(), npc, true);
-                npc.setCurrentLocation(shop.getLocationUUID());
+                npc.setCurrentLocation(shop);
                 shopsInTown.add(shop);
             } else {
                 this.shopsInTown = generateShops();
@@ -58,7 +58,7 @@ public class Town extends Location {
                 }
             }
             Shop shop = new Shop(shopToMake, UUID.randomUUID(), npc, true);
-            npc.setCurrentLocation(shop.locationUUID);
+            npc.setCurrentLocation(shop);
             shops.add(shop);
             i++;
         }

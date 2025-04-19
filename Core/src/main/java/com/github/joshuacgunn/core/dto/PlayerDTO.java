@@ -12,11 +12,20 @@ public class PlayerDTO extends EntityDTO {
     public PlayerStats playerStats;
     public String gameState;
     public String previousGameState;
+    public int playerLevel;
 
 
     public PlayerDTO() {
         super();
         this.setEntityType("Player");
+    }
+
+    public int getPlayerLevel() {
+        return this.playerLevel;
+    }
+
+    public void setPlayerLevel(int playerLevel) {
+        this.playerLevel = playerLevel;
     }
 
     public String getGameState() {

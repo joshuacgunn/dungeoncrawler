@@ -12,29 +12,39 @@ public class GameLoop {
 
     public GameLoop(Player player) {
         this.player = player;
-        Location playerLocation = player.getEntityLocation();
-        
+        Location playerLocation = player.getCurrentLocation();
+
         // Initialize the appropriate game state based on player location
+        initializeGameState(playerLocation);
+
+        // Main game loop - simplified
+        if (currentGameState != null) {
+            currentGameState.handleGameState();
+        }
+    }
+
+    private void initializeGameState(Location playerLocation) {
         if (playerLocation instanceof com.github.joshuacgunn.core.location.Dungeon) {
             this.currentGameState = new DungeonState(this);
         } else if (playerLocation instanceof com.github.joshuacgunn.core.location.Town) {
             this.currentGameState = new TownState(this);
         } else if (playerLocation instanceof com.github.joshuacgunn.core.location.Shop) {
             this.currentGameState = new ShopState(this);
+        } else {
+            this.currentGameState = new ExploringState(this);
         }
-        
-        // Ensure the game state is properly initialized
+
         if (this.currentGameState == null) {
             throw new IllegalStateException("Could not determine initial game state from player location: " + playerLocation);
         }
-        
-        // Set initial game state
+
         player.setGameState(this.currentGameState);
-        
-        // Main game loop
-        while (isRunning && currentGameState != null) {
-            this.currentGameState.handleGameState();
-        }
+    }
+
+    public void stopGame() {
+        this.isRunning = false;
+        this.currentGameState = null;
+        System.exit(0);  // Add this line to force exit
     }
 
     public void setCurrentGameState(GameState currentGameState) {
@@ -62,7 +72,6 @@ public class GameLoop {
     }
 
     public static GameLoop createGameLoop(Player player) {
-        Location playerLocation = player.getEntityLocation();
         return new GameLoop(player);
     }
 }

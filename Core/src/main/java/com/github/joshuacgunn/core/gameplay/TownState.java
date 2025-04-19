@@ -3,9 +3,11 @@ package com.github.joshuacgunn.core.gameplay;
 import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.location.Shop;
 import com.github.joshuacgunn.core.location.Town;
+import com.github.joshuacgunn.core.location.World;
 import com.github.joshuacgunn.core.mechanics.GameEvents;
 
 import java.util.Scanner;
+import java.util.UUID;
 
 public class TownState implements GameState {
     private final GameLoop parentLoop;
@@ -18,7 +20,7 @@ public class TownState implements GameState {
     public TownState(GameLoop parentLoop) {
         this.parentLoop = parentLoop;
         this.player = parentLoop.getPlayer();
-        this.whichTown = (Town) player.getEntityLocation();
+        this.whichTown = (Town) player.getCurrentLocation();
         String townSize;
         if (whichTown.getShopsInTown().size() == 3) {
             townSize = "large";
@@ -39,10 +41,13 @@ public class TownState implements GameState {
         }
         System.out.println("You have left the town");
         GameEvents.switchGameStates(player, new ExploringState(parentLoop));
+        player.setCurrentLocation(new World(UUID.randomUUID()));
+        parentLoop.getCurrentGameState().handleGameState();
     }
 
     @Override
     public void update() {
+        if (!inTown) return;
         System.out.println("What would you like to do?");
         System.out.println("1. Visit a shop");
         System.out.println("2. Leave the town");
@@ -55,7 +60,7 @@ public class TownState implements GameState {
                     System.out.println((i + 1) + ": " + shop.getLocationName());
                 }
                 handleInput();
-                player.setCurrentLocation(whichTown.getShopsInTown().get(currentAction-1).getLocationUUID());
+                player.setCurrentLocation(whichTown.getShopsInTown().get(currentAction-1));
                 System.out.println("You have entered " + whichTown.getShopsInTown().get(currentAction-1).getLocationName());
                 ShopState shopState = new ShopState(parentLoop);
                 GameEvents.switchGameStates(player, shopState);

@@ -29,6 +29,7 @@ public class Player extends Entity {
     private final PlayerClass playerClass;
     private GameState gameState;
     private GameState previousGameState;
+    private int playerLevel;
 
     /**
      * Creates a new player with the specified name and UUID.
@@ -42,6 +43,7 @@ public class Player extends Entity {
         super(name, uuid);
         this.entityHp = MAX_HP;
         this.playerClass = playerClass;
+        this.playerLevel = 0;
         this.playerStats = initializeStats();
     }
 
@@ -52,6 +54,14 @@ public class Player extends Entity {
      */
     public Weapon getCurrentWeapon() {
         return this.currentWeapon;
+    }
+
+    public int getPlayerLevel() {
+        return this.playerLevel;
+    }
+
+    public void setPlayerLevel(int playerLevel) {
+        this.playerLevel = playerLevel;
     }
 
     public GameState getGameState() {
@@ -81,8 +91,6 @@ public class Player extends Entity {
     public PlayerClass getPlayerClass() {
         return this.playerClass;
     }
-
-
 
     /**
      * Equips a weapon for the player to use.
@@ -194,7 +202,7 @@ public class Player extends Entity {
 
     public static Player createPlayer() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Welcome to Dungeon Crawler!");
+        System.out.println("Welcome to the greatest RPG you've every played.");
         System.out.println("What is your name?");
         String name = scanner.nextLine();
         System.out.println("What class would you like to play as?");

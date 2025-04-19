@@ -51,7 +51,7 @@ public class DungeonFloor extends Location{
         if (!skipEnemyGeneration) {
             generateEnemies();
             for (Enemy enemy : enemiesOnFloor) {
-                enemy.setCurrentLocation(this.locationUUID);
+                enemy.setCurrentLocation(this);
             }
         }
         this.difficultyRating = calculateDifficulty();
