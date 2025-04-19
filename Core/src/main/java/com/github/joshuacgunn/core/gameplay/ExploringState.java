@@ -93,8 +93,10 @@ public class ExploringState implements GameState {
                     System.out.println("There are no dungeons in the world.");
                     break;
                 }
+
                 System.out.println("Which dungeon?");
                 System.out.println("0: Go back");
+
                 int j = 1;
                 ArrayList<Dungeon> dungeons = new ArrayList<>();
                 for (Dungeon dungeon : Location.getLocationsByType(Dungeon.class)) {

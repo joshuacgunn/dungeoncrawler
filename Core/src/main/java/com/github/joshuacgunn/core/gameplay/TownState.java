@@ -51,7 +51,7 @@ public class TownState implements GameState {
         while (inTown) {
             update();
         }
-        if (inGame) {
+        if (inGame && !inShop) {
             System.out.println("You have left the town");
             player.setCurrentLocation(new World(UUID.randomUUID()));
             player.setPreviousGameState(this);
@@ -61,7 +61,7 @@ public class TownState implements GameState {
         } else if (inShop) {
             ShopState shopState = new ShopState(parentLoop);
             GameEvents.switchGameStates(player, shopState);
-
+            shopState.handleGameState();
         } else {
             GameEvents.leaveGame(player, parentLoop);
         }

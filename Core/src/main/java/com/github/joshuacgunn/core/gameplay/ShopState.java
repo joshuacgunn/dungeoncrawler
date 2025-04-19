@@ -20,10 +20,17 @@ public class ShopState implements GameState {
     public ShopState(GameLoop parentLoop) {
         this.parentLoop = parentLoop;
         this.player = parentLoop.getPlayer();
+
         this.whichShop = (Shop) parentLoop.getPlayer().getCurrentLocation();
-        if (parentLoop.getPreviousGameState() != null && parentLoop.getPreviousGameState().getGameStateName().equals("ExploringState")) {
+
+        if (player.getGameState() == null) {
             System.out.println(whichShop.getShopOwner().getEntityName() + ": " + GameEvents.npcDialogue(whichShop.getShopOwner(), 1));
-        } else {
+        } else if (player.getPreviousGameState() != null) {
+            System.out.println(whichShop.getShopOwner().getEntityName() + ": " + GameEvents.npcDialogue(whichShop.getShopOwner(), 1));
+        } else if (player.getPreviousGameState() instanceof TownState || player.getPreviousGameState() instanceof DungeonState) {
+            System.out.println(whichShop.getShopOwner().getEntityName() + ": " + GameEvents.npcDialogue(whichShop.getShopOwner(), 1));
+        }
+        else {
             GameEvents.loadGameGreet(player);
         }
     }
@@ -44,6 +51,7 @@ public class ShopState implements GameState {
                     }
                 }
             }
+            player.setPreviousGameState(this);
             TownState townState = new TownState(parentLoop);
             GameEvents.switchGameStates(player, townState);
             townState.handleGameState();
@@ -61,6 +69,10 @@ public class ShopState implements GameState {
         System.out.println("2. Leave the shop");
         handleInput();
         switch (currentAction) {
+            case 0:
+                inShop = false;
+                inGame = false;
+                break;
             case 1:
                 System.out.println("Which item would you like to buy?");
             case 2:
