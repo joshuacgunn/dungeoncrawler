@@ -69,8 +69,8 @@ public abstract class GameEvents {
 
         // Move save to after state transition is complete
         SaveManager.saveState(player);
-        newGameState.handleGameState();
 
+        newGameState.handleGameState();
     }
 
     public static String npcDialogue(NPC npc, int dialogue) {

@@ -1,6 +1,7 @@
 package com.github.joshuacgunn.core.entity;
 
 import com.github.joshuacgunn.core.gameplay.GameState;
+import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Weapon;
 import com.github.joshuacgunn.core.mechanics.PlayerStats;
 
@@ -41,12 +42,15 @@ public class Player extends Entity {
      * @param name The player's name
      * @param uuid The unique identifier for the player
      */
-    public Player(String name, UUID uuid, PlayerClass playerClass) {
+    public Player(String name, UUID uuid, PlayerClass playerClass, boolean isNew) {
         super(name, uuid);
-        this.entityHp = MAX_HP;
         this.playerClass = playerClass;
-        this.playerLevel = 0;
-        this.playerStats = initializeStats();
+        if (isNew) {
+            generateStartingEquipment(this);
+            this.playerStats = initializeStats();
+            this.entityHp = MAX_HP;
+            this.playerLevel = 0;
+        }
     }
 
     /**
@@ -233,9 +237,54 @@ public class Player extends Entity {
         scanner.nextLine();
         UUID uuid = UUID.randomUUID();
         PlayerClass playerClassEnum = PlayerClass.values()[playerClass - 1];
-        Player player = new Player(name, uuid, playerClassEnum);
+        Player player = new Player(name, uuid, playerClassEnum, true);
         System.out.println(player.getPlayerStatsString());
         return player;
+    }
+
+    public static void generateStartingEquipment(Player player) {
+        PlayerClass playerClass = player.getPlayerClass();
+        Weapon weapon;
+        Armor helmet;
+        Armor chestplate;
+        Armor leggings;
+        Armor boots;
+        switch(playerClass) {
+            case ROGUE:
+                weapon = new Weapon("Rogue's basic sword", UUID.randomUUID(), Weapon.WeaponQuality.JAGGED, Weapon.WeaponMaterial.IRON);
+                helmet = new Armor(UUID.randomUUID(), Armor.ArmorSlot.HELMET, "Rogue's basic helmet", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
+                chestplate = new Armor(UUID.randomUUID(), Armor.ArmorSlot.CHESTPLATE, "Rogue's basic chestplate", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
+                leggings = new Armor(UUID.randomUUID(), Armor.ArmorSlot.LEGGINGS, "Rogue's basic leggings", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
+                boots = new Armor(UUID.randomUUID(), Armor.ArmorSlot.BOOTS, "Rogue's basic boots", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
+                break;
+            case WIZARD:
+                weapon = new Weapon("Wizard's basic sword", UUID.randomUUID(), Weapon.WeaponQuality.JAGGED, Weapon.WeaponMaterial.IRON);
+                helmet = new Armor(UUID.randomUUID(), Armor.ArmorSlot.HELMET, "Wizard's basic helmet", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
+                chestplate = new Armor(UUID.randomUUID(), Armor.ArmorSlot.CHESTPLATE, "Wizard's basic chestplate", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
+                leggings = new Armor(UUID.randomUUID(), Armor.ArmorSlot.LEGGINGS, "Wizard's basic leggings", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
+                boots = new Armor(UUID.randomUUID(), Armor.ArmorSlot.BOOTS, "Wizard's basic boots", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
+                break;
+            case PALADIN:
+                weapon = new Weapon("Paladin's basic sword", UUID.randomUUID(), Weapon.WeaponQuality.JAGGED, Weapon.WeaponMaterial.IRON);
+                helmet = new Armor(UUID.randomUUID(), Armor.ArmorSlot.HELMET, "Paladin's basic helmet", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
+                chestplate = new Armor(UUID.randomUUID(), Armor.ArmorSlot.CHESTPLATE, "Paladin's basic chestplate", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
+                leggings = new Armor(UUID.randomUUID(), Armor.ArmorSlot.LEGGINGS, "Paladin's basic leggings", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
+                boots = new Armor(UUID.randomUUID(), Armor.ArmorSlot.BOOTS, "Paladin's basic boots", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
+                break;
+            case null, default:
+                weapon = Weapon.generateWeapon(0, 5, player.getInventory());
+                helmet = new Armor(UUID.randomUUID(), Armor.ArmorSlot.HELMET, "Basic helmet", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
+                chestplate = new Armor(UUID.randomUUID(), Armor.ArmorSlot.CHESTPLATE, "Basic chestplate", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
+                leggings = new Armor(UUID.randomUUID(), Armor.ArmorSlot.LEGGINGS, "Basic leggings", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
+                boots = new Armor(UUID.randomUUID(), Armor.ArmorSlot.BOOTS, "Basic boots", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
+                break;
+        }
+
+        player.equipArmor(helmet);
+        player.equipArmor(chestplate);
+        player.equipArmor(leggings);
+        player.equipArmor(boots);
+        player.setCurrentWeapon(weapon);
     }
 
 }

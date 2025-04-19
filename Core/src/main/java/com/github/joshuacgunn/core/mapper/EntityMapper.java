@@ -226,7 +226,7 @@ public interface EntityMapper {
     default Player playerDtoToPlayer(PlayerDTO dto) {
         if (dto == null) return null;
 
-        Player player = new Player(dto.getEntityName(), dto.getEntityUUID(), dto.getPlayerClass());
+        Player player = new Player(dto.getEntityName(), dto.getEntityUUID(), dto.getPlayerClass(), false);
 
         player.setPlayerStats(dto.getPlayerStats());
         player.setPlayerLevel(dto.getPlayerLevel());

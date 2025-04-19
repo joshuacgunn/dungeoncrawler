@@ -17,7 +17,6 @@ public class Game {
             player = Player.createPlayer();
             Town startingTown = new Town(UUID.randomUUID(), true);
             player.setCurrentLocation(startingTown);
-            player.setCurrentWeapon(Weapon.generateWeapon(0, 7, player.getInventory()));
         } else {
             player = SaveManager.loadState();
         }

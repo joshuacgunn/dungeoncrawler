@@ -89,7 +89,7 @@ public class EntityTypeAdapter implements JsonSerializer<Entity>, JsonDeserializ
         switch (entityType) {
             case "Player":
                 Player.PlayerClass playerClass = Player.PlayerClass.valueOf(jsonObject.get("playerClass").getAsString());
-                entity = new Player(entityName, entityUUID, playerClass);
+                entity = new Player(entityName, entityUUID, playerClass, false);
                 break;
 
             case "NPC":
