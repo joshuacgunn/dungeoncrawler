@@ -21,20 +21,20 @@ public class MainMenuState implements GameState {
 
     public MainMenuState() {
         clearConsole();
-        System.out.println("" +
-                "" +
-                " _____                                                                                   _____ \n" +
-                "( ___ )                                                                                 ( ___ )\n" +
-                " |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   | \n" +
-                " |   |  ____                                        ____                    _            |   | \n" +
-                " |   | |  _ \\ _   _ _ __   __ _  ___  ___  _ __    / ___|_ __ __ ___      _| | ___ _ __  |   | \n" +
-                " |   | | | | | | | | '_ \\ / _` |/ _ \\/ _ \\| '_ \\  | |   | '__/ _` \\ \\ /\\ / / |/ _ \\ '__| |   | \n" +
-                " |   | | |_| | |_| | | | | (_| |  __/ (_) | | | | | |___| | | (_| |\\ V  V /| |  __/ |    |   | \n" +
-                " |   | |____/ \\__,_|_| |_|\\__, |\\___|\\___/|_| |_|  \\____|_|  \\__,_| \\_/\\_/ |_|\\___|_|    |   | \n" +
-                " |   |                    |___/                                                          |   | \n" +
-                " |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| \n" +
-                "(_____)                                                                                 (_____)\n" +
-                "");
+        System.out.println(
+                """
+                         _____                                                                                   _____\s
+                        ( ___ )                                                                                 ( ___ )
+                         |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   |\s
+                         |   |  ____                                        ____                    _            |   |\s
+                         |   | |  _ \\ _   _ _ __   __ _  ___  ___  _ __    / ___|_ __ __ ___      _| | ___ _ __  |   |\s
+                         |   | | | | | | | | '_ \\ / _` |/ _ \\/ _ \\| '_ \\  | |   | '__/ _` \\ \\ /\\ / / |/ _ \\ '__| |   |\s
+                         |   | | |_| | |_| | | | | (_| |  __/ (_) | | | | | |___| | | (_| |\\ V  V /| |  __/ |    |   |\s
+                         |   | |____/ \\__,_|_| |_|\\__, |\\___|\\___/|_| |_|  \\____|_|  \\__,_| \\_/\\_/ |_|\\___|_|    |   |\s
+                         |   |                    |___/                                                          |   |\s
+                         |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___|\s
+                        (_____)                                                                                 (_____)
+                        """);
         handleGameState();
     }
 
@@ -60,19 +60,18 @@ public class MainMenuState implements GameState {
                 inGame = false;
                 break;
             case 1:
-                System.out.println("Starting new game.");
-                try {
-                    TimeUnit.SECONDS.sleep(2);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                clearConsole();
                 if (new File("saves/player_save.json").exists()) {
                     System.out.println("You have already saved a game!");
                     System.out.println("Would you like to overwrite it? (y/n)");
                     String input = scanner.nextLine();
                     switch (input) {
                         case "y":
+                            try {
+                                TimeUnit.SECONDS.sleep(2);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            System.out.println("Starting new game.");
                             try {
                                 Files.delete(Path.of("saves/"));
                             } catch (Exception e) {
@@ -81,6 +80,7 @@ public class MainMenuState implements GameState {
                             GameEvents.initializeGame();
                             break;
                         case "n":
+                            update();
                             break;
                     }
                 } else {
@@ -88,7 +88,7 @@ public class MainMenuState implements GameState {
                     break;
                 }
             case 2:
-                if (new File("saves/player_save.json").exists()) {
+                if (new File("saves/player_save.json").exists() || new File("backups/saves/").exists()) {
                     GameEvents.initializeGame();
                     break;
                 } else {

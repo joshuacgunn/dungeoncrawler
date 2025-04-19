@@ -162,6 +162,10 @@ public abstract class GameEvents {
     public static void initializeGame() {
         clearConsole();
         Player player;
+        if (new File("backups/saves/").exists()) {
+            SaveManager.loadState();
+        }
+
         boolean isNewGame = !(new File("saves/player_save.json").exists());
 
         if (isNewGame) {

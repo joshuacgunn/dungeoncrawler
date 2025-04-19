@@ -41,6 +41,10 @@ public abstract class SaveManager {
     }
 
     public static Player loadState() {
+        if (new File(BACKUP_DIRECTORY + "saves/").exists() && !(new File(SAVE_DIRECTORY + "player_save.json").exists())) {
+            loadBackup();
+        }
+
         // The order of this is critical for functionality. It will not work if changed.
         loadItems();
 
@@ -48,6 +52,7 @@ public abstract class SaveManager {
         loadDungeons();
         loadTowns();
 
+        manageBackupDirectory();
         return loadPlayer();
     }
 
@@ -86,6 +91,41 @@ public abstract class SaveManager {
                 Arrays.sort(files, Comparator.comparingLong(File::lastModified));
                 files[0].delete();
             }
+        }
+    }
+
+    public static void loadBackup () {
+        File backupDir = new File(BACKUP_DIRECTORY + "saves");
+        if (!backupDir.exists() || !backupDir.isDirectory()) {
+            throw new RuntimeException("Backup directory not found");
+        }
+
+        // Get all backup directories
+        File[] backupDirs = backupDir.listFiles();
+        if (backupDirs == null || backupDirs.length == 0) {
+            throw new RuntimeException("No backups found");
+        }
+
+        // Sort by last modified time to get the most recent backup
+        Arrays.sort(backupDirs, (f1, f2) -> Long.compare(f2.lastModified(), f1.lastModified()));
+        File mostRecentBackup = backupDirs[0];
+
+        // Clear current save directory
+        File currentSaveDir = new File(SAVE_DIRECTORY);
+        if (currentSaveDir.exists()) {
+            try {
+                FileUtils.deleteDirectory(currentSaveDir);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to clear current save directory", e);
+            }
+        }
+
+        // Copy the most recent backup to the save directory
+        try {
+            FileUtils.copyDirectory(mostRecentBackup, currentSaveDir);
+            System.out.println("Loaded backup from: " + mostRecentBackup.getName());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to copy backup to save directory", e);
         }
     }
 
