@@ -77,6 +77,7 @@ public class ExploringState implements GameState {
                 if (townIndex == 0) {
                     break;
                 }
+
                 isExploring = false;
                 player.setCurrentLocation(towns.get(townIndex-1));
                 player.setPreviousGameState(this);

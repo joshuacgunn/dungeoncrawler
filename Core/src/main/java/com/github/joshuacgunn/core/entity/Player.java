@@ -226,7 +226,6 @@ public class Player extends Entity {
 
     public static Player createPlayer() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Welcome to the greatest RPG you've every played.");
         System.out.println("What is your name?");
         String name = scanner.nextLine();
         System.out.println("What class would you like to play as?");

@@ -5,6 +5,7 @@ import com.github.joshuacgunn.core.entity.NPC;
 import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.gameplay.ExploringState;
 import com.github.joshuacgunn.core.gameplay.GameState;
+import com.github.joshuacgunn.core.gameplay.TownState;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
 import com.github.joshuacgunn.core.location.Location;
@@ -13,6 +14,8 @@ import com.github.joshuacgunn.core.location.World;
 import com.github.joshuacgunn.core.save.SaveManager;
 import com.github.joshuacgunn.core.gameplay.GameLoop;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 public abstract class GameEvents {
@@ -156,4 +159,32 @@ public abstract class GameEvents {
         }
     }
 
+    public static void initializeGame() {
+        clearConsole();
+        Player player;
+        boolean isNewGame = !(new File("saves/player_save.json").exists());
+
+        if (isNewGame) {
+            player = Player.createPlayer();
+            Town startingTown = new Town(UUID.randomUUID(), true);
+            player.setCurrentLocation(startingTown);
+        } else {
+            player = SaveManager.loadState();
+        }
+
+        GameLoop gameLoop = new GameLoop(player, isNewGame);
+        player.setGameState(new TownState(gameLoop, false));
+        gameLoop.startGameLoop();
+    }
+
+    public static void clearConsole() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            }
+            else {
+                System.out.print("\033\143");
+            }
+        } catch (IOException | InterruptedException ex) {}
+    }
 }
