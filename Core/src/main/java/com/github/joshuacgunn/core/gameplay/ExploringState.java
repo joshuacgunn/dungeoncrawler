@@ -22,8 +22,10 @@ public class ExploringState implements GameState {
     public ExploringState(GameLoop parentLoop) {
         this.parentLoop = parentLoop;
         this.player = parentLoop.getPlayer();
-        if (parentLoop.getPreviousGameState() != this) {
+        if (parentLoop.getPreviousGameState() != null && parentLoop.getPreviousGameState().getGameStateName().equals("ExploringState")) {
             System.out.println("You are now exploring the world.");
+        } else {
+            GameEvents.loadGameGreet(player);
         }
     }
 
@@ -33,9 +35,7 @@ public class ExploringState implements GameState {
         while (isExploring) {
             update();
         }
-        System.out.println("You have left the world.");
-        SaveManager.saveState(player);
-        parentLoop.stopGame();
+        GameEvents.leaveGame(player, parentLoop);
     }
 
     @Override

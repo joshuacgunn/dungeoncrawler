@@ -5,6 +5,7 @@ import com.github.joshuacgunn.core.location.Shop;
 import com.github.joshuacgunn.core.location.Town;
 import com.github.joshuacgunn.core.location.World;
 import com.github.joshuacgunn.core.mechanics.GameEvents;
+import com.github.joshuacgunn.core.save.SaveManager;
 
 import java.util.Scanner;
 import java.util.UUID;
@@ -14,6 +15,7 @@ public class TownState implements GameState {
     private final Player player;
     private int currentAction;
     private boolean inTown = true;
+    private boolean inGame = true;
     private final Town whichTown;
     Scanner scanner = new Scanner(System.in);
 
@@ -29,8 +31,10 @@ public class TownState implements GameState {
         } else {
             townSize = "small";
         }
-        if (parentLoop.getPreviousGameState() != this) {
+        if (parentLoop.getPreviousGameState() != null && parentLoop.getPreviousGameState().getGameStateName().equals("ExploringState")) {
             System.out.println("You have entered " + whichTown.getLocationName() + ", a " + townSize + " town with a " + getShopsInTown());
+        } else {
+            GameEvents.loadGameGreet(player);
         }
     }
 
@@ -39,20 +43,29 @@ public class TownState implements GameState {
         while (inTown) {
             update();
         }
-        System.out.println("You have left the town");
-        GameEvents.switchGameStates(player, new ExploringState(parentLoop));
-        player.setCurrentLocation(new World(UUID.randomUUID()));
-        parentLoop.getCurrentGameState().handleGameState();
+        if (inGame) {
+            System.out.println("You have left the town");
+            GameEvents.switchGameStates(player, new ExploringState(parentLoop));
+            player.setCurrentLocation(new World(UUID.randomUUID()));
+            parentLoop.getCurrentGameState().handleGameState();
+        } else {
+            GameEvents.leaveGame(player, parentLoop);
+        }
     }
 
     @Override
     public void update() {
         if (!inTown) return;
         System.out.println("What would you like to do?");
+        System.out.println("0: Leave the game");
         System.out.println("1. Visit a shop");
         System.out.println("2. Leave the town");
         handleInput();
         switch (currentAction) {
+            case 0:
+                inTown = false;
+                inGame = false;
+                break;
             case 1:
                 System.out.println("Which shop would you like to go to? ");
                 for (int i = 0; i < whichTown.getShopsInTown().size(); i++) {
@@ -76,6 +89,9 @@ public class TownState implements GameState {
     public void handleInput() {
         String input = scanner.nextLine();
         switch (input) {
+            case "0":
+                currentAction = 0;
+                break;
             case "1":
                 currentAction = 1;
                 break;

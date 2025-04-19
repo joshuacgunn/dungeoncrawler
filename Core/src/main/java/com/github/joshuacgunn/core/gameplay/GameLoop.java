@@ -2,6 +2,7 @@ package com.github.joshuacgunn.core.gameplay;
 
 import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.location.Location;
+import com.github.joshuacgunn.core.save.SaveManager;
 
 
 public class GameLoop {
@@ -16,6 +17,8 @@ public class GameLoop {
 
         // Initialize the appropriate game state based on player location
         initializeGameState(playerLocation);
+        player.setGameState(this.currentGameState);
+        SaveManager.saveState(player);
 
         // Main game loop - simplified
         if (currentGameState != null) {
@@ -37,8 +40,6 @@ public class GameLoop {
         if (this.currentGameState == null) {
             throw new IllegalStateException("Could not determine initial game state from player location: " + playerLocation);
         }
-
-        player.setGameState(this.currentGameState);
     }
 
     public void stopGame() {

@@ -13,6 +13,7 @@ public class ShopState implements GameState {
     private final Shop whichShop;
     private int currentAction;
     private boolean inShop = true;
+    private boolean inGame = true;
     Scanner scanner = new Scanner(System.in);
     private final Player player;
 
@@ -20,8 +21,10 @@ public class ShopState implements GameState {
         this.parentLoop = parentLoop;
         this.player = parentLoop.getPlayer();
         this.whichShop = (Shop) parentLoop.getPlayer().getCurrentLocation();
-        if (parentLoop.getPreviousGameState() != this) {
+        if (parentLoop.getPreviousGameState() != null && parentLoop.getPreviousGameState().getGameStateName().equals("ExploringState")) {
             System.out.println(whichShop.getShopOwner().getEntityName() + ": " + GameEvents.npcDialogue(whichShop.getShopOwner(), 1));
+        } else {
+            GameEvents.loadGameGreet(player);
         }
     }
 
@@ -31,24 +34,29 @@ public class ShopState implements GameState {
         while (inShop) {
             update();
         }
-        System.out.println(whichShop.getShopOwner().getEntityName() + ": " + GameEvents.npcDialogue(whichShop.getShopOwner(), 2));
-        System.out.println("You have left the shop");
-        for (Town town : Location.getLocationsByType(Town.class) ) {
-            for (Shop shop : town.getShopsInTown()) {
-                if (shop.equals(player.getCurrentLocation())) {
-                    player.setCurrentLocation(town);
+        if (inGame) {
+            System.out.println(whichShop.getShopOwner().getEntityName() + ": " + GameEvents.npcDialogue(whichShop.getShopOwner(), 2));
+            System.out.println("You have left the shop");
+            for (Town town : Location.getLocationsByType(Town.class)) {
+                for (Shop shop : town.getShopsInTown()) {
+                    if (shop.equals(player.getCurrentLocation())) {
+                        player.setCurrentLocation(town);
+                    }
                 }
             }
+            TownState townState = new TownState(parentLoop);
+            GameEvents.switchGameStates(player, townState);
+            townState.handleGameState();
+        } else {
+            GameEvents.leaveGame(player, parentLoop);
         }
-        TownState townState = new TownState(parentLoop);
-        GameEvents.switchGameStates(player, townState);
-        townState.handleGameState();
     }
 
     @Override
     public void update() {
         if (!inShop) return;
         System.out.println("What would you like to do?");
+        System.out.println("0: Leave the game");
         System.out.println("1. Buy an item");
         System.out.println("2. Leave the shop");
         handleInput();

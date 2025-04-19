@@ -5,6 +5,7 @@ import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.location.Dungeon;
 import com.github.joshuacgunn.core.location.World;
 import com.github.joshuacgunn.core.mechanics.GameEvents;
+import com.github.joshuacgunn.core.save.SaveManager;
 
 import java.util.Scanner;
 import java.util.UUID;
@@ -14,6 +15,7 @@ public class DungeonState implements GameState {
     private Player player;
     public Scanner scanner = new Scanner(System.in);
     private boolean inDungeon = true;
+    private boolean inGame = true;
     private int currentAction;
     private Dungeon whichDungeon;
 
@@ -21,8 +23,10 @@ public class DungeonState implements GameState {
         this.parentLoop = parentLoop;
         this.player = parentLoop.getPlayer();
         this.whichDungeon = (Dungeon) player.getCurrentLocation();
-        if (parentLoop.getPreviousGameState() != this) {
+        if (parentLoop.getPreviousGameState() != null && parentLoop.getPreviousGameState().getGameStateName().equals("ExploringState")) {
             System.out.println("You have entered " + whichDungeon.getLocationName() + ", a dungeon with " + whichDungeon.getFloors().size() + " floors, and a difficulty of " + whichDungeon.getDifficultyRating());
+        } else {
+            GameEvents.loadGameGreet(player);
         }
     }
 
@@ -31,21 +35,30 @@ public class DungeonState implements GameState {
         while (inDungeon) {
             update();
         }
-        System.out.println("You have left the dungeon");
-        GameEvents.switchGameStates(player, new ExploringState(parentLoop));
-        player.setCurrentLocation(new World(UUID.randomUUID()));
+        if (inGame) {
+            System.out.println("You have left the dungeon");
+            GameEvents.switchGameStates(player, new ExploringState(parentLoop));
+            player.setCurrentLocation(new World(UUID.randomUUID()));
+        } else {
+            GameEvents.leaveGame(player, parentLoop);
+        }
     }
 
     @Override
     public void update() {
         if (!inDungeon) return;
-        System.out.println("You are in the dungeon, what is your next move?");
+        System.out.println("You are in the dungeon, on floor " + whichDungeon.getCurrentFloor() + ", what is your next move?");
+        System.out.println("0. Leave the game");
         System.out.println("1. Attack an enemy");
         System.out.println("2. Try to sneak past to the next floor");
         System.out.println("3. Check your inventory");
         System.out.println("4. Leave the dungeon");
         handleInput();
         switch (currentAction) {
+            case 0:
+                inDungeon = false;
+                inGame = false;
+                break;
             case 1:
                 Enemy enemy = whichDungeon.getCurrentFloor().getEnemiesOnFloor().get(0);
                 CombatState combatState = new CombatState(enemy, parentLoop);
@@ -65,6 +78,9 @@ public class DungeonState implements GameState {
     public void handleInput() {
         String input = scanner.nextLine();
         switch (input) {
+            case "0":
+                currentAction = 0;
+                break;
             case "1":
                 currentAction = 1;
                 break;

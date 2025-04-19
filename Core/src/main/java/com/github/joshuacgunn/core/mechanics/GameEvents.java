@@ -6,6 +6,7 @@ import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.gameplay.GameState;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
+import com.github.joshuacgunn.core.location.Town;
 import com.github.joshuacgunn.core.save.SaveManager;
 import com.github.joshuacgunn.core.gameplay.GameLoop;
 
@@ -125,5 +126,24 @@ public abstract class GameEvents {
         }
     }
 
+    public static void leaveGame(Player player, GameLoop parentLoop) {
+        System.out.println("You have left the game");
+        SaveManager.saveState(player);
+        parentLoop.stopGame();
+    }
 
-}
+    public static void loadGameGreet(Player player) {
+            System.out.println("Welcome back, " + player.getEntityName() + "!");
+            if (player.getCurrentLocation() != null) {
+                if (player.getCurrentLocation() instanceof Town town) {
+                    System.out.println("You are currently in the town of " + town.getLocationName() + ".");
+                } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.World) {
+                    System.out.println("You are currently exploring the world. Have fun!");
+                } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.Dungeon dungeon) {
+                    System.out.println("You are currently in the dungeon " + dungeon.getLocationName() + ", on floor " + dungeon.getCurrentFloor() + ".");
+                } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.Shop shop) {
+                    System.out.println("You are currently in the shop " + shop.getLocationName() + ".");
+                }
+            }
+        }
+    }
