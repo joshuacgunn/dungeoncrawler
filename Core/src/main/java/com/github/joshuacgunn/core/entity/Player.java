@@ -88,6 +88,7 @@ public class Player extends Entity {
 
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
+        this.gameStateName = gameState.getClass().getSimpleName();
     }
 
     public GameState getPreviousGameState() {
@@ -96,6 +97,7 @@ public class Player extends Entity {
 
     public void setPreviousGameState(GameState previousGameState) {
         this.previousGameState = previousGameState;
+        this.previousGameStateName = previousGameState.getClass().getSimpleName();
     }
 
     public PlayerStats getPlayerStats() {

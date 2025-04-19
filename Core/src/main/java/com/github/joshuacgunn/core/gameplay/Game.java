@@ -23,6 +23,7 @@ public class Game {
         }
 
         GameLoop gameLoop = new GameLoop(player, isNewGame);
+        player.setGameState(new TownState(gameLoop, false));
         gameLoop.startGameLoop();
     }
 }

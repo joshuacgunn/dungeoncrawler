@@ -17,21 +17,14 @@ public class ShopState implements GameState {
     Scanner scanner = new Scanner(System.in);
     private final Player player;
 
-    public ShopState(GameLoop parentLoop) {
+    public ShopState(GameLoop parentLoop, boolean isNew) {
         this.parentLoop = parentLoop;
         this.player = parentLoop.getPlayer();
 
         this.whichShop = (Shop) parentLoop.getPlayer().getCurrentLocation();
 
-        if (player.getGameState() == null) {
-            System.out.println(whichShop.getShopOwner().getEntityName() + ": " + GameEvents.npcDialogue(whichShop.getShopOwner(), 1));
-        } else if (player.getPreviousGameState() != null) {
-            System.out.println(whichShop.getShopOwner().getEntityName() + ": " + GameEvents.npcDialogue(whichShop.getShopOwner(), 1));
-        } else if (player.getPreviousGameState() instanceof TownState || player.getPreviousGameState() instanceof DungeonState) {
-            System.out.println(whichShop.getShopOwner().getEntityName() + ": " + GameEvents.npcDialogue(whichShop.getShopOwner(), 1));
-        }
-        else {
-            GameEvents.loadGameGreet(player);
+        if (isNew) {
+            System.out.println(whichShop.getShopOwner().getEntityName() + ": " + GameEvents.npcDialogue(whichShop.getShopOwner(), 1) );
         }
     }
 
@@ -54,7 +47,6 @@ public class ShopState implements GameState {
             player.setPreviousGameState(this);
             TownState townState = new TownState(parentLoop, true);
             GameEvents.switchGameStates(player, townState);
-            townState.handleGameState();
         } else {
             GameEvents.leaveGame(player, parentLoop);
         }

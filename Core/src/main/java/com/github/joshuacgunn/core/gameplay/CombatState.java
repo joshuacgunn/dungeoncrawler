@@ -27,7 +27,7 @@ public class CombatState implements GameState {
             update();
         }
         if (!player.isAlive()) {
-            parentLoop.setRunning(false);
+            parentLoop.stopGame();
         } else {
             GameEvents.switchGameStates(player, parentLoop.getPreviousGameState());
         }

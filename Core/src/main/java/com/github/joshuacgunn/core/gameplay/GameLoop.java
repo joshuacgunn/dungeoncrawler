@@ -23,7 +23,6 @@ public class GameLoop {
     private GameState previousGameState;
 
     /** Flag indicating if the game loop is currently running */
-    private boolean isRunning = true;
 
     /** The player associated with this game loop */
     private final Player player;
@@ -47,23 +46,46 @@ public class GameLoop {
 
         if (!isNewGame && player.getGameStateName() != null) {
             // Create the actual state objects for the game
-            String stateName = player.getGameStateName();
-            if (stateName != null) {
-                switch (stateName) {
-                    case "DungeonState":
-                        player.setGameState(new DungeonState(this, false));
-                        break;
-                    case "ExploringState":
-                        player.setGameState(new ExploringState(this, false));
-                        break;
-                    case "TownState":
-                        player.setGameState(new TownState(this, false));
-                        break;
-                    case "ShopState":
-                        player.setGameState(new ShopState(this));
-                        break;
-                }
+            createAndSetGameState(player.getGameStateName(), false);
+            
+            // Restore previous state if it exists
+            if (player.getPreviousGameStateName() != null) {
+                createAndSetPreviousGameState(player.getPreviousGameStateName());
             }
+        }
+    }
+
+    private void createAndSetGameState(String stateName, boolean isNew) {
+        if (stateName == null) return;
+        
+        GameState newState = switch (stateName) {
+            case "DungeonState" -> new DungeonState(this, isNew);
+            case "ExploringState" -> new ExploringState(this, isNew);
+            case "TownState" -> new TownState(this, isNew);
+            case "ShopState" -> new ShopState(this, isNew);
+            default -> null;
+        };
+        
+        if (newState != null) {
+            this.currentGameState = newState;
+            player.setGameState(newState);
+        }
+    }
+
+    private void createAndSetPreviousGameState(String stateName) {
+        if (stateName == null) return;
+        
+        GameState prevState = switch (stateName) {
+            case "DungeonState" -> new DungeonState(this, false);
+            case "ExploringState" -> new ExploringState(this, false);
+            case "TownState" -> new TownState(this, false);
+            case "ShopState" -> new ShopState(this, false);
+            default -> null;
+        };
+        
+        if (prevState != null) {
+            this.previousGameState = prevState;
+            player.setPreviousGameState(prevState);
         }
     }
 
@@ -78,7 +100,7 @@ public class GameLoop {
         } else if (playerLocation instanceof com.github.joshuacgunn.core.location.Town) {
             this.currentGameState = new TownState(this, isNewGame);
         } else if (playerLocation instanceof com.github.joshuacgunn.core.location.Shop) {
-            this.currentGameState = new ShopState(this);
+            this.currentGameState = new ShopState(this, isNewGame);
         } else {
             this.currentGameState = new ExploringState(this, isNewGame);
         }
@@ -88,7 +110,6 @@ public class GameLoop {
      * Stops the game loop and exits the application.
      */
     public void stopGame() {
-        this.isRunning = false;
         this.currentGameState = null;
         System.exit(0);
     }
@@ -134,9 +155,6 @@ public class GameLoop {
      *
      * @param running Whether the game loop should be running
      */
-    public void setRunning(boolean running) {
-        this.isRunning = running;
-    }
 
     /**
      * Gets the player associated with this game loop.

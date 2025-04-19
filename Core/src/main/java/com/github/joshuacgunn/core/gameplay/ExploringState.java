@@ -27,12 +27,6 @@ public class ExploringState implements GameState {
             if (player.getPreviousGameState() != null) {
                 System.out.println("You begin exploring the world...");
             }
-//            else if (player.getPreviousGameState() instanceof TownState || player.getPreviousGameState() instanceof DungeonState) {
-//                System.out.println("You begin exploring the world...");
-//            }
-            else {
-                GameEvents.loadGameGreet(player);
-            }
         }
     }
 
@@ -88,7 +82,6 @@ public class ExploringState implements GameState {
                 player.setPreviousGameState(this);
                 TownState townState = new TownState(parentLoop, true);
                 GameEvents.switchGameStates(player, townState);
-                townState.handleGameState();
                 break;
             case 2:
 
@@ -122,7 +115,6 @@ public class ExploringState implements GameState {
                 player.setPreviousGameState(this);
                 DungeonState dungeonState = new DungeonState(parentLoop, true);
                 GameEvents.switchGameStates(player, dungeonState);
-                dungeonState.handleGameState();
                 break;
             case 3:
                 System.out.print("Searching for a new place to go");
@@ -153,14 +145,12 @@ public class ExploringState implements GameState {
                     player.setPreviousGameState(this);
                     TownState townState1 = new TownState(parentLoop, true);
                     GameEvents.switchGameStates(player, townState1);
-                    townState1.handleGameState();
                 } else if (newLocation instanceof Dungeon && input.equalsIgnoreCase("y") ) {
                     isExploring = false;
                     player.setCurrentLocation(newLocation);
                     player.setPreviousGameState(this);
                     DungeonState dungeonState1 = new DungeonState(parentLoop, true);
                     GameEvents.switchGameStates(player, dungeonState1);
-                    dungeonState1.handleGameState();
                 } else {
                     System.out.println("You decided not to go there.");
                     update();

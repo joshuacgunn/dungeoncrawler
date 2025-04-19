@@ -6,12 +6,10 @@ import com.github.joshuacgunn.core.dto.NpcDTO;
 import com.github.joshuacgunn.core.dto.PlayerDTO;
 import com.github.joshuacgunn.core.dto.InventoryDTO;
 import com.github.joshuacgunn.core.entity.*;
-import com.github.joshuacgunn.core.gameplay.*;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
 import com.github.joshuacgunn.core.item.Weapon;
 import com.github.joshuacgunn.core.location.Location;
-import com.github.joshuacgunn.core.location.Town;
 import com.github.joshuacgunn.core.location.World;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -111,14 +109,16 @@ public interface EntityMapper {
         // Handle current dungeon
         if (player.getCurrentLocation() != null) {
             dto.setCurrentLocationUUID(player.getCurrentLocation().getLocationUUID());
+        } else {
+            dto.setCurrentLocationUUID(new World(UUID.randomUUID()).getLocationUUID());
         }
 
         if (player.getGameState() != null) {
             dto.setGameState(player.getGameState().getGameStateName());
         }
 
-        if (player.getPreviousGameState() != null) {
-            dto.setPreviousGameState(player.getPreviousGameState() != null ? player.getPreviousGameState().getGameStateName() : null);
+        if (player.getPreviousGameStateName() != null) {
+            dto.setPreviousGameStateName(player.getPreviousGameState().getGameStateName());
         }
 
         dto.setPlayerClass(player.getPlayerClass());
@@ -248,9 +248,11 @@ public interface EntityMapper {
         if (dto.getGameState() != null) {
             player.setGameStateName(dto.getGameState());
         }
-        if (dto.getPreviousGameState() != null) {
-            player.setPreviousGameStateName(dto.getPreviousGameState());
+
+        if (dto.getPreviousGameStateName() != null) {
+            player.setPreviousGameStateName(dto.getPreviousGameStateName());
         }
+
     return player;
 }
 

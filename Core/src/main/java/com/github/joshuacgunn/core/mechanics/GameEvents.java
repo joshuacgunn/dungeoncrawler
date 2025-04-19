@@ -53,22 +53,24 @@ public abstract class GameEvents {
 
         GameState currentState = player.getGameState();
         if (currentState == null) {
-            // If there's no current state, just set the new one
             player.setGameState(newGameState);
             return;
         }
 
+        // Use the existing parent loop instead of creating a new one
         GameLoop parentLoop = currentState.getParentLoop();
         if (parentLoop != null) {
-            if (parentLoop.getPreviousGameState() != null) {
-                parentLoop.setPreviousGameState(currentState);
-            }
+            parentLoop.setPreviousGameState(currentState);
             parentLoop.setCurrentGameState(newGameState);
         }
 
         player.setPreviousGameState(currentState);
         player.setGameState(newGameState);
+
+        // Move save to after state transition is complete
         SaveManager.saveState(player);
+        newGameState.handleGameState();
+
     }
 
     public static String npcDialogue(NPC npc, int dialogue) {
@@ -143,13 +145,14 @@ public abstract class GameEvents {
         if (player.getCurrentLocation() != null) {
             if (player.getCurrentLocation() instanceof Town town) {
                 System.out.println("You are currently in the town of " + town.getLocationName() + ".");
-            } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.World) {
-                System.out.println("You are currently exploring the world. Have fun!");
             } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.Dungeon dungeon) {
                 System.out.println("You are currently in the dungeon " + dungeon.getLocationName() + ", on floor " + dungeon.getCurrentFloor().getFloorNumber() + ".");
             } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.Shop shop) {
                 System.out.println("You are currently in the shop " + shop.getLocationName() + ".");
             }
+        }
+        else {
+            System.out.println("You are currently exploring the world. Have fun!");
         }
     }
 
