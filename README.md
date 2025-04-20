@@ -9,7 +9,7 @@ Updates will come, but only when the game is in a stable state, and after I've m
 # Future Plans
 Although I have many things I want to add to the game, it is time consuming to add them. I'm currently a student, and my classes take priority over this project. That being said, I have no plans to drop this project any time soon, and would like to continue working on it until it's at least playable. Here are some things I'm currently planning on implementing*:
 - Currency system
-- Proper chest rarity generation
+- ~~Proper chest rarity generation~~ - Added as of 4/20
 - Sidequests
 - Bosses
 - Unique dungeons
