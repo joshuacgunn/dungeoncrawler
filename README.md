@@ -20,6 +20,7 @@ Although I have many things I want to add to the game, it is time consuming to a
 - Random events while exploring
 - Leveling system
 - Proper player class system with different functionalities
+- A way for the player to move around in a dungeon
 - And more to come...
 
 # Disclaimer
