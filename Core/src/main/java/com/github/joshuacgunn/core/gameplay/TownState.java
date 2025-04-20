@@ -10,6 +10,8 @@ import com.github.joshuacgunn.core.mechanics.GameEvents;
 import java.util.Scanner;
 import java.util.UUID;
 
+import static com.github.joshuacgunn.core.mechanics.GameEvents.printLogo;
+
 public class TownState implements GameState {
     private final GameLoop parentLoop;
     private final Player player;
@@ -40,6 +42,7 @@ public class TownState implements GameState {
 
         // isNew is true for new games, false for loaded games
         if (isNew) {
+            printLogo();
             String townSize = getTownSize();
             System.out.println("You have entered " + whichTown.getLocationName() +
                     ", a " + townSize + " town with a " + getShopsInTown());

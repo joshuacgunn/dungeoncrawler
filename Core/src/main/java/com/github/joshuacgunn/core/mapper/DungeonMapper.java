@@ -96,6 +96,7 @@ public interface DungeonMapper {
             for (UUID enemyUUID : floorDTO.getEnemyUUIDs()) {
                 Enemy enemy = (Enemy) Entity.entityMap.get(enemyUUID);
                 enemies.add(enemy);
+                Entity.entityMap.get(enemyUUID).setCurrentLocation(floor);
             }
 
             floor.setEnemiesOnFloor(enemies);

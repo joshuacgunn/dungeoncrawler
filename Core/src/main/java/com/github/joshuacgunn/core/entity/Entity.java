@@ -173,10 +173,14 @@ public abstract class Entity {
         if (damage > this.entityHp) {
             this.entityHp = 0;
             this.isAlive = false;
-//            if (this instanceof Enemy) {
-//                DungeonFloor dungeonFloor = (DungeonFloor) Location.locationMap.get(this.currentLocation);
-//                dungeonFloor.getEnemiesOnFloor().remove(this);
-//            }
+            if (this instanceof Enemy) {
+                DungeonFloor dungeonFloor = (DungeonFloor) Location.locationMap.get(this.currentLocation.getLocationUUID());
+                for (Item item : this.getInventory().getItems()) {
+                    Item.itemMap.remove(item.getItemUUID());
+                }
+                dungeonFloor.getEnemiesOnFloor().remove(this);
+                Entity.entityMap.remove(this.getEntityUUID());
+            }
         } else {
             this.entityHp -= damage;
         }

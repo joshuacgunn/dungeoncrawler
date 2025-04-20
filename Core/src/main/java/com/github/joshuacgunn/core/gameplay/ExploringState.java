@@ -11,6 +11,8 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+import static com.github.joshuacgunn.core.mechanics.GameEvents.printLogo;
+
 public class ExploringState implements GameState {
     private final GameLoop parentLoop;
     Scanner scanner = new Scanner(System.in);
@@ -29,6 +31,7 @@ public class ExploringState implements GameState {
         this.player = parentLoop.getPlayer();
 
         if (isNew) {
+            printLogo();
             if (player.getPreviousGameState() != null) {
                 System.out.println("You begin exploring the world...");
             }

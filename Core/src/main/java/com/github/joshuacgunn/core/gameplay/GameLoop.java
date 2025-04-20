@@ -60,6 +60,7 @@ public class GameLoop {
             case "ExploringState" -> new ExploringState(this, isNew);
             case "TownState" -> new TownState(this, isNew);
             case "ShopState" -> new ShopState(this, isNew);
+            case "CombatState" -> new CombatState(this);
             default -> null;
         };
         
@@ -77,6 +78,7 @@ public class GameLoop {
             case "ExploringState" -> new ExploringState(this, false);
             case "TownState" -> new TownState(this, false);
             case "ShopState" -> new ShopState(this, false);
+            case "CombatState" -> new CombatState(this);
             default -> null;
         };
         

@@ -1,5 +1,6 @@
 package com.github.joshuacgunn.core.gameplay;
 
+import com.github.joshuacgunn.core.entity.NPC;
 import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.location.Location;
 import com.github.joshuacgunn.core.location.Shop;
@@ -7,6 +8,9 @@ import com.github.joshuacgunn.core.location.Town;
 import com.github.joshuacgunn.core.mechanics.GameEvents;
 
 import java.util.Scanner;
+import java.util.UUID;
+
+import static com.github.joshuacgunn.core.mechanics.GameEvents.printLogo;
 
 public class ShopState implements GameState {
     private final GameLoop parentLoop;
@@ -27,10 +31,18 @@ public class ShopState implements GameState {
     public ShopState(GameLoop parentLoop, boolean isNew) {
         this.parentLoop = parentLoop;
         this.player = parentLoop.getPlayer();
-
-        this.whichShop = (Shop) parentLoop.getPlayer().getCurrentLocation();
+        if (player.getCurrentLocation() != null && player.getCurrentLocation() instanceof Shop) {
+            this.whichShop = (Shop) parentLoop.getPlayer().getCurrentLocation();
+        } else {
+            Town town = new Town(UUID.randomUUID(), false);
+            Shop shop = new Shop(Shop.ShopType.BLACKSMITH, UUID.randomUUID(), new NPC("TestNPC", UUID.randomUUID()), false, town);
+            this.whichShop = shop;
+            Location.locationMap.remove(shop.getLocationUUID());
+            Location.locationMap.remove(town.getLocationUUID());
+        }
 
         if (isNew) {
+            printLogo();
             System.out.println(whichShop.getShopOwner().getEntityName() + ": " + GameEvents.npcDialogue(whichShop.getShopOwner(), 1) );
         }
     }
@@ -84,6 +96,9 @@ public class ShopState implements GameState {
         System.out.print("Choice: ");
         String input = scanner.nextLine();
         switch (input) {
+            case "0":
+                currentAction = 0;
+                break;
             case "1":
                 currentAction = 1;
                 break;

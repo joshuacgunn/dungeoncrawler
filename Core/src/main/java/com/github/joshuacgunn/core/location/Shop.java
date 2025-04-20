@@ -15,7 +15,6 @@ import java.util.UUID;
  * Extends the Location class to integrate with the game's location system.
  */
 public class Shop extends Location {
-
     /**
      * Defines the different types of shops available in the game world.
      * Each type has specific characteristics and limitations.

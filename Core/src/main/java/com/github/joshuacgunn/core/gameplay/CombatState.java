@@ -1,11 +1,16 @@
 package com.github.joshuacgunn.core.gameplay;
 
 import com.github.joshuacgunn.core.entity.Enemy;
+import com.github.joshuacgunn.core.entity.Entity;
 import com.github.joshuacgunn.core.entity.Player;
+import com.github.joshuacgunn.core.location.Dungeon;
 import com.github.joshuacgunn.core.mechanics.GameEvents;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.Scanner;
+
+import static com.github.joshuacgunn.core.mechanics.GameEvents.printLogo;
 
 /**
  * Represents the combat state of the game where battles between the player and enemies take place.
@@ -21,10 +26,10 @@ public class CombatState implements GameState {
     private final Enemy enemy;
     
     /** Scanner for handling user input during combat */
-    public Scanner scanner;
+    Scanner scanner = new Scanner(System.in);
     
     /** Flag indicating if combat is still ongoing */
-    private boolean inCombat;
+    private boolean inCombat = true;
     
     /** Tracks the current action being performed */
     private int currentAction;
@@ -35,14 +40,19 @@ public class CombatState implements GameState {
     /**
      * Creates a new combat state instance.
      *
-     * @param enemy The enemy to fight against
      * @param parentLoop The game loop managing this combat state
      */
-    public CombatState(Enemy enemy, GameLoop parentLoop) {
+    public CombatState(GameLoop parentLoop) {
         this.player = parentLoop.getPlayer();
-        this.enemy = enemy;
+        if (player.getCurrentLocation() instanceof Dungeon) {
+            this.enemy = ((Dungeon) player.getCurrentLocation()).getCurrentFloor().getEnemiesOnFloor().get(new java.util.Random().nextInt(((Dungeon) player.getCurrentLocation()).getCurrentFloor().getEnemiesOnFloor().size()));
+        } else {
+            this.enemy = new Enemy(Enemy.EnemyType.GOBLIN, UUID.randomUUID(), false);
+            Entity.entityMap.remove(enemy.getEntityUUID());
+        }
         this.parentLoop = parentLoop;
         System.out.println("You are approached by " + enemy.getEntityName() + ", wielding a[n] " + enemy.getCurrentWeapon().getWeaponMaterial().name().toLowerCase() + " sword");
+        printLogo();
     }
 
     /**
@@ -57,7 +67,8 @@ public class CombatState implements GameState {
         if (!player.isAlive()) {
             parentLoop.stopGame();
         } else {
-            GameEvents.switchGameStates(player, parentLoop.getPreviousGameState());
+            DungeonState dungeonState = new DungeonState(parentLoop, false);
+            GameEvents.switchGameStates(player, dungeonState);
         }
     }
 
@@ -67,6 +78,7 @@ public class CombatState implements GameState {
      */
     @Override
     public void update() {
+        if (!inCombat) return;
         System.out.println("What would you like to do?");
         System.out.println("1. Attack the enemy");
         System.out.println("2. Run away");
@@ -88,7 +100,7 @@ public class CombatState implements GameState {
                     inCombat = false;
                 } else if (!enemy.isAlive()) {
                     enemy.setDeathStatus(false);
-                    System.out.println("You dealt " + player.calculateWeaponDamage() + " damage, killing the enemy!");
+                    System.out.println("You dealt " + player.calculateWeaponDamage() + " damage, killing the " + enemy.getEntityName() + "!" );
                     inCombat = false;
                 }
                 try {

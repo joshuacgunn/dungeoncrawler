@@ -3,8 +3,6 @@ package com.github.joshuacgunn.core.gameplay;
 import com.github.joshuacgunn.core.mechanics.GameEvents;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -56,6 +54,7 @@ public class MainMenuState implements GameState {
                 if (new File("saves/player_save.json").exists()) {
                     System.out.println("You have already saved a game!");
                     System.out.println("Would you like to overwrite it? (y/n)");
+                    System.out.print("Choice: ");
                     String input = scanner.nextLine();
                     switch (input) {
                         case "y":

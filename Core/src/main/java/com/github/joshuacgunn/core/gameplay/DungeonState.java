@@ -6,8 +6,11 @@ import com.github.joshuacgunn.core.location.Dungeon;
 import com.github.joshuacgunn.core.location.World;
 import com.github.joshuacgunn.core.mechanics.GameEvents;
 
+import java.util.Random;
 import java.util.Scanner;
 import java.util.UUID;
+
+import static com.github.joshuacgunn.core.mechanics.GameEvents.printLogo;
 
 /**
  * Represents the dungeon exploration state of the game where players navigate through
@@ -21,6 +24,7 @@ public class DungeonState implements GameState {
     public Scanner scanner = new Scanner(System.in);
     private boolean inDungeon = true;
     private boolean inGame = true;
+    private boolean inCombat = false;
     private int currentAction;
     private final Dungeon whichDungeon;
 
@@ -36,6 +40,7 @@ public class DungeonState implements GameState {
         this.player = parentLoop.getPlayer();
         this.whichDungeon = (Dungeon) player.getCurrentLocation();
         if (isNew) {
+            printLogo();
             System.out.println("You have entered " + whichDungeon.getLocationName() + ", a dungeon with " + whichDungeon.getFloors().size() + " floors, and a difficulty of " + whichDungeon.getDifficultyRating());
         }
     }
@@ -55,7 +60,10 @@ public class DungeonState implements GameState {
         while (inDungeon) {
             update();
         }
-        if (inGame) {
+        if (inCombat && inGame) {
+            CombatState combatState = new CombatState(parentLoop);
+            GameEvents.switchGameStates(player, combatState);
+        } else if (inGame) {
             System.out.println("You have left the dungeon");
             player.setCurrentLocation(new World(UUID.randomUUID()));
             player.setPreviousGameState(this);
@@ -90,10 +98,8 @@ public class DungeonState implements GameState {
                 inGame = false;
                 break;
             case 1:
-                Enemy enemy = whichDungeon.getCurrentFloor().getEnemiesOnFloor().get(0);
-                CombatState combatState = new CombatState(enemy, parentLoop);
-                GameEvents.switchGameStates(player, combatState);
-                combatState.handleGameState();
+                inDungeon = false;
+                inCombat = true;
                 break;
             case 3:
                 GameEvents.showInventory(player);

@@ -239,35 +239,6 @@ public class Player extends Entity {
         );
     }
 
-    /**
-     * Creates a new player character with user input for name and class selection.
-     * This method handles the initial player creation process including:
-     * - Getting the player's name
-     * - Class selection from available options
-     * - Generating a unique identifier
-     * - Setting up initial player stats based on chosen class
-     *
-     * @return A newly created Player instance with the chosen attributes
-     */
-    public static Player createPlayer() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("What is your name?");
-        System.out.print("Name: ");
-        String name = scanner.nextLine();
-        System.out.println("Welcome " + name + "! What class would you like to play as? (1-3) ");
-        System.out.println("1. Rogue");
-        System.out.println("2. Wizard");
-        System.out.println("3. Paladin");
-        System.out.print("Class: ");
-        int playerClass = scanner.nextInt();
-        scanner.nextLine();
-        UUID uuid = UUID.randomUUID();
-        PlayerClass playerClassEnum = PlayerClass.values()[playerClass - 1];
-        Player player = new Player(name, uuid, playerClassEnum, true);
-        System.out.println("You chose " + playerClassEnum.name().toLowerCase() + "!");
-        System.out.println(player.getPlayerStatsString());
-        return player;
-    }
 
 
     public static void generateStartingEquipment(Player player) {

@@ -3,20 +3,15 @@ package com.github.joshuacgunn.core.mechanics;
 import com.github.joshuacgunn.core.entity.Entity;
 import com.github.joshuacgunn.core.entity.NPC;
 import com.github.joshuacgunn.core.entity.Player;
-import com.github.joshuacgunn.core.gameplay.GameState;
-import com.github.joshuacgunn.core.gameplay.TownState;
+import com.github.joshuacgunn.core.gameplay.*;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
-import com.github.joshuacgunn.core.location.Shop;
-import com.github.joshuacgunn.core.location.Town;
+import com.github.joshuacgunn.core.location.*;
 import com.github.joshuacgunn.core.save.SaveManager;
-import com.github.joshuacgunn.core.gameplay.GameLoop;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * A utility class that manages and handles various game-related events and actions
@@ -182,14 +177,15 @@ public abstract class GameEvents {
      * @param player The player whose game is being loaded
      */
     public static void loadGameGreet(Player player) {
+        printLogo();
         System.out.println("Welcome back, " + player.getEntityName() + "!");
         if (player.getCurrentLocation() != null) {
             if (player.getCurrentLocation() instanceof Town town) {
                 System.out.println("You are currently in the town of " + town.getLocationName() + ".");
-            } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.Dungeon dungeon) {
+            } else if (player.getCurrentLocation() instanceof Dungeon dungeon) {
                 System.out.println("You are currently in the dungeon " + dungeon.getLocationName() + ", on floor " + dungeon.getCurrentFloor().getFloorNumber() + ".");
-            } else if (player.getCurrentLocation() instanceof com.github.joshuacgunn.core.location.Shop shop) {
-                System.out.println("You are currently in the shop " + shop.getLocationName() + ".");
+            } else if (player.getCurrentLocation() instanceof Shop shop) {
+                System.out.println("You are currently in the shop " + shop.getLocationName() + ", in the town of " + shop.getParentTown().getLocationName() + ".");
             }
         } else {
             System.out.println("You are currently exploring the world. Have fun!");
@@ -211,7 +207,7 @@ public abstract class GameEvents {
         }
 
         if (isNewGame) {
-            player = Player.createPlayer();
+            player = createPlayer();
             Town startingTown = new Town(UUID.randomUUID(), true);
             player.setCurrentLocation(startingTown);
         } else {
@@ -242,20 +238,229 @@ public abstract class GameEvents {
 
     public static void printLogo() {
         clearConsole();
-        System.out.println(
-                """
-                         _____                                                                                   _____\s
-                        ( ___ )                                                                                 ( ___ )
-                         |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   |\s
-                         |   |  ____                                        ____                    _            |   |\s
-                         |   | |  _ \\ _   _ _ __   __ _  ___  ___  _ __    / ___|_ __ __ ___      _| | ___ _ __  |   |\s
-                         |   | | | | | | | | '_ \\ / _` |/ _ \\/ _ \\| '_ \\  | |   | '__/ _` \\ \\ /\\ / / |/ _ \\ '__| |   |\s
-                         |   | | |_| | |_| | | | | (_| |  __/ (_) | | | | | |___| | | (_| |\\ V  V /| |  __/ |    |   |\s
-                         |   | |____/ \\__,_|_| |_|\\__, |\\___|\\___/|_| |_|  \\____|_|  \\__,_| \\_/\\_/ |_|\\___|_|    |   |\s
-                         |   |                    |___/                                                          |   |\s
-                         |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___|\s
-                        (_____)                                                                                 (_____)
+        if (!Entity.getEntitiesByType(Player.class).isEmpty()) {
+            Location location = Entity.getEntitiesByType(Player.class).getFirst().getCurrentLocation();
+            GameState gameState = null;
+            if (Entity.getEntitiesByType(Player.class).getFirst().getGameState() != null) {
+                gameState = Entity.getEntitiesByType(Player.class).getFirst().getGameState();
+            }
+            if (gameState instanceof CombatState) {
+                System.out.println("""
+                                 ,     .
+                                /(     )\\               A
+                           .--.( `.___.' ).--.         /_\\
+                           `._ `%_&%#%$_ ' _.'     /| <___> |\\
+                              `|(@\\*%%/@)|'       / (  |L|  ) \\
+                               |  |%%#|  |       J d8bo|=|od8b L
+                                \\ \\$#%/ /        | 8888|=|8888 |
+                                |\\|%%#|/|        J Y8P"|=|"Y8P F
+                                | (.".)%|         \\ (  |L|  ) /
+                            ___.'  `-'  `.___      \\|  |L|  |/
+                          .'#*#`-       -'$#*`.       / )|
+                         /#%^#%*_ *%^%_  #  %$%\\    .J (__)
+                         #&  . %%%#% ###%*.   *%\\.-'&# (__)
+                         %*  J %.%#_|_#$.\\J* \\ %'#%*^  (__)
+                         *#% J %$%%#|#$#$ J\\%   *   .--|(_)
+                         |%  J\\ `%%#|#%%' / `.   _.'   |L|
+                         |#$%||` %%%$### '|   `-'      |L|
+                         (#%%||` #$#$%%% '|            |L|
+                         | ##||  $%%.%$%  |            |L|
+                         |$%^||   $%#$%   |  VK/cf     |L|
+                         |&^ ||  #%#$%#%  |            |L|
+                         |#$*|| #$%$$#%%$ |\\           |L|
+                         ||||||  %%(@)$#  |\\\\          |L|
+                         `|||||  #$$|%#%  | L|         |L|
+                              |  #$%|$%%  | ||l        |L|
+                              |  ##$H$%%  | |\\\\        |L|
+                              |  #%%H%##  | |\\\\|       |L|
+                              |  ##% $%#  | Y|||       |L|
+                              J $$#* *%#% L  |E/
+                              (__ $F J$ __)  F/
+                              J#%$ | |%%#%L
+                              |$$%#& & %%#|
+                              J##$ J % %%$F
+                               %$# * * %#&
+                               %#$ | |%#$%
+                               *#$%| | #$*
+                              /$#' ) ( `%%\\
+                             /#$# /   \\ %$%\\
+                            ooooO'     `Ooooo\
                         """);
+            }
+            if (location instanceof Town) {
+                System.out.println("""
+                                                                                   |>>>
+                                           _                      _                |
+                            ____________ .' '.    _____/----/-\\ .' './========\\   / \\
+                           //// ////// /V_.-._\\  |.-.-.|===| _ |-----| u    u |  /___\\
+                          // /// // ///==\\ u |.  || | ||===||||| |T| |   ||   | .| u |_ _ _ _ _ _
+                         ///////-\\////====\\==|:::::::::::::::::::::::::::::::::::|u u| U U U U U
+                         |----/\\u |--|++++|..|'''''''''''::::::::::::::''''''''''|+++|+-+-+-+-+-+
+                         |u u|u | |u ||||||..|              '::::::::'           |===|>=== _ _ ==
+                         |===|  |u|==|++++|==|              .::::::::.           | T |....| V |..
+                         |u u|u | |u ||HH||         \\|/    .::::::::::.
+                         |===|_.|u|_.|+HH+|_              .::::::::::::.              _
+                                        __(_)___         .::::::::::::::.         ___(_)__
+                        ---------------/  / \\  /|       .:::::;;;:::;;:::.       |\\  / \\  \\-------
+                        ______________/_______/ |      .::::::;;:::::;;:::.      | \\_______\\________
+                        |       |     [===  =] /|     .:::::;;;::::::;;;:::.     |\\ [==  = ]   |
+                        |_______|_____[ = == ]/ |    .:::::;;;:::::::;;;::::.    | \\[ ===  ]___|____
+                             |       |[  === ] /|   .:::::;;;::::::::;;;:::::.   |\\ [=  ===] |
+                        _____|_______|[== = =]/ |  .:::::;;;::::::::::;;;:::::.  | \\[ ==  =]_|______
+                         |       |    [ == = ] /| .::::::;;:::::::::::;;;::::::. |\\ [== == ]      |
+                        _|_______|____[=  == ]/ |.::::::;;:::::::::::::;;;::::::.| \\[  === ]______|_
+                           |       |  [ === =] /.::::::;;::::::::::::::;;;:::::::.\\ [===  =]   |
+                        ___|_______|__[ == ==]/.::::::;;;:::::::::::::::;;;:::::::.\\[=  == ]___|_____""");
+            } else if (location instanceof Dungeon && !(gameState instanceof CombatState)) {
+                System.out.println("""
+                                                   .-----.
+                                                 .'       `.
+                                                :      ^v^  :
+                                                :           :
+                                                '           '
+                                 |~        www   `.       .'
+                                /.\\       /#^^\\_   `-/\\--'
+                               /#  \\     /#%    \\   /# \\
+                              /#%   \\   /#%______\\ /#%__\\
+                             /#%     \\   |= I I ||  |- |
+                             ~~|~~~|~~   |_=_-__|'  |[]|
+                               |[] |_______\\__|/_ _ |= |`.
+                        ^V^    |-  /= __   __    /-\\|= | :;
+                               |= /- /\\/  /\\/   /=- \\.-' :;
+                               | /_.=========._/_.-._\\  .:'
+                               |= |-.'.- .'.- |  /|\\ |.:'
+                               \\  |=|:|= |:| =| |~|~||'|
+                                |~|-|:| -|:|  |-|~|~||=|      ^V^
+                                |=|=|:|- |:|- | |~|~|| |
+                                | |-_~__=_~__=|_^^^^^|/___
+                                |-(=-=-=-=-=-(|=====/=_-=/\\
+                                | |=_-= _=- _=| -_=/=_-_/__\\\s
+                                | |- _ =_-  _-|=_- |]#| I II
+                                |=|_/ \\_-_= - |- = |]#| I II
+                                | /  _/ \\. -_=| =__|]!!!I_II!!
+                               _|/-'/  ` \\_/ \\|/' _ ^^^^`.==_^.
+                             _/  _/`-./`-; `-.\\_ / \\_'\\`. `. ===`.
+                            / .-'  __/_   `.   _/.' .-' `-. ; ====;\\
+                           /.   `./    \\ `. \\ / -  /  .-'.' ====='  >
+                          /  \\  /  .-' `--.  / .' /  `-.' ======.' /""");
+            } else if (location instanceof Shop) {
+                System.out.println("""
+                                           //////
+                                     <====//////====[]
+                                         /////\\\\\\\\\\
+                                       ((((( ))))))))
+                                       ||| /\\   /\\ ||
+                                       || |_O| |O_|||
+                                      (9|     ^    |6)
+                                         \\    V   /                          )
+                                         (~~~~~~~~~)                   ( ((
+                                        /~~~~~~~~~~~\\                     )) )
+                                      ///////|||\\\\\\\\\\\\\\                 (( ((
+                                    //                 \\\\                )  ))
+                              ______|~~~|____________|~~~|_________      (((
+                            []#=====`^^^'============`^^^'========#[]    |||
+                          __[]_____________________________________[]___(___)_
+                         [____________________________________________________]
+                           )   ===========================================  (
+                          /  /'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`\\  \\
+                        <__/    (___________________________)               \\__>
+                        
+                        ------------------------------------------------
+                        """
+                );
+            } else {
+                Random rand = new Random();
+                float environmentGen = rand.nextFloat();
+                if (environmentGen < 0.25) {
+                    System.out.println("""
+                                .    _    +     .  ______   .          .
+                             (      /|\\      .    |      \\      .   +
+                                 . |||||     _    | |   | | ||         .
+                            .      |||||    | |  _| | | | |_||    .
+                               /\\  ||||| .  | | |   | |      |       .
+                            __||||_|||||____| |_|_____________\\__________
+                            . |||| |||||  /\\   _____      _____  .   .
+                              |||| ||||| ||||   .   .  .         ________
+                             . \\|`-'|||| ||||    __________       .    .
+                                \\__ |||| ||||      .          .     .
+                             __    ||||`-'|||  .       .    __________
+                            .    . |||| ___/  ___________             .
+                               . _ ||||| . _               .   _________
+                            _   ___|||||__  _ \\\\--//    .          _
+                                 _ `---'    .)=\\oo|=(.   _   .   .    .
+                            _  ^      .  -    . \\.|""");
+                } else if (environmentGen < 0.5) {
+                    System.out.println("""
+                                .                  .-.    .  _   *     _   .
+                                       *          /   \\     ((       _/ \\       *    .
+                                     _    .   .--'\\/\\_ \\     `      /    \\  *    ___
+                                 *  / \\_    _/ ^      \\/\\'__        /\\/\\  /\\  __/   \\ *
+                                   /    \\  /    .'   _/  /  \\  *' /    \\/  \\/ .`'\\_/\\   .
+                              .   /\\/\\  /\\/ :' __  ^/  ^/    `--./.'  ^  `-.\\ _    _:\\ _
+                                 /    \\/  \\  _/  \\-' __/.' ^ _   \\_   .'\\   _/ \\ .  __/ \\
+                               /\\  .-   `. \\/     \\ / -.   _/ \\ -. `_/   \\ /    `._/  ^  \\
+                              /  `-.__ ^   / .-'.--'    . /    `--./ .-'  `-.  `-. `.  -  `.
+                            @/        `.  / /      `-.   /  .-'   / .   .'   \\    \\  \\  .-  \\%
+                            @&8jgs@@%% @)&@&(88&@.-_=_-=_-=_-=_-=_.8@% &@&&8(8%@%8)(8@%8 8%@)%
+                            @88:::&(&8&&8:::::%&`.~-_~~-~~_~-~_~-~~=.'@(&%::::%@8&8)::&#@8::::
+                            `::::::8%@@%:::::@%&8:`.=~~-.~~-.~~=..~'8::::::::&@8:::::&8:::::'
+                             `::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::.'""");
+                } else if (environmentGen < 0.75) {
+                    System.out.println("""
+                            _____/'.-..___________________________ mvn,, ___________________
+                                                         )\\     nMmIEFooPTn                \s
+                                                        ( (    Li1iiJl1ItTIjp              \s
+                                                         ) \\  i i_BP_LWmKK`  J  `          \s
+                            `                .          /  (   i1 LL 1I`L            .     \s
+                                         ..             \\   \\  i   X  Y o1                 \s
+                                                    .    )   )  `   l   p      ..          \s
+                            ;                           /   (,      l(@) l                ..
+                              q      ` .  '            (     \\.     i    p   R          .; \s
+                               \\  t            ;        )     \\`   j,.. ,.q,/Pqoj          `
+                                \\/            `       ./       \\`;     `'     `          ..\s
+                              '-     \\;            -'.'    ;    \\ `                     `. `
+                            .--.`.; ,-.. ,.-, ;' `.-'       `    `.'.   .--.""-._        .;\s
+                                `............---""     ;_.         )   (  '=    /         `-
+                             ~                                    /     `------'     .     \s
+                                             ~                  ,'  \\|//            `'     \s
+                                            ~           ~       ; `. ""                   ..
+                                                                 `.  )     \\"       .--""\"""");
+                } else {
+                    System.out.println("""
+                                                                    __
+                                             ,-_                  (`  ).
+                                             |-_'-,              (     ).
+                                             |-_'-'           _(        '`.
+                                    _        |-_'/        .=(`(      .     )
+                                   /;-,_     |-_'        (     (.__.:-`-_.'
+                                  /-.-;,-,___|'          `(       ) )
+                                 /;-;-;-;_;_/|\\_ _ _ _ _   ` __.:'   )
+                                    x_( __`|_P_|`-;-;-;,|        `--'
+                                    |\\ \\    _||   `-;-;-'
+                                    | \\`   -_|.      '-'
+                                    | /   /-_| `
+                                    |/   ,'-_|  \\
+                                    /____|'-_|___\\
+                             _..,____]__|_\\-_'|_[___,.._
+                            '                          ``'--,..,."""
+                    );
+                }
+            }
+        } else {
+            System.out.println("""
+                             _____                                                                                   _____\s
+                            ( ___ )                                                                                 ( ___ )
+                             |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   |\s
+                             |   |  ____                                        ____                    _            |   |\s
+                             |   | |  _ \\ _   _ _ __   __ _  ___  ___  _ __    / ___|_ __ __ ___      _| | ___ _ __  |   |\s
+                             |   | | | | | | | | '_ \\ / _` |/ _ \\/ _ \\| '_ \\  | |   | '__/ _` \\ \\ /\\ / / |/ _ \\ '__| |   |\s
+                             |   | | |_| | |_| | | | | (_| |  __/ (_) | | | | | |___| | | (_| |\\ V  V /| |  __/ |    |   |\s
+                             |   | |____/ \\__,_|_| |_|\\__, |\\___|\\___/|_| |_|  \\____|_|  \\__,_| \\_/\\_/ |_|\\___|_|    |   |\s
+                             |   |                    |___/                                                          |   |\s
+                             |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___|\s
+                            (_____)                                                                                 (_____)
+                            """);
+        }
     }
 
     public static List<NPC> generateUniqueNPCs(Shop shop) {
@@ -290,5 +495,47 @@ public abstract class GameEvents {
             npcList.add(theresa);
         }
         return npcList;
+    }
+
+    /**
+     * Creates a new player character with user input for name and class selection.
+     * This method handles the initial player creation process including:
+     * - Getting the player's name
+     * - Class selection from available options
+     * - Generating a unique identifier
+     * - Setting up initial player stats based on chosen class
+     *
+     * @return A newly created Player instance with the chosen attributes
+     */
+    public static Player createPlayer() {
+        System.out.println("""
+                 _____                                                                                _____\s
+                ( ___ )                                                                              ( ___ )
+                 |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   |\s
+                 |   |   ____                _          ____ _                          _             |   |\s
+                 |   |  / ___|_ __ ___  __ _| |_ ___   / ___| |__   __ _ _ __ __ _  ___| |_ ___ _ __  |   |\s
+                 |   | | |   | '__/ _ \\/ _` | __/ _ \\ | |   | '_ \\ / _` | '__/ _` |/ __| __/ _ \\ '__| |   |\s
+                 |   | | |___| | |  __/ (_| | ||  __/ | |___| | | | (_| | | | (_| | (__| ||  __/ |    |   |\s
+                 |   |  \\____|_|  \\___|\\__,_|\\__\\___|  \\____|_| |_|\\__,_|_|  \\__,_|\\___|\\__\\___|_|    |   |\s
+                 |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___|\s
+                (_____)                                                                              (_____)
+                """);
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("What is your name?");
+        System.out.print("Name: ");
+        String name = scanner.nextLine();
+        System.out.println("Welcome " + name + "! What class would you like to play as? (1-3) ");
+        System.out.println("1. Rogue");
+        System.out.println("2. Wizard");
+        System.out.println("3. Paladin");
+        System.out.print("Class: ");
+        int playerClass = scanner.nextInt();
+        scanner.nextLine();
+        UUID uuid = UUID.randomUUID();
+        Player.PlayerClass playerClassEnum = Player.PlayerClass.values()[playerClass - 1];
+        Player player = new Player(name, uuid, playerClassEnum, true);
+        System.out.println("You chose " + playerClassEnum.name().toLowerCase() + "!");
+        System.out.println(player.getPlayerStatsString());
+        return player;
     }
 }
