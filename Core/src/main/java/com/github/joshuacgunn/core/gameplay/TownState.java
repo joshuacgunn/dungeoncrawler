@@ -42,11 +42,9 @@ public class TownState implements GameState {
 
         // isNew is true for new games, false for loaded games
         if (isNew) {
-            if (player.getPreviousGameState() != null) {
-                if (player.getPreviousGameState().getGameStateName().equals("ShopState")) {
-                    printLogo(this);
-                    System.out.println("You have re-entered " + whichTown.getLocationName());
-                }
+            if (player.getPreviousGameState() != null && player.getPreviousGameState().getGameStateName().equals("ShopState")) {
+                printLogo(this);
+                System.out.println("You have re-entered " + whichTown.getLocationName());
             } else {
                 printLogo(this);
                 String townSize = getTownSize();
