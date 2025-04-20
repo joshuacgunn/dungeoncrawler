@@ -25,11 +25,27 @@ import java.io.*;
 
 import static com.github.joshuacgunn.core.gson.GsonProvider.GSON;
 
+/**
+ * A utility class that manages game state persistence and loading operations.
+ * Handles saving and loading of all game elements including player data, entities,
+ * locations, and items. Also manages backup functionality for save files.
+ */
 public abstract class SaveManager {
+    /** Directory path for main save files */
     private static final String SAVE_DIRECTORY = "saves/";
+    
+    /** Directory path for backup save files */
     private static final String BACKUP_DIRECTORY = "backups/";
+    
+    /** Date format for backup file naming */
     private static final SimpleDateFormat date = new SimpleDateFormat("dd_HH.mm.ss");
 
+    /**
+     * Saves the complete game state using the current player context.
+     * Creates a comprehensive save including all related game elements.
+     *
+     * @param player The player whose game state is being saved
+     */
     public static void saveState(Player player) {
         // The order of this is critical for functionality. It will not work if changed.
         saveItems();
@@ -40,6 +56,12 @@ public abstract class SaveManager {
         backupSave();
     }
 
+    /**
+     * Loads the complete game state from saved files.
+     * Reconstructs the entire game state including all entities and locations.
+     *
+     * @return The loaded Player object with restored game state
+     */
     public static Player loadState() {
         if (!(new File(SAVE_DIRECTORY).exists()) && new File(BACKUP_DIRECTORY + "saves/").exists()) {
             loadBackup();
@@ -56,6 +78,10 @@ public abstract class SaveManager {
         return loadPlayer();
     }
 
+    /**
+     * Creates the necessary directory structure for save files.
+     * Ensures both main save and backup directories exist.
+     */
     public static void createDirectories() {
         try {
             File save_dir = new File(SAVE_DIRECTORY);
@@ -70,6 +96,10 @@ public abstract class SaveManager {
         }
     }
 
+    /**
+     * Creates a backup of the current save state.
+     * Uses timestamp-based naming for backup files.
+     */
     public static void backupSave() {
         String location = ("backups/saves/save_" + date.format(new Date()));
         File backupDir = new File(location);
@@ -83,6 +113,10 @@ public abstract class SaveManager {
         }
     }
 
+    /**
+     * Manages the backup directory by enforcing size limits and cleanup.
+     * Removes old backups when necessary.
+     */
     private static void manageBackupDirectory() {
         File dir = new File(BACKUP_DIRECTORY + "saves" + "/");
         if (dir.exists()) {
@@ -94,6 +128,10 @@ public abstract class SaveManager {
         }
     }
 
+    /**
+     * Loads a backup save state.
+     * Restores the game state from the most recent backup.
+     */
     public static void loadBackup () {
         File backupDir = new File(BACKUP_DIRECTORY + "saves");
         if (!backupDir.exists() || !backupDir.isDirectory()) {
@@ -129,6 +167,10 @@ public abstract class SaveManager {
         }
     }
 
+    /**
+     * Saves all game entities to persistent storage.
+     * Includes NPCs, enemies, and other game characters.
+     */
     public static void saveEntities() {
         createDirectories();
         List<NpcDTO> npcDTOs = new ArrayList<>();
@@ -155,6 +197,10 @@ public abstract class SaveManager {
         }
     }
 
+    /**
+     * Loads all game entities from persistent storage.
+     * Reconstructs entity relationships and states.
+     */
     public static void loadEntities() {
         try (Reader reader = new FileReader(SAVE_DIRECTORY + "NPCs_snapshot.json")) {
             // Use TypeToken for proper generic type handling
@@ -197,6 +243,12 @@ public abstract class SaveManager {
         }
     }
 
+    /**
+     * Saves player-specific data to persistent storage.
+     * Includes inventory, stats, and current state.
+     *
+     * @param player The player to save
+     */
     public static void savePlayer(Player player) {
         createDirectories();
         try (Writer writer = new FileWriter(SAVE_DIRECTORY + "player_save.json")) {
@@ -208,6 +260,11 @@ public abstract class SaveManager {
         }
     }
 
+    /**
+     * Loads player data from persistent storage.
+     *
+     * @return The reconstructed Player object
+     */
     public static Player loadPlayer() {
         // Check for backup in case player_save.json is deleted somehow
         File directory = new File(BACKUP_DIRECTORY + "player/");
@@ -242,7 +299,10 @@ public abstract class SaveManager {
         return null;
     }
 
-
+    /**
+     * Saves all dungeon locations and their states.
+     * Includes dungeon layout, contents, and progress.
+     */
     public static void saveDungeons() {
         createDirectories();
         List<DungeonDTO> dungeonDTOs = Location.locationMap.values().stream()
@@ -258,6 +318,10 @@ public abstract class SaveManager {
         }
     }
 
+    /**
+     * Loads all dungeon locations and their states.
+     * Reconstructs dungeon environments and contents.
+     */
     public static void loadDungeons() {
         try (Reader reader = new FileReader(SAVE_DIRECTORY + "dungeons_snapshot.json")) {
             DungeonDTO[] dungeonDTOs = GSON.fromJson(reader, DungeonDTO[].class);
@@ -272,6 +336,10 @@ public abstract class SaveManager {
         }
     }
 
+    /**
+     * Loads all items from persistent storage.
+     * Reconstructs item properties and relationships.
+     */
     public static void loadItems() {
         try (Reader reader = new FileReader(SAVE_DIRECTORY + "armors_snapshot.json")) {
             ArmorDTO[] armorDTOS = GSON.fromJson(reader, ArmorDTO[].class);
@@ -294,6 +362,10 @@ public abstract class SaveManager {
         }
     }
 
+    /**
+     * Saves all items to persistent storage.
+     * Includes equipment, inventory items, and their states.
+     */
     public static void saveItems() {
         createDirectories();
         List<ArmorDTO> armorDTOs = new ArrayList<>();
@@ -318,6 +390,10 @@ public abstract class SaveManager {
         }
     }
 
+    /**
+     * Saves all town locations and their states.
+     * Includes shops, NPCs, and other town-specific data.
+     */
     public static void saveTowns() {
         createDirectories();
         List<TownDTO> townDTOS = Location.locationMap.values().stream()
@@ -333,6 +409,10 @@ public abstract class SaveManager {
         }
     }
 
+    /**
+     * Loads all town locations and their states.
+     * Reconstructs town environments and inhabitants.
+     */
     public static void loadTowns() {
         try (Reader reader = new FileReader(SAVE_DIRECTORY + "towns_snapshot.json")) {
             TownDTO[] townDTOS = GSON.fromJson(reader, TownDTO[].class);

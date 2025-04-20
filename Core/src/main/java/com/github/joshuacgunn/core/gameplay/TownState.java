@@ -5,9 +5,7 @@ import com.github.joshuacgunn.core.location.Shop;
 import com.github.joshuacgunn.core.location.Town;
 import com.github.joshuacgunn.core.location.World;
 import com.github.joshuacgunn.core.mechanics.GameEvents;
-import com.github.joshuacgunn.core.save.SaveManager;
 
-import javax.print.attribute.HashPrintJobAttributeSet;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -21,6 +19,14 @@ public class TownState implements GameState {
     private final Town whichTown;
     Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Constructs a new TownState instance, representing the state of the game
+     * when the player is in a town.
+     *
+     * @param parentLoop The parent GameLoop object managing the current game state.
+     * @param isNew      A flag indicating whether this is a new game (true)
+     *                   or a loaded game (false).
+     */
     public TownState(GameLoop parentLoop, boolean isNew) {
         this.parentLoop = parentLoop;
         this.player = parentLoop.getPlayer();

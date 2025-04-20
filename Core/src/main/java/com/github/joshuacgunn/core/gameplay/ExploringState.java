@@ -5,7 +5,6 @@ import com.github.joshuacgunn.core.location.Dungeon;
 import com.github.joshuacgunn.core.location.Location;
 import com.github.joshuacgunn.core.location.Town;
 import com.github.joshuacgunn.core.mechanics.GameEvents;
-import com.github.joshuacgunn.core.save.SaveManager;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -19,6 +18,12 @@ public class ExploringState implements GameState {
     private boolean isExploring = true;
     private final Player player;
 
+    /**
+     * Constructs a new ExploringState instance.
+     *
+     * @param parentLoop The parent GameLoop managing this game state.
+     * @param isNew Indicates whether this ExploringState is part of a new game.
+     */
     public ExploringState(GameLoop parentLoop, boolean isNew) {
         this.parentLoop = parentLoop;
         this.player = parentLoop.getPlayer();

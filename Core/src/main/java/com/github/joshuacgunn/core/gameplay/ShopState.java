@@ -17,6 +17,13 @@ public class ShopState implements GameState {
     Scanner scanner = new Scanner(System.in);
     private final Player player;
 
+    /**
+     * Creates a new ShopState instance, representing the state where the player
+     * interacts with a shop in the game.
+     *
+     * @param parentLoop The GameLoop instance managing the current game state.
+     * @param isNew A boolean flag indicating whether this is a new instance of the ShopState.
+     */
     public ShopState(GameLoop parentLoop, boolean isNew) {
         this.parentLoop = parentLoop;
         this.player = parentLoop.getPlayer();
@@ -27,7 +34,6 @@ public class ShopState implements GameState {
             System.out.println(whichShop.getShopOwner().getEntityName() + ": " + GameEvents.npcDialogue(whichShop.getShopOwner(), 1) );
         }
     }
-
 
     @Override
     public void handleGameState() {

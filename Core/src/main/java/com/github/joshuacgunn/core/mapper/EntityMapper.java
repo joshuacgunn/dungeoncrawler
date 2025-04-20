@@ -18,9 +18,11 @@ import org.mapstruct.factory.Mappers;
 import java.util.*;
 
 /**
- * Mapper interface for converting between Entity objects and their respective DTOs.
- * Uses MapStruct to generate the implementation at compile time.
+ * Provides mapping functionality between Entity domain objects and their corresponding DTOs.
+ * Handles polymorphic mapping of different entity types (Player, Enemy, NPC) and their properties,
+ * including inventory management and equipment state.
  */
+
 @Mapper(uses = {ItemMapper.class, DungeonMapper.class})
 public interface EntityMapper {
     /**
@@ -29,10 +31,26 @@ public interface EntityMapper {
     EntityMapper INSTANCE = Mappers.getMapper(EntityMapper.class);
 
     /**
-     * Converts an Entity to an appropriate EntityDTO based on its type.
+     * Maps an Entity object to its appropriate DTO representation based on the entity type.
+     * Supports polymorphic mapping for Player, Enemy, and NPC entities while preserving
+     * type-specific properties.
      *
-     * @param entity the entity to convert
-     * @return the converted DTO
+     * Mapped properties include:
+     * - Basic entity attributes (name, UUID, HP, defense)
+     * - Life status
+     * - Current location
+     * - Inventory contents
+     * - Equipped armor
+     * - Current weapon
+     *
+     * Special handling:
+     * - Null safety for inventory items and equipment
+     * - Type-specific conversion for Player, Enemy, and NPC entities
+     * - Location reference management via UUID
+     * - Collection mapping for inventory and armor items
+     *
+     * @param entity The source Entity object to convert
+     * @return EntityDTO containing the mapped data, with appropriate subtype for specialized entities
      */
     default EntityDTO entityToEntityDTO(Entity entity) {
         if (entity == null) return null;
@@ -96,11 +114,13 @@ public interface EntityMapper {
 
 
     /**
-     * Converts an Entity to a Player-specific DTO.
+     * Maps a Player entity to a PlayerDTO.
+     * Includes player-specific attributes along with common entity properties.
      *
-     * @param player the player entity to convert
-     * @return the player DTO
+     * @param player The Player entity to convert
+     * @return PlayerDTO containing the mapped player data
      */
+
     default PlayerDTO playerToPlayerDTO(Player player) {
         if (player == null) return null;
 
@@ -137,6 +157,13 @@ public interface EntityMapper {
         return dto;
     }
 
+    /**
+     * Maps an NPC entity to an NPCDTO.
+     * Includes NPC-specific attributes along with common entity properties.
+     *
+     * @param npc The NPC entity to convert
+     * @return NPCDTO containing the mapped NPC data
+     */
     default NpcDTO npcToNpcDTO(NPC npc) {
 
         NpcDTO dto = new NpcDTO();
@@ -147,11 +174,13 @@ public interface EntityMapper {
     }
 
     /**
-     * Converts an Enemy to an Enemy-specific DTO.
+     * Maps an Enemy entity to an EnemyDTO.
+     * Includes enemy-specific attributes along with common entity properties.
      *
-     * @param enemy the enemy entity to convert
-     * @return the enemy DTO
+     * @param enemy The Enemy entity to convert
+     * @return EnemyDTO containing the mapped enemy data
      */
+
     default EnemyDTO enemyToEnemyDTO(Enemy enemy) {
         if (enemy == null) return null;
 
@@ -159,10 +188,11 @@ public interface EntityMapper {
     }
 
     /**
-     * Converts an EntityDTO to an appropriate Entity based on its type.
+     * Maps an EntityDTO back to its corresponding Entity object.
+     * Handles reverse mapping of all properties including inventory and equipment.
      *
-     * @param dto the DTO to convert
-     * @return the converted entity
+     * @param dto The EntityDTO to convert back to an Entity
+     * @return Entity object containing the mapped data
      */
     @Mapping(target = "entityMap", ignore = true)
     default Entity entityDtoToEntity(EntityDTO dto) {

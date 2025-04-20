@@ -5,10 +5,15 @@ import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.location.Dungeon;
 import com.github.joshuacgunn.core.location.World;
 import com.github.joshuacgunn.core.mechanics.GameEvents;
-import com.github.joshuacgunn.core.save.SaveManager;
 
 import java.util.Scanner;
 import java.util.UUID;
+
+/**
+ * Represents the dungeon exploration state of the game where players navigate through
+ * procedurally generated floors, encounter enemies, and discover treasures.
+ * Implements the GameState interface to integrate with the game's state management system.
+ */
 
 public class DungeonState implements GameState {
     private final GameLoop parentLoop;
@@ -19,6 +24,13 @@ public class DungeonState implements GameState {
     private int currentAction;
     private final Dungeon whichDungeon;
 
+    /**
+     * Creates a new dungeon state instance.
+     *
+     * @param parentLoop The game loop managing this dungeon state
+     * @param isNew Whether this is a new dungeon instance (true) or a loaded one (false)
+     */
+
     public DungeonState(GameLoop parentLoop, boolean isNew) {
         this.parentLoop = parentLoop;
         this.player = parentLoop.getPlayer();
@@ -27,6 +39,16 @@ public class DungeonState implements GameState {
             System.out.println("You have entered " + whichDungeon.getLocationName() + ", a dungeon with " + whichDungeon.getFloors().size() + " floors, and a difficulty of " + whichDungeon.getDifficultyRating());
         }
     }
+
+    /**
+     * Handles the main dungeon exploration loop and state transitions.
+     * This method manages:
+     * - Dungeon navigation
+     * - Enemy encounters
+     * - Treasure discovery
+     * - Floor progression
+     * - Exit conditions
+     */
 
     @Override
     public void handleGameState() {
@@ -44,6 +66,14 @@ public class DungeonState implements GameState {
         }
     }
 
+    /**
+     * Updates the dungeon state each game tick.
+     * Handles:
+     * - Enemy movement and spawning
+     * - Environmental effects
+     * - Player status updates
+     * - Floor events
+     */
     @Override
     public void update() {
         if (!inDungeon) return;
@@ -73,6 +103,16 @@ public class DungeonState implements GameState {
                 break;
         }
     }
+
+    /**
+     * Processes player input during dungeon exploration.
+     * Handles actions such as:
+     * - Movement between rooms
+     * - Interaction with objects
+     * - Combat initiation
+     * - Inventory management
+     * - Floor navigation
+     */
 
     @Override
     public void handleInput() {

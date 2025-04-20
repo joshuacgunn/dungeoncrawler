@@ -17,6 +17,13 @@ public class MainMenuState implements GameState {
     private boolean inGame = true;
     private boolean isInMainMenu = true;
 
+    /**
+     * Constructs a new MainMenuState and initializes the main menu for the game.
+     *
+     * This method clears the console, displays the main menu banner, and
+     * calls the handleGameState method to process the main menu loop.
+     * It is responsible for setting up the starting point of the game's main menu.
+     */
     public MainMenuState() {
         clearConsole();
         System.out.println(

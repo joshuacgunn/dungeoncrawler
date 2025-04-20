@@ -10,15 +10,34 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * A MapStruct mapper interface that handles conversion between Town domain objects
+ * and their corresponding DTOs (Data Transfer Objects).
+ * Manages the complex relationships between towns, shops, and NPCs while
+ * maintaining data integrity during serialization and deserialization.
+ */
 @Mapper
 public interface TownMapper {
 
+    /** Singleton instance of the TownMapper */
     TownMapper INSTANCE = Mappers.getMapper(TownMapper.class);
 
+    /**
+     * Converts a Town domain object to its DTO representation.
+     * Maps the complete town structure including all shops and their associated NPCs.
+     *
+     * Mapped properties include:
+     * - Town attributes (name, UUID, shop count)
+     * - Shop collection with their types and UUIDs
+     * - Shop owner references
+     * - NPCs present in each shop
+     *
+     * @param town The source Town object to convert
+     * @return TownDTO containing the mapped town data and its internal structure
+     */
     default TownDTO townToTownDto(Town town) {
         TownDTO dto = new TownDTO();
 
@@ -45,6 +64,21 @@ public interface TownMapper {
         return dto;
     }
 
+    /**
+     * Converts a TownDTO back to a Town domain object.
+     * Reconstructs the complete town structure while maintaining proper object references
+     * and preventing circular dependencies.
+     *
+     * Features:
+     * - Creates a non-generating town instance
+     * - Restores shop collection with proper types
+     * - Relinks shop owners from entity map
+     * - Rebuilds NPC collections for each shop
+     * - Ignores locationMap to prevent circular references
+     *
+     * @param townDTO The TownDTO to convert back to a Town
+     * @return Town object containing the reconstructed town structure
+     */
     @Mapping(target="locationMap", ignore = true)
     default Town townDtoToTown(TownDTO townDTO) {
         Town town = new Town(townDTO.getTownUUID(), false);

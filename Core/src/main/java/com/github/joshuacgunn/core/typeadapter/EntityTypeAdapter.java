@@ -91,7 +91,6 @@ public class EntityTypeAdapter implements JsonSerializer<Entity>, JsonDeserializ
                 Player.PlayerClass playerClass = Player.PlayerClass.valueOf(jsonObject.get("playerClass").getAsString());
                 entity = new Player(entityName, entityUUID, playerClass, false);
                 break;
-
             case "NPC":
                 entity = new NPC(entityName, entityUUID);
 
@@ -101,7 +100,6 @@ public class EntityTypeAdapter implements JsonSerializer<Entity>, JsonDeserializ
                     ((NPC) entity).setNpcPersonality(personality);
                 }
                 break;
-
             case "Enemy":
                 float hp = jsonObject.has("entityHp") ? jsonObject.get("entityHp").getAsFloat() : 0f;
                 entity = new Enemy(Enemy.EnemyType.valueOf(entityName.toUpperCase()), entityUUID, false) {

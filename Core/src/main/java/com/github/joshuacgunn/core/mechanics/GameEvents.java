@@ -15,9 +15,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+/**
+ * A utility class that manages and handles various game-related events and actions
+ * in the Terminal RPG game. This class serves as a central hub for common game operations
+ * and state transitions.
+ */
 public abstract class GameEvents {
 
-
+    /**
+     * Displays the inventory contents of a given entity.
+     * Shows items, equipment, and relevant statistics.
+     *
+     * @param entity The entity whose inventory should be displayed
+     */
     public static void showInventory(Entity entity) {
         System.out.println("Your inventory:");
         for (Item item : entity.getInventory().getItems()) {
@@ -46,6 +56,13 @@ public abstract class GameEvents {
         }
     }
 
+    /**
+     * Handles the transition between different game states.
+     * Manages state cleanup and initialization during transitions.
+     *
+     * @param player The player whose state is being changed
+     * @param newGameState The game state to transition to
+     */
     public static void switchGameStates(Player player, GameState newGameState) {
         if (player == null || newGameState == null) {
             throw new IllegalArgumentException("Player and new game state cannot be null");
@@ -73,6 +90,14 @@ public abstract class GameEvents {
         newGameState.handleGameState();
     }
 
+    /**
+     * Retrieves dialogue for NPCs based on the conversation context.
+     * Provides appropriate responses for different dialogue states.
+     *
+     * @param npc The NPC who is speaking
+     * @param dialogue The dialogue ID or context number
+     * @return The selected dialogue string for the given context
+     */
     public static String npcDialogue(NPC npc, int dialogue) {
         switch (npc.getNpcPersonality()) {
             case ANGRY:
@@ -134,12 +159,25 @@ public abstract class GameEvents {
         }
     }
 
+    /**
+     * Handles the game exit process.
+     * Performs necessary cleanup and save operations before exit.
+     *
+     * @param player The player who is leaving the game
+     * @param parentLoop The main game loop instance
+     */
     public static void leaveGame(Player player, GameLoop parentLoop) {
         System.out.println("You have left the game");
         SaveManager.saveState(player);
         parentLoop.stopGame();
     }
 
+    /**
+     * Displays welcome message when loading a saved game.
+     * Shows relevant player statistics and game state information.
+     *
+     * @param player The player whose game is being loaded
+     */
     public static void loadGameGreet(Player player) {
         System.out.println("Welcome back, " + player.getEntityName() + "!");
         if (player.getCurrentLocation() != null) {
@@ -155,6 +193,10 @@ public abstract class GameEvents {
         }
     }
 
+    /**
+     * Initializes the game environment.
+     * Sets up necessary game systems and initial state.
+     */
     public static void initializeGame() {
         clearConsole();
         Player player;
@@ -178,6 +220,10 @@ public abstract class GameEvents {
         gameLoop.startGameLoop();
     }
 
+    /**
+     * Clears the console screen.
+     * Ensures clean display of new game states or information.
+     */
     public static void clearConsole() {
         try {
             if (System.getProperty("os.name").contains("Windows")) {

@@ -19,7 +19,21 @@ import java.util.UUID;
 @Mapper
 public interface DungeonMapper {
 
+    /** Singleton instance of the DungeonMapper */
     DungeonMapper INSTANCE = Mappers.getMapper(DungeonMapper.class);
+
+    /**
+     * Converts a Dungeon domain object to its DTO representation.
+     * Maps all relevant fields including:
+     * - Basic dungeon properties (name, UUID)
+     * - Floor information
+     * - Current floor state
+     * - Difficulty rating
+     * - Cleared status
+     *
+     * @param dungeon The source Dungeon object to convert
+     * @return A DungeonDTO containing the mapped dungeon data
+     */
 
     default DungeonDTO dungeonToDungeonDto(Dungeon dungeon) {
         if (dungeon == null) return null;
@@ -63,6 +77,14 @@ public interface DungeonMapper {
         return dungeonDTO;
     }
 
+    /**
+     * Converts a DungeonDTO back to a Dungeon domain object.
+     * Maps all relevant fields while ignoring the locationMap to prevent
+     * circular references.
+     *
+     * @param dungeonDTO The source DungeonDTO to convert
+     * @return A Dungeon object containing the mapped data
+     */
     @Mapping(target = "locationMap", ignore = true)
     default Dungeon dungeonDtoToDungeon(DungeonDTO dungeonDTO) {
         Dungeon dungeon = new Dungeon(dungeonDTO.getDungeonName(), dungeonDTO.getDungeonUUID(), false);

@@ -29,6 +29,12 @@ public class Weapon extends Item {
 
     private final WeaponMaterial weaponMaterial;
 
+    /**
+     * Enum representing different materials that weapons can be made of, each
+     * with a specific base damage multiplier. The base damage multiplier
+     * affects the overall damage output of a weapon crafted with the respective
+     * material.
+     */
     public enum WeaponMaterial {
         BONE(0.5f),
         IRON(1.0f),

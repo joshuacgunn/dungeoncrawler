@@ -82,6 +82,12 @@ public class Dungeon extends Location {
         }
     }
 
+    /**
+     * Clears the current dungeon floor and advances to the next appropriate floor in the dungeon.
+     * Marks the dungeon as cleared if the current floor is valid and has a floor number less than or equal to 1.
+     *
+     * @return true if the floor was successfully cleared and the dungeon is marked as cleared; false otherwise
+     */
     public boolean clearFloor() {
         System.out.println("You cleared floor " + currentFloor.getFloorNumber() + ", moving to floor " + (currentFloor.getFloorNumber() + 2) + " in the dungeon.");
         currentFloor = floors.get(currentFloor.getFloorNumber());

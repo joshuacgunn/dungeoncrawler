@@ -10,11 +10,38 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * A MapStruct mapper interface that handles conversion between Item domain objects
+ * and their corresponding DTOs (Data Transfer Objects).
+ * Supports polymorphic mapping of different item types (Weapon, Armor, etc.)
+ * while maintaining data integrity and preventing circular references.
+ */
 @Mapper
 public interface ItemMapper {
 
+    /** Singleton instance of the ItemMapper */
     ItemMapper INSTANCE = Mappers.getMapper(ItemMapper.class);
 
+    /**
+     * Converts an Item domain object to its DTO representation.
+     * Handles polymorphic mapping based on item type and preserves all relevant
+     * item attributes during conversion.
+     *
+     * Mapped properties include:
+     * - Basic item attributes (name, UUID, value)
+     * - Type-specific properties (damage for weapons, defense for armor)
+     * - Rarity information
+     * - Item state and condition
+     * - Custom attributes and enchantments
+     *
+     * Special handling:
+     * - Polymorphic type detection and appropriate subtype mapping
+     * - Null safety for optional attributes
+     * - Preservation of item type information
+     *
+     * @param item The source Item object to convert
+     * @return ItemDTO containing the mapped data, with appropriate subtype for specialized items
+     */
     default ItemDTO itemToItemDTO(Item item) {
         if (item == null) return null;
 
@@ -48,6 +75,20 @@ public interface ItemMapper {
         }
     }
 
+    /**
+     * Converts an ItemDTO back to an Item domain object.
+     * Maps all relevant fields while ignoring the itemMap to prevent
+     * circular references in the object graph.
+     *
+     * Features:
+     * - Type-aware conversion based on stored item type
+     * - Recreation of item attributes and properties
+     * - Proper handling of item state
+     * - Reference management for related entities
+     *
+     * @param dto The ItemDTO to convert back to an Item
+     * @return Item object containing the mapped data
+     */
     @Mapping(target = "itemMap", ignore = true)
     default Item itemDtoToItem(ItemDTO dto) {
         if (dto == null) return null;

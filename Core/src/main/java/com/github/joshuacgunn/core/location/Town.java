@@ -12,6 +12,13 @@ public class Town extends Location {
     private int shopCount;
     private ArrayList<Shop> shopsInTown = new ArrayList<>();
 
+    /**
+     * Creates a new town instance with a randomly generated name and shops.
+     *
+     * @param uuid Unique identifier for this town
+     * @param isNew Whether this is a new town (true) or loaded from save (false)
+     */
+
     public Town(UUID uuid, boolean isNew) {
         super(generateTownName(), uuid);
         if (isNew) {
@@ -44,6 +51,13 @@ public class Town extends Location {
         this.shopsInTown = shopsInTown;
     }
 
+    /**
+     * Generates a random assortment of shops for the town.
+     * Ensures that no duplicate shop types exist in the same town.
+     *
+     * @return ArrayList of newly generated shops
+     */
+
     public ArrayList<Shop> generateShops() {
         Faker faker = new Faker();
         ArrayList<Shop> shops = new ArrayList<>();
@@ -64,6 +78,19 @@ public class Town extends Location {
         }
         return shops;
     }
+
+    /**
+     * Generates a unique town name using various fantasy-themed sources.
+     * Names can be drawn from:
+     * - Pokemon locations
+     * - Game of Thrones cities
+     * - The Witcher locations
+     * - Lord of the Rings locations
+     *
+     * Ensures generated names are unique across all existing towns.
+     *
+     * @return A unique generated town name
+     */
 
     public static String generateTownName() {
         Random rand = new Random();

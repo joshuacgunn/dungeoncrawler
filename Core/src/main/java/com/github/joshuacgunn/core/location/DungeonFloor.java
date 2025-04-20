@@ -151,6 +151,18 @@ public class DungeonFloor extends Location{
         return chest;
     }
 
+    /**
+     * Generates a list of enemies for the current dungeon floor.
+     *
+     * This method creates and initializes enemies based on the floor's number
+     * and the characteristics of the previous floor. For the first floor, a
+     * random number of enemies between predefined values is generated. For
+     * subsequent floors, the difficulty and types of enemies are influenced
+     * by the difficulty rating and highest enemy type from the previous floor.
+     * Newly generated enemies are assigned a random type and unique identifier (UUID).
+     *
+     * The generated list of enemies is assigned to the `enemiesOnFloor` field.
+     */
     private void generateEnemies() {
         ArrayList<Enemy> enemies = new ArrayList<>();
         Random rand = new Random();

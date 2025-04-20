@@ -20,11 +20,18 @@ public class Player extends Entity {
     /** The maximum health points a player can have */
     public static final float MAX_HP = 100f;
 
+    /**
+     * Possible player character classes that determine initial stats and abilities.
+     */
     public enum PlayerClass {
+        /** Specializes in stealth and agility */
         ROGUE,
+        /** Masters of arcane magic */
         WIZARD,
-        PALADIN;
+        /** Holy warrior combining combat and divine powers */
+        PALADIN
     }
+
 
     private PlayerStats playerStats;
     private final PlayerClass playerClass;
@@ -160,6 +167,14 @@ public class Player extends Entity {
         return baseDamage * (1f + strengthBonus + classBonus);
     }
 
+    /**
+     * Initializes the player's stats based on their chosen class.
+     * The player's attributes such as dexterity, strength, charisma, luck, intelligence,
+     * and vitality are set according to predefined values for their class type.
+     * If the player's class is null or unrecognized, default stats are set to zero.
+     *
+     * @return A PlayerStats object containing the initialized attributes for the player.
+     */
     private PlayerStats initializeStats() {
         PlayerStats stats = new PlayerStats();
 
@@ -224,6 +239,16 @@ public class Player extends Entity {
         );
     }
 
+    /**
+     * Creates a new player character with user input for name and class selection.
+     * This method handles the initial player creation process including:
+     * - Getting the player's name
+     * - Class selection from available options
+     * - Generating a unique identifier
+     * - Setting up initial player stats based on chosen class
+     *
+     * @return A newly created Player instance with the chosen attributes
+     */
     public static Player createPlayer() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("What is your name?");
@@ -240,6 +265,7 @@ public class Player extends Entity {
         System.out.println(player.getPlayerStatsString());
         return player;
     }
+
 
     public static void generateStartingEquipment(Player player) {
         PlayerClass playerClass = player.getPlayerClass();
@@ -278,12 +304,10 @@ public class Player extends Entity {
                 boots = new Armor(UUID.randomUUID(), Armor.ArmorSlot.BOOTS, "Basic boots", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
                 break;
         }
-
         player.equipArmor(helmet);
         player.equipArmor(chestplate);
         player.equipArmor(leggings);
         player.equipArmor(boots);
         player.setCurrentWeapon(weapon);
     }
-
 }

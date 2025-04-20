@@ -11,6 +11,11 @@ import java.util.Random;
 public class Armor extends Item {
     private float armorDefense;
 
+    /**
+     * Enum representing various types of armor materials with associated
+     * base defense multipliers. These materials factor into the calculation
+     * of the total defense value of an armor piece.
+     */
     public enum ArmorMaterial {
         LEATHER(0.5f),
         BONE(0.8f),
@@ -26,6 +31,11 @@ public class Armor extends Item {
         }
     }
 
+    /**
+     * Represents the quality tier of a piece of armor, determining its
+     * defensive capabilities and durability multiplier.
+     * Each quality tier has a predefined defense value and a durability multiplier.
+     */
     public enum ArmorQuality {
         FLIMSY(5f, 1),
         WORN(7f, 3),
@@ -44,6 +54,12 @@ public class Armor extends Item {
             this.durabilityMultiplier = durabilityMultiplier;
         }
     }
+
+    /**
+     * The ArmorSlot enum represents the different types of slots available for armor pieces
+     * in the game, each associated with a specific defense multiplier. This multiplier is used
+     * to calculate the contribution of the armor piece to the overall defense value.
+     */
     public enum ArmorSlot {
         HELMET(1.1f),
         CHESTPLATE(1.8f),
