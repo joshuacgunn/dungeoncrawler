@@ -52,7 +52,7 @@ public class CombatState implements GameState {
         }
         this.parentLoop = parentLoop;
         System.out.println("You are approached by " + enemy.getEntityName() + ", wielding a[n] " + enemy.getCurrentWeapon().getWeaponMaterial().name().toLowerCase() + " sword");
-        printLogo();
+        printLogo(this);
     }
 
     /**

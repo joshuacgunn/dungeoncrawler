@@ -31,7 +31,7 @@ public class ExploringState implements GameState {
         this.player = parentLoop.getPlayer();
 
         if (isNew) {
-            printLogo();
+            printLogo(this);
             if (player.getPreviousGameState() != null) {
                 System.out.println("You begin exploring the world...");
             }
@@ -44,14 +44,15 @@ public class ExploringState implements GameState {
         while (isExploring) {
             update();
         }
-        GameEvents.leaveGame(player, parentLoop);
+        MainMenuState mainMenuState = new MainMenuState();
+        GameEvents.switchGameStates(player, mainMenuState);
     }
 
     @Override
     public void update() {
         if (!isExploring) return;
         System.out.println("What would you like to do?");
-        System.out.println("0: Exit game");
+        System.out.println("0: Back to the main menu");
         System.out.println("1. Go to a previous town");
         System.out.println("2. Go to a previous dungeon");
         System.out.println("3. Find a new place");

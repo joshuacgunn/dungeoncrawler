@@ -40,7 +40,7 @@ public class DungeonState implements GameState {
         this.player = parentLoop.getPlayer();
         this.whichDungeon = (Dungeon) player.getCurrentLocation();
         if (isNew) {
-            printLogo();
+            printLogo(this);
             System.out.println("You have entered " + whichDungeon.getLocationName() + ", a dungeon with " + whichDungeon.getFloors().size() + " floors, and a difficulty of " + whichDungeon.getDifficultyRating());
         }
     }
@@ -70,7 +70,8 @@ public class DungeonState implements GameState {
             ExploringState exploringState = new ExploringState(parentLoop, true);
             GameEvents.switchGameStates(player, exploringState);
         } else {
-            GameEvents.leaveGame(player, parentLoop);
+            player.setCurrentLocation(null);
+            GameEvents.switchGameStates(player, new MainMenuState());
         }
     }
 
@@ -86,7 +87,7 @@ public class DungeonState implements GameState {
     public void update() {
         if (!inDungeon) return;
         System.out.println("What would you like to do?");
-        System.out.println("0. Leave the game");
+        System.out.println("0. Back to the main menu");
         System.out.println("1. Attack an enemy");
         System.out.println("2. Try to sneak past to the next floor");
         System.out.println("3. Check your inventory");

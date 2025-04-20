@@ -56,11 +56,10 @@ public class GameLoop {
         if (stateName == null) return;
         
         GameState newState = switch (stateName) {
-            case "DungeonState" -> new DungeonState(this, isNew);
+            case "DungeonState", "CombatState" -> new DungeonState(this, isNew);
             case "ExploringState" -> new ExploringState(this, isNew);
             case "TownState" -> new TownState(this, isNew);
             case "ShopState" -> new ShopState(this, isNew);
-            case "CombatState" -> new CombatState(this);
             default -> null;
         };
         
@@ -74,11 +73,10 @@ public class GameLoop {
         if (stateName == null) return;
         
         GameState prevState = switch (stateName) {
-            case "DungeonState" -> new DungeonState(this, false);
+            case "DungeonState", "CombatState" -> new DungeonState(this, false);
             case "ExploringState" -> new ExploringState(this, false);
             case "TownState" -> new TownState(this, false);
             case "ShopState" -> new ShopState(this, false);
-            case "CombatState" -> new CombatState(this);
             default -> null;
         };
         

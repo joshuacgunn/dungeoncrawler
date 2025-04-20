@@ -15,7 +15,6 @@ public class MainMenuState implements GameState {
     Scanner scanner = new Scanner(System.in);
     private boolean inMainMenu = true;
     private int currentAction;
-    private boolean inGame = true;
 
     /**
      * Constructs a new MainMenuState and initializes the main menu for the game.
@@ -25,7 +24,7 @@ public class MainMenuState implements GameState {
      * It is responsible for setting up the starting point of the game's main menu.
      */
     public MainMenuState() {
-        printLogo();
+        printLogo(this);
         handleGameState();
     }
 
@@ -48,7 +47,6 @@ public class MainMenuState implements GameState {
         switch (currentAction) {
             case 0:
                 inMainMenu = false;
-                inGame = false;
                 break;
             case 1:
                 if (new File("saves/player_save.json").exists()) {

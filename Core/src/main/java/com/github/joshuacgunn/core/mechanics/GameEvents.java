@@ -177,7 +177,7 @@ public abstract class GameEvents {
      * @param player The player whose game is being loaded
      */
     public static void loadGameGreet(Player player) {
-        printLogo();
+        printLogo(player.getGameState());
         System.out.println("Welcome back, " + player.getEntityName() + "!");
         if (player.getCurrentLocation() != null) {
             if (player.getCurrentLocation() instanceof Town town) {
@@ -236,14 +236,10 @@ public abstract class GameEvents {
         } catch (IOException | InterruptedException ex) {}
     }
 
-    public static void printLogo() {
+    public static void printLogo(GameState gameState) {
         clearConsole();
-        if (!Entity.getEntitiesByType(Player.class).isEmpty()) {
+        if (!Entity.getEntitiesByType(Player.class).isEmpty() && !(gameState instanceof MainMenuState)) {
             Location location = Entity.getEntitiesByType(Player.class).getFirst().getCurrentLocation();
-            GameState gameState = null;
-            if (Entity.getEntitiesByType(Player.class).getFirst().getGameState() != null) {
-                gameState = Entity.getEntitiesByType(Player.class).getFirst().getGameState();
-            }
             if (gameState instanceof CombatState) {
                 System.out.println("""
                                  ,     .

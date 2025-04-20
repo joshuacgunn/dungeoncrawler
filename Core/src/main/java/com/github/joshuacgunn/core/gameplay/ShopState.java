@@ -42,7 +42,7 @@ public class ShopState implements GameState {
         }
 
         if (isNew) {
-            printLogo();
+            printLogo(this);
             System.out.println(whichShop.getShopOwner().getEntityName() + ": " + GameEvents.npcDialogue(whichShop.getShopOwner(), 1) );
         }
     }
@@ -66,7 +66,8 @@ public class ShopState implements GameState {
             TownState townState = new TownState(parentLoop, true);
             GameEvents.switchGameStates(player, townState);
         } else {
-            GameEvents.leaveGame(player, parentLoop);
+            player.setCurrentLocation(null);
+            GameEvents.switchGameStates(player, new MainMenuState());
         }
     }
 
@@ -74,7 +75,7 @@ public class ShopState implements GameState {
     public void update() {
         if (!inShop) return;
         System.out.println("What would you like to do?");
-        System.out.println("0: Leave the game");
+        System.out.println("0: Back to the main menu");
         System.out.println("1. Buy an item");
         System.out.println("2. Leave the shop");
         handleInput();

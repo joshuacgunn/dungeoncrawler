@@ -42,7 +42,7 @@ public class TownState implements GameState {
 
         // isNew is true for new games, false for loaded games
         if (isNew) {
-            printLogo();
+            printLogo(this);
             String townSize = getTownSize();
             System.out.println("You have entered " + whichTown.getLocationName() +
                     ", a " + townSize + " town with a " + getShopsInTown());
@@ -74,7 +74,8 @@ public class TownState implements GameState {
             ShopState shopState = new ShopState(parentLoop, true);
             GameEvents.switchGameStates(player, shopState);
         } else {
-            GameEvents.leaveGame(player, parentLoop);
+            player.setCurrentLocation(null);
+            GameEvents.switchGameStates(player, new MainMenuState());
         }
     }
 
@@ -82,7 +83,7 @@ public class TownState implements GameState {
     public void update() {
         if (!inTown) return;
         System.out.println("What would you like to do?");
-        System.out.println("0: Leave the game");
+        System.out.println("0: Back to the main menu");
         System.out.println("1. Visit a shop");
         System.out.println("2. Leave the town");
         handleInput();
