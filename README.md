@@ -13,7 +13,7 @@ Although I have many things I want to add to the game, it is time consuming to a
 - Sidequests
 - Bosses
 - Unique dungeons
-- ~~Unique NPC's~~ - (4/18) Added some, will add more in the future.
+- ~~Unique NPC's~~ - Added as of 4/18
 - More enemy variety
 - ~~Some ASCII art so the terminal doesn't look so dry~~ - Added as of 4/19
 - Functional shops (they don't sell anything currently)
@@ -22,6 +22,6 @@ Although I have many things I want to add to the game, it is time consuming to a
 - Proper player class system with different functionalities
 - A way for the player to move around in a dungeon
 - And more to come...  
-_*Even if something is crossed out, it will still be changed in the future_
+_*If something is crossed out, it does not mean I'm completely done implementing it_
 # Disclaimer
 I'm relatively new to Java, which means my knowledge of how to code certain things is limited. AI has been used in this project to code some things. Most notably the Gson adapters are completely AI generated. I understand how they work, but I do not think I would be able to code them myself. 
