@@ -13,7 +13,7 @@ Although I have many things I want to add to the game, it is time consuming to a
 - Sidequests
 - Bosses
 - Unique dungeons
-- Unique NPC's
+- ~~Unique NPC's~~ - (4/18) Added some, will add more in the future.
 - More enemy variety
 - Some ASCII art so the terminal doesn't look so try
 - Functional shops (they don't sell anything currently)
