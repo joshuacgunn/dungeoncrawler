@@ -88,8 +88,7 @@ public interface TownMapper {
 
         ArrayList<Shop> shopsInTown = new ArrayList<>();
         for (ShopDTO shopDTO : townDTO.getShopsInTown()) {
-            Shop shop = new Shop(shopDTO.getShopType(), shopDTO.getShopUUID(), (NPC) Entity.entityMap.get(shopDTO.getShopOwnerUUID()), false);
-            shop.setParentTown(town);
+            Shop shop = new Shop(shopDTO.getShopType(), shopDTO.getShopUUID(), (NPC) Entity.entityMap.get(shopDTO.getShopOwnerUUID()), false, town);
             shopsInTown.add(shop);
             ArrayList<NPC> npcsInShop = new ArrayList<>();
             for (UUID npcUUID : shopDTO.getNpcsInShop()) {

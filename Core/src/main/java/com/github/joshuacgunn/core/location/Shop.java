@@ -64,10 +64,11 @@ public class Shop extends Location {
      * @param shopOwner The NPC who owns this shop
      * @param isNew Whether this is a new shop instance (true) or loaded from save (false)
      */
-    public Shop(ShopType shopType, UUID uuid, NPC shopOwner, boolean isNew) {
+    public Shop(ShopType shopType, UUID uuid, NPC shopOwner, boolean isNew, Town parentTown) {
         super(shopType.name, uuid);
         this.shopOwner = shopOwner;
         this.shopType = shopType;
+        this.parentTown = parentTown;
         this.setLocationName(shopOwner.getEntityName() + "'s " + shopType.name);
         if (isNew) {
             this.npcsInShop = generateNPCs();
@@ -79,10 +80,6 @@ public class Shop extends Location {
                 npc.setCurrentLocation(this);
             }
         }
-    }
-
-    public void setParentTown(Town town) {
-        this.parentTown = town;
     }
 
     public Town getParentTown() {
