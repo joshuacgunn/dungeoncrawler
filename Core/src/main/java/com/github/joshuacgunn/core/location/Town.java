@@ -3,6 +3,7 @@ package com.github.joshuacgunn.core.location;
 import com.github.javafaker.Faker;
 import com.github.joshuacgunn.core.entity.Entity;
 import com.github.joshuacgunn.core.entity.NPC;
+import com.github.joshuacgunn.core.mechanics.GameEvents;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -27,6 +28,7 @@ public class Town extends Location {
             if (shopCount == 1) {
                 NPC npc = new NPC(new Faker().name().firstName(), UUID.randomUUID());
                 Shop shop = new Shop(Shop.ShopType.TAVERN, UUID.randomUUID(), npc, true);
+                shop.setParentTown(this);
                 npc.setCurrentLocation(shop);
                 shopsInTown.add(shop);
             } else {
@@ -72,6 +74,7 @@ public class Town extends Location {
                 }
             }
             Shop shop = new Shop(shopToMake, UUID.randomUUID(), npc, true);
+            shop.setParentTown(this);
             npc.setCurrentLocation(shop);
             shops.add(shop);
             i++;
@@ -126,7 +129,7 @@ public class Town extends Location {
                 }
                 generated = true;
                 return name;
-            } else {
+            } else if (nameChance < .96f) {
                 String name = faker.lordOfTheRings().location();
                 for (Town town : Location.getLocationsByType(Town.class)) {
                     if (name.equals(town.getLocationName())) {
@@ -135,6 +138,9 @@ public class Town extends Location {
                 }
                 generated = true;
                 return name;
+            } else {
+                generated = true;
+                return "Silver Skalitz";
             }
         }
         return null;

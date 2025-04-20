@@ -2,6 +2,7 @@ package com.github.joshuacgunn.core.location;
 
 import com.github.javafaker.Faker;
 import com.github.joshuacgunn.core.entity.NPC;
+import com.github.joshuacgunn.core.mechanics.GameEvents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,12 +45,14 @@ public class Shop extends Location {
         }
     }
 
+    private Town parentTown;
+
     /** The NPC who owns and operates the shop */
     private NPC shopOwner;
     
     /** The type of this shop */
     private ShopType shopType;
-    
+
     /** List of NPCs currently present in the shop */
     private List<NPC> npcsInShop = new ArrayList<>();
 
@@ -68,7 +71,22 @@ public class Shop extends Location {
         this.setLocationName(shopOwner.getEntityName() + "'s " + shopType.name);
         if (isNew) {
             this.npcsInShop = generateNPCs();
+            for (NPC npc : GameEvents.generateUniqueNPCs(this)) {
+                if (this.npcsInShop.contains(npc)) {
+                    continue;
+                }
+                this.npcsInShop.add(npc);
+                npc.setCurrentLocation(this);
+            }
         }
+    }
+
+    public void setParentTown(Town town) {
+        this.parentTown = town;
+    }
+
+    public Town getParentTown() {
+        return this.parentTown;
     }
 
     /**

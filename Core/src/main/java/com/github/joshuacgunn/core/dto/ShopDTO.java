@@ -6,11 +6,20 @@ import java.util.List;
 import java.util.UUID;
 
 public class ShopDTO {
-    private String shopName;
-    private UUID shopUUID;
-    private UUID shopOwner;
-    private Shop.ShopType shopType;
-    private List<UUID> npcsInShop;
+    public String shopName;
+    public UUID shopUUID;
+    public UUID shopOwner;
+    public Shop.ShopType shopType;
+    public List<UUID> npcsInShop;
+    public UUID parentTownUUID;
+
+    public void setParentTownUUID(UUID uuid) {
+        this.parentTownUUID = uuid;
+    }
+
+    public UUID getParentTownUUID() {
+        return this.parentTownUUID;
+    }
 
     public String getShopName() {
         return shopName;

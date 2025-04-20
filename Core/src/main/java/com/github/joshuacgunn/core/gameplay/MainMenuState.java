@@ -18,7 +18,6 @@ public class MainMenuState implements GameState {
     private boolean inMainMenu = true;
     private int currentAction;
     private boolean inGame = true;
-    private boolean isInMainMenu = true;
 
     /**
      * Constructs a new MainMenuState and initializes the main menu for the game.
@@ -37,6 +36,7 @@ public class MainMenuState implements GameState {
         while (inMainMenu) {
             update();
         }
+        System.exit(0);
     }
 
     @Override
@@ -109,6 +109,7 @@ public class MainMenuState implements GameState {
                     GameEvents.initializeGame();
                     break;
                 }
+                break;
             case 2:
                 if (new File("saves/player_save.json").exists() || new File("backups/saves/").exists()) {
                     GameEvents.initializeGame();

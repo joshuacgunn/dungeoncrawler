@@ -7,12 +7,15 @@ import com.github.joshuacgunn.core.gameplay.GameState;
 import com.github.joshuacgunn.core.gameplay.TownState;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
+import com.github.joshuacgunn.core.location.Shop;
 import com.github.joshuacgunn.core.location.Town;
 import com.github.joshuacgunn.core.save.SaveManager;
 import com.github.joshuacgunn.core.gameplay.GameLoop;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -253,5 +256,39 @@ public abstract class GameEvents {
                          |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___|\s
                         (_____)                                                                                 (_____)
                         """);
+    }
+
+    public static List<NPC> generateUniqueNPCs(Shop shop) {
+        ArrayList<NPC> npcList = new ArrayList<>();
+        String name = shop.getParentTown().getLocationName();
+        if (name.equalsIgnoreCase("Blaviken") && shop.getShopType() == Shop.ShopType.TAVERN) {
+            NPC geralt = new NPC("Geralt of Rivia", UUID.randomUUID());
+            geralt.setNpcPersonality(NPC.Personality.SERIOUS);
+            npcList.add(geralt);
+            NPC ciri = new NPC("Ciri", UUID.randomUUID());
+            ciri.setNpcPersonality(NPC.Personality.SERIOUS);
+            npcList.add(ciri);
+            NPC vesemir = new NPC("Vesemir", UUID.randomUUID());
+            vesemir.setNpcPersonality(NPC.Personality.SERIOUS);
+            npcList.add(vesemir);
+        } else if (name.equalsIgnoreCase("Pallet Town") && shop.getShopType() == Shop.ShopType.TAVERN) {
+            NPC ash = new NPC("Ash Ketchum", UUID.randomUUID());
+            ash.setNpcPersonality(NPC.Personality.FUNNY);
+            npcList.add(ash);
+            NPC paul = new NPC("Paul", UUID.randomUUID());
+            paul.setNpcPersonality(NPC.Personality.SERIOUS);
+            npcList.add(paul);
+            NPC gary = new NPC("Gary Oak", UUID.randomUUID());
+            gary.setNpcPersonality(NPC.Personality.SARCASTIC);
+            npcList.add(gary);
+        } else if (name.equalsIgnoreCase("Silver Skalitz") && shop.getShopType() == Shop.ShopType.BLACKSMITH) {
+            NPC henry = new NPC("Henry", UUID.randomUUID());
+            henry.setNpcPersonality(NPC.Personality.FUNNY);
+            npcList.add(henry);
+            NPC theresa = new NPC("Theresa", UUID.randomUUID());
+            theresa.setNpcPersonality(NPC.Personality.SARCASTIC);
+            npcList.add(theresa);
+        }
+        return npcList;
     }
 }

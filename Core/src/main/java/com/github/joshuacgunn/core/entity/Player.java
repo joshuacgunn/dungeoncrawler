@@ -252,16 +252,19 @@ public class Player extends Entity {
     public static Player createPlayer() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("What is your name?");
+        System.out.print("Name: ");
         String name = scanner.nextLine();
-        System.out.println("What class would you like to play as?");
+        System.out.println("Welcome " + name + "! What class would you like to play as? (1-3) ");
         System.out.println("1. Rogue");
         System.out.println("2. Wizard");
         System.out.println("3. Paladin");
+        System.out.print("Class: ");
         int playerClass = scanner.nextInt();
         scanner.nextLine();
         UUID uuid = UUID.randomUUID();
         PlayerClass playerClassEnum = PlayerClass.values()[playerClass - 1];
         Player player = new Player(name, uuid, playerClassEnum, true);
+        System.out.println("You chose " + playerClassEnum.name().toLowerCase() + "!");
         System.out.println(player.getPlayerStatsString());
         return player;
     }
