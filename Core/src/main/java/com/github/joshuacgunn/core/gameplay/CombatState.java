@@ -42,17 +42,17 @@ public class CombatState implements GameState {
      *
      * @param parentLoop The game loop managing this combat state
      */
-    public CombatState(GameLoop parentLoop) {
+    public CombatState(GameLoop parentLoop, boolean isNew) {
         this.player = parentLoop.getPlayer();
+        this.parentLoop = parentLoop;
         if (player.getCurrentLocation() instanceof Dungeon) {
             this.enemy = ((Dungeon) player.getCurrentLocation()).getCurrentFloor().getEnemiesOnFloor().get(new java.util.Random().nextInt(((Dungeon) player.getCurrentLocation()).getCurrentFloor().getEnemiesOnFloor().size()));
         } else {
             this.enemy = new Enemy(Enemy.EnemyType.GOBLIN, UUID.randomUUID(), false);
             Entity.entityMap.remove(enemy.getEntityUUID());
         }
-        this.parentLoop = parentLoop;
-        System.out.println("You are approached by " + enemy.getEntityName() + ", wielding a[n] " + enemy.getCurrentWeapon().getWeaponMaterial().name().toLowerCase() + " sword");
         printLogo(this);
+        System.out.println("You are approached by a[n] " + enemy.getEntityName() + ", wielding a[n] " + enemy.getCurrentWeapon().getWeaponMaterial().name().toLowerCase() + " sword");
     }
 
     /**
@@ -67,7 +67,9 @@ public class CombatState implements GameState {
         if (!player.isAlive()) {
             parentLoop.stopGame();
         } else {
+            player.setPreviousGameState(this);
             DungeonState dungeonState = new DungeonState(parentLoop, false);
+            dungeonState.ranAway = true;
             GameEvents.switchGameStates(player, dungeonState);
         }
     }
@@ -111,8 +113,12 @@ public class CombatState implements GameState {
                 break;
             case 2:
                 System.out.println("You ran away!");
+                try {
+                    TimeUnit.SECONDS.sleep(2);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 inCombat = false;
-                GameEvents.switchGameStates(player, parentLoop.getPreviousGameState());
                 break;
             case 3:
                 GameEvents.showInventory(player);

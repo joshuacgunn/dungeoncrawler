@@ -17,6 +17,16 @@ public class Item {
     /** Global registry mapping UUIDs to all created items */
     public static Map<UUID, Item> itemMap = new HashMap<>();
 
+    public enum ItemRarity {
+        COMMON,
+        UNCOMMON,
+        RARE,
+        EPIC,
+        LEGENDARY,
+        MYTHICAL,
+        DEMONIC,
+    }
+
     /**
      * Creates a new item and registers it in the global item map.
      *
@@ -49,6 +59,10 @@ public class Item {
 
     public void setItemName(String name) {
         this.itemName = name;
+    }
+
+    public ItemRarity getItemRarity() {
+        return ItemRarity.COMMON;
     }
 
     /**

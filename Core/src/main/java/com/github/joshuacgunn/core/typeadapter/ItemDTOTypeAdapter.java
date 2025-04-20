@@ -4,6 +4,7 @@ import com.github.joshuacgunn.core.dto.ArmorDTO;
 import com.github.joshuacgunn.core.dto.ItemDTO;
 import com.github.joshuacgunn.core.dto.WeaponDTO;
 import com.github.joshuacgunn.core.item.Armor;
+import com.github.joshuacgunn.core.item.Item;
 import com.google.gson.*;
 import com.github.joshuacgunn.core.item.Weapon;
 
@@ -18,6 +19,7 @@ public class ItemDTOTypeAdapter implements JsonSerializer<ItemDTO>, JsonDeserial
         // Common properties
         result.addProperty("itemName", src.getItemName());
         result.addProperty("itemUUID", src.getItemUUID().toString());
+        result.addProperty("itemRarity", src.getItemRarity().name());
 
         // Type-specific properties
         if (src instanceof WeaponDTO weaponDTO) {
@@ -129,6 +131,11 @@ public class ItemDTOTypeAdapter implements JsonSerializer<ItemDTO>, JsonDeserial
 
         if (jsonObject.has("itemUUID")) {
             dto.setItemUUID(java.util.UUID.fromString(jsonObject.get("itemUUID").getAsString()));
+        }
+
+        if (jsonObject.has("itemRarity")) {
+            String rarityStr = jsonObject.get("itemRarity").getAsString();
+            dto.setItemRarity(Item.ItemRarity.valueOf(rarityStr));
         }
 
         return dto;

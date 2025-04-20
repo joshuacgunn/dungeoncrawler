@@ -128,7 +128,7 @@ public class Chest extends Container{
         }
 
         // Remove chest if certain requirements are not met (floor # below 3, floor too easy)
-        if (items.isEmpty() || parentFloor.getDifficultyRating() < 3 || (random.nextFloat() * parentFloor.getDifficultyRating() / 3) < 0.75f) {
+        if (items.isEmpty() || parentFloor.getDifficultyRating() < 1.3 || (random.nextFloat() * parentFloor.getDifficultyRating() / 3) < 0.75f) {
             parentFloor.setHasChest(false);
         }
 
@@ -160,6 +160,7 @@ public class Chest extends Container{
     @SuppressWarnings("unchecked")
     public <T extends Item> T generateItem() {
         try {
+            Random rand = new Random();
             Reflections reflection = new Reflections("com.github.joshuacgunn");
             Set<Class<? extends Item>> itemClasses = reflection.getSubTypesOf(Item.class);
             int extendedClasses = 0;
@@ -167,15 +168,28 @@ public class Chest extends Container{
                 extendedClasses += 1;
             }
 
-            float generatePercent = (100.0f / extendedClasses) / 100.0f;
+            Item.ItemRarity rarityToUse;
+            float rarityChance = rand.nextFloat();
+            if (parentFloor.getDifficultyRating() < 3) {
+                rarityToUse = Item.ItemRarity.COMMON;
+            } else if (parentFloor.getDifficultyRating() < 6) {
+                rarityToUse = Item.ItemRarity.values()[rand.nextInt(0, 2)];
+                if (rarityChance > .8f) {
+                    rarityToUse = Item.ItemRarity.UNCOMMON;
+                }
+            } else if (parentFloor.getDifficultyRating() < 9) {
+                rarityToUse = Item.ItemRarity.RARE;
+            } else {
+                rarityToUse = Item.ItemRarity.EPIC;
+            }
 
-            Random rand = new Random();
+            float generatePercent = (100.0f / extendedClasses) / 100.0f;
 
             float chanceToGenerate = rand.nextFloat();
             if (chanceToGenerate < generatePercent) {
-                return (T) Armor.generateArmor(0, 4, this);
+                return (T) Armor.generateArmor(rarityToUse, this);
             } else if (chanceToGenerate < generatePercent * 2) {
-                return (T) Weapon.generateWeapon(0, 4, this);
+                return (T) Weapon.generateWeapon(rarityToUse, this);
             }
         } catch (ClassCastException e) {
             e.printStackTrace();

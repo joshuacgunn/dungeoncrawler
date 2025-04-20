@@ -169,7 +169,7 @@ public class DungeonFloor extends Location{
 
         if (floorNumber == 1) {
             for (int i = 0; i < rand.nextInt(3, 5); i++) {
-                Enemy enemy = Enemy.createEnemy(Enemy.EnemyType.values()[rand.nextInt(0, 4)], UUID.randomUUID(), true);
+                Enemy enemy = new Enemy(Enemy.EnemyType.values()[rand.nextInt(0, 4)], UUID.randomUUID(), true);
                 enemies.add(enemy);
             }
         } else {
@@ -183,7 +183,7 @@ public class DungeonFloor extends Location{
             }
 
             for (int i = 0; i < Math.min(Math.floor(this.floorNumber * 1.3), Math.ceil(previousFloorDifficulty*1.9)) + 1; i++) {
-                Enemy enemy = Enemy.createEnemy(Enemy.EnemyType.values()[rand.nextInt(Math.max(0, previousHighestEnemy-1), Math.min(Enemy.EnemyType.values().length-2, previousHighestEnemy+1))] , UUID.randomUUID(), true);
+                Enemy enemy = new Enemy(Enemy.EnemyType.values()[rand.nextInt(Math.max(0, previousHighestEnemy-1), Math.min(Enemy.EnemyType.values().length-2, previousHighestEnemy+1))] , UUID.randomUUID(), true);
                 enemies.add(enemy);
             }
         }

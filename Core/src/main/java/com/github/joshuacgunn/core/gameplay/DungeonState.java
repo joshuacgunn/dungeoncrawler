@@ -27,6 +27,7 @@ public class DungeonState implements GameState {
     private boolean inCombat = false;
     private int currentAction;
     private final Dungeon whichDungeon;
+    public boolean ranAway = false;
 
     /**
      * Creates a new dungeon state instance.
@@ -42,6 +43,13 @@ public class DungeonState implements GameState {
         if (isNew) {
             printLogo(this);
             System.out.println("You have entered " + whichDungeon.getLocationName() + ", a dungeon with " + whichDungeon.getFloors().size() + " floors, and a difficulty of " + whichDungeon.getDifficultyRating());
+        } else if (player.getPreviousGameState() != null && player.getPreviousGameState().getGameStateName().equals("CombatState")) {
+            printLogo(this);
+            System.out.println("You have re-entered " + whichDungeon.getLocationName());
+            if (ranAway) {
+                System.out.println("You scurried away from the enemy...");
+                ranAway = false;
+            }
         }
     }
 
@@ -61,7 +69,7 @@ public class DungeonState implements GameState {
             update();
         }
         if (inCombat && inGame) {
-            CombatState combatState = new CombatState(parentLoop);
+            CombatState combatState = new CombatState(parentLoop, true);
             GameEvents.switchGameStates(player, combatState);
         } else if (inGame) {
             System.out.println("You have left the dungeon");

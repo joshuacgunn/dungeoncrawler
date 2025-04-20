@@ -54,6 +54,7 @@ public interface ItemMapper {
             dto.setWeaponDamage(weapon.getWeaponDamage());
             dto.setWeaponDurability(weapon.getWeaponDurability());
             dto.setArmorPenetration(weapon.getArmorPenetration());
+            dto.setItemRarity(weapon.getItemRarity());
             dto.setItemType("Weapon"); // Explicitly set type
             return dto;
         } else if (item instanceof Armor armor) {
@@ -64,6 +65,7 @@ public interface ItemMapper {
             dto.setArmorSlot(armor.getArmorSlot());
             dto.setArmorQuality(armor.getArmorQuality());
             dto.setArmorMaterial(armor.getArmorMaterial());
+            dto.setItemRarity(armor.getItemRarity());
             dto.setItemType("Armor"); // Explicitly set type
             return dto;
         } else {
@@ -97,10 +99,12 @@ public interface ItemMapper {
             Weapon weapon = new Weapon(
                     weaponDTO.getItemName(),
                     weaponDTO.getItemUUID(),
-                    weaponDTO.getWeaponQuality(),
-                    weaponDTO.getWeaponMaterial()
+                    weaponDTO.getItemRarity(),
+                    false
             );
             weapon.setWeaponDamage(weaponDTO.getWeaponDamage());
+            weapon.setWeaponQuality(weaponDTO.getWeaponQuality());
+            weapon.setWeaponMaterial(weaponDTO.getWeaponMaterial());
             weapon.setArmorPenetration(weaponDTO.getArmorPenetration());
             weapon.setWeaponDurability(weaponDTO.getWeaponDurability());
             weapon.setWeaponDurability(weaponDTO.getWeaponDurability());
@@ -110,9 +114,11 @@ public interface ItemMapper {
                     armorDTO.getItemUUID(),
                     armorDTO.getArmorSlot(),
                     armorDTO.getItemName(),
-                    armorDTO.getArmorQuality(),
-                    armorDTO.getArmorMaterial()
+                    armorDTO.getItemRarity(),
+                    false
                     );
+            armor.setArmorQuality(armorDTO.getArmorQuality());
+            armor.setArmorMaterial(armorDTO.getArmorMaterial());
             armor.setArmorDefense(armorDTO.getArmorDefense());
             return armor;
         } else {

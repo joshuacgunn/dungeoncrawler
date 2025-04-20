@@ -97,7 +97,7 @@ public interface EntityMapper {
         if (entity.getArmors() != null) {
             List<UUID> armorUUIDList = new ArrayList<>();
             for (Item item : entity.getArmors()) {
-                if (item instanceof Armor && item != null) {  // Add null check here
+                if (item instanceof Armor) {  // Add null check here
                     armorUUIDList.add(item.getItemUUID());
                 }
             }

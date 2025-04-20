@@ -455,7 +455,7 @@ public abstract class GameEvents {
                         ------------------------------------------------
                         """
                 );
-            } else {
+            } else if (!(gameState instanceof CombatState)){
                 Random rand = new Random();
                 float environmentGen = rand.nextFloat();
                 if (environmentGen < 0.25) {

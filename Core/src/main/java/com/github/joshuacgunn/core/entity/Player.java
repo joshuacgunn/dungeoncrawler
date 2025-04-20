@@ -2,6 +2,7 @@ package com.github.joshuacgunn.core.entity;
 
 import com.github.joshuacgunn.core.gameplay.GameState;
 import com.github.joshuacgunn.core.item.Armor;
+import com.github.joshuacgunn.core.item.Item;
 import com.github.joshuacgunn.core.item.Weapon;
 import com.github.joshuacgunn.core.mechanics.PlayerStats;
 
@@ -248,36 +249,11 @@ public class Player extends Entity {
         Armor chestplate;
         Armor leggings;
         Armor boots;
-        switch(playerClass) {
-            case ROGUE:
-                weapon = new Weapon("Rogue's basic sword", UUID.randomUUID(), Weapon.WeaponQuality.JAGGED, Weapon.WeaponMaterial.IRON);
-                helmet = new Armor(UUID.randomUUID(), Armor.ArmorSlot.HELMET, "Rogue's basic helmet", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
-                chestplate = new Armor(UUID.randomUUID(), Armor.ArmorSlot.CHESTPLATE, "Rogue's basic chestplate", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
-                leggings = new Armor(UUID.randomUUID(), Armor.ArmorSlot.LEGGINGS, "Rogue's basic leggings", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
-                boots = new Armor(UUID.randomUUID(), Armor.ArmorSlot.BOOTS, "Rogue's basic boots", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
-                break;
-            case WIZARD:
-                weapon = new Weapon("Wizard's basic sword", UUID.randomUUID(), Weapon.WeaponQuality.JAGGED, Weapon.WeaponMaterial.IRON);
-                helmet = new Armor(UUID.randomUUID(), Armor.ArmorSlot.HELMET, "Wizard's basic helmet", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
-                chestplate = new Armor(UUID.randomUUID(), Armor.ArmorSlot.CHESTPLATE, "Wizard's basic chestplate", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
-                leggings = new Armor(UUID.randomUUID(), Armor.ArmorSlot.LEGGINGS, "Wizard's basic leggings", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
-                boots = new Armor(UUID.randomUUID(), Armor.ArmorSlot.BOOTS, "Wizard's basic boots", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
-                break;
-            case PALADIN:
-                weapon = new Weapon("Paladin's basic sword", UUID.randomUUID(), Weapon.WeaponQuality.JAGGED, Weapon.WeaponMaterial.IRON);
-                helmet = new Armor(UUID.randomUUID(), Armor.ArmorSlot.HELMET, "Paladin's basic helmet", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
-                chestplate = new Armor(UUID.randomUUID(), Armor.ArmorSlot.CHESTPLATE, "Paladin's basic chestplate", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
-                leggings = new Armor(UUID.randomUUID(), Armor.ArmorSlot.LEGGINGS, "Paladin's basic leggings", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
-                boots = new Armor(UUID.randomUUID(), Armor.ArmorSlot.BOOTS, "Paladin's basic boots", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
-                break;
-            case null, default:
-                weapon = Weapon.generateWeapon(0, 5, player.getInventory());
-                helmet = new Armor(UUID.randomUUID(), Armor.ArmorSlot.HELMET, "Basic helmet", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
-                chestplate = new Armor(UUID.randomUUID(), Armor.ArmorSlot.CHESTPLATE, "Basic chestplate", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
-                leggings = new Armor(UUID.randomUUID(), Armor.ArmorSlot.LEGGINGS, "Basic leggings", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
-                boots = new Armor(UUID.randomUUID(), Armor.ArmorSlot.BOOTS, "Basic boots", Armor.ArmorQuality.WORN, Armor.ArmorMaterial.LEATHER);
-                break;
-        }
+        weapon = new Weapon("Basic sword", UUID.randomUUID(), Item.ItemRarity.COMMON, true);
+        helmet = new Armor(UUID.randomUUID(), Armor.ArmorSlot.HELMET, "Basic helmet", Item.ItemRarity.COMMON, true);
+        chestplate = new Armor(UUID.randomUUID(), Armor.ArmorSlot.CHESTPLATE, "Basic chestplate", Item.ItemRarity.COMMON, true);
+        leggings = new Armor(UUID.randomUUID(), Armor.ArmorSlot.LEGGINGS, "Basic leggings", Item.ItemRarity.COMMON, true);
+        boots = new Armor(UUID.randomUUID(), Armor.ArmorSlot.BOOTS, "Basic boots", Item.ItemRarity.COMMON, true);
         player.equipArmor(helmet);
         player.equipArmor(chestplate);
         player.equipArmor(leggings);

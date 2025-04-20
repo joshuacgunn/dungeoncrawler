@@ -12,7 +12,7 @@ import java.util.UUID;
  *
  * Weapons have various attributes including damage, durability, and armor penetration.
  * These attributes are determined by the weapon's quality level, which ranges from
- * RUSTED (lowest) to LEGENDARY (highest).
+ * RUSTED (lowest) to HEAVENLY (highest).
  */
 public class Weapon extends Item {
     /** Base damage this weapon inflicts in combat */
@@ -25,9 +25,11 @@ public class Weapon extends Item {
     private float armorPenetration;
 
     /** Quality tier of this weapon, affecting its base stats */
-    private final WeaponQuality weaponQuality;
+    private WeaponQuality weaponQuality;
 
-    private final WeaponMaterial weaponMaterial;
+    private WeaponMaterial weaponMaterial;
+
+    private final ItemRarity itemRarity;
 
     /**
      * Enum representing different materials that weapons can be made of, each
@@ -36,12 +38,13 @@ public class Weapon extends Item {
      * material.
      */
     public enum WeaponMaterial {
-        BONE(0.5f),
+        BRONZE(0.5f),
         IRON(1.0f),
         STEEL(1.2f),
         OBSIDIAN(1.5f),
         MITHRIL(1.8f),
-        CELESTIUM(2.2f);
+        CELESTIUM(2.2f),
+        DEMONITE(2.5f);
 
         public final float baseDamageMultiplier;
 
@@ -63,7 +66,8 @@ public class Weapon extends Item {
         RAZOR(25f, 0.4f, 2.4f),
         MASTERFUL(29f, 0.45f, 2.7f),
         EXQUISITE(33f, 0.5f, 3.0f),
-        LEGENDARY(37f, 0.55f, 3.5f);
+        HEAVENLY(37f, 0.55f, 3.5f),
+        HELLMADE(41f, 0.6f, 4.0f);
 
         /** Base damage value for this quality tier */
         public final float damage;
@@ -93,14 +97,16 @@ public class Weapon extends Item {
      *
      * @param itemName Name of the weapon
      * @param itemUUID Unique identifier for this weapon instance
-     * @param quality Quality tier affecting weapon stats
      */
-    public Weapon(String itemName, UUID itemUUID, WeaponQuality quality, WeaponMaterial weaponMaterial) {
+    public Weapon(String itemName, UUID itemUUID, ItemRarity itemRarity, boolean isNew) {
         super(itemName, itemUUID);
-        this.weaponQuality = quality;
-        this.weaponMaterial = weaponMaterial;
-        this.weaponDurability = 100f;
-        updateAttributes();
+
+        this.itemRarity = itemRarity;
+
+        if (isNew) {
+            this.weaponDurability = 100f;
+            updateAttributes();
+        }
     }
 
     /**
@@ -132,6 +138,14 @@ public class Weapon extends Item {
 
     public WeaponMaterial getWeaponMaterial() {
         return weaponMaterial;
+    }
+
+    public void setWeaponQuality(WeaponQuality quality) {
+        this.weaponQuality = quality;
+    }
+
+    public void setWeaponMaterial(WeaponMaterial material) {
+        this.weaponMaterial = material;
     }
 
     /**
@@ -170,37 +184,78 @@ public class Weapon extends Item {
         this.armorPenetration = armorPenetration;
     }
 
+    public void updateQualityMaterial() {
+        Random random = new Random();
+        float extraQualityChance = random.nextFloat();
+
+        switch (this.itemRarity) {
+            case COMMON:
+                if (extraQualityChance < .9f) {
+                    this.weaponQuality = WeaponQuality.values()[random.nextInt(0, 2)];
+                } else {
+                    this.weaponQuality = WeaponQuality.JAGGED;
+                }
+                this.weaponMaterial = WeaponMaterial.BRONZE;
+                break;
+            case UNCOMMON:
+                if (extraQualityChance < .9f) {
+                    this.weaponQuality = WeaponQuality.values()[random.nextInt(1, 3)];
+                } else {
+                    this.weaponQuality = WeaponQuality.TEMPERED;
+                }
+                this.weaponMaterial = WeaponMaterial.IRON;
+                break;
+            case RARE:
+                if (extraQualityChance < .9f) {
+                    this.weaponQuality = WeaponQuality.values()[random.nextInt(2, 4)];
+                } else {
+                    this.weaponQuality = WeaponQuality.RAZOR;
+                }
+                this.weaponMaterial = WeaponMaterial.STEEL;
+                break;
+            case EPIC:
+                if (extraQualityChance < .9f) {
+                    this.weaponQuality = WeaponQuality.values()[4];
+                } else {
+                    this.weaponQuality = WeaponQuality.MASTERFUL;
+                }
+                this.weaponMaterial = WeaponMaterial.OBSIDIAN;
+                break;
+            case LEGENDARY:
+                if (extraQualityChance < .9f) {
+                    this.weaponQuality = WeaponQuality.values()[5];
+                } else {
+                    this.weaponQuality = WeaponQuality.EXQUISITE;
+                }
+                this.weaponMaterial = WeaponMaterial.MITHRIL;
+                break;
+            case MYTHICAL:
+                this.weaponQuality = WeaponQuality.HEAVENLY;
+                this.weaponMaterial = WeaponMaterial.CELESTIUM;
+                break;
+            case DEMONIC:
+                this.weaponQuality = WeaponQuality.HELLMADE;
+                this.weaponMaterial = WeaponMaterial.DEMONITE;
+                break;
+        }
+    }
+
     /**
      * Creates a random weapon with quality between specified bounds and adds it to a container.
      *
-     * @param minQuality Minimum quality index (inclusive)
-     * @param maxQuality Maximum quality index (inclusive)
+     * @param rarity Rarity of the item to generate
      * @param container Container to add the weapon to
      * @return The generated weapon
      */
-    public static Weapon generateWeapon(int minQuality, int maxQuality, Container container) {
-        Random rand = new Random();
-
-        WeaponQuality quality = WeaponQuality.values()[rand.nextInt(minQuality, maxQuality+1)];
-
-        WeaponMaterial material;
-
-        if (quality.ordinal() < WeaponQuality.TEMPERED.ordinal()) {
-            material = WeaponMaterial.values()[rand.nextInt(3)]; // Lower tier materials
-        } else if (quality.ordinal() < WeaponQuality.EXQUISITE.ordinal()) {
-            material = WeaponMaterial.values()[2 + rand.nextInt(2)]; // Mid tier
-        } else {
-            material = WeaponMaterial.values()[4 + rand.nextInt(2)]; // High tier
-        }
-
-        Weapon generatedWeapon = new Weapon("Weapon", UUID.randomUUID(), quality, material);
+    public static Weapon generateWeapon(ItemRarity rarity, Container container) {
+        Weapon generatedWeapon = new Weapon("Weapon", UUID.randomUUID(), rarity, true);
         if (container instanceof Inventory inventory) {
             Entity entity = inventory.getOwner();
-            generatedWeapon.setItemName(entity.getEntityName() + "s " + quality.name().toLowerCase() + " " + material.name().toLowerCase() + " sword");
+            generatedWeapon.setItemName(entity.getEntityName() + "s " + generatedWeapon.getWeaponQuality().name().toLowerCase() + " " + generatedWeapon.getWeaponMaterial().name().toLowerCase() + " sword");
             entity.addItem(generatedWeapon);
             entity.setCurrentWeapon(generatedWeapon);
         } else {
-            generatedWeapon.setItemName(quality.name().toLowerCase() + " " + material.name().toLowerCase() + " sword");
+            generatedWeapon.setItemName(generatedWeapon.getWeaponQuality().name().toLowerCase() + " " + generatedWeapon.getWeaponMaterial().name().toLowerCase() + " sword");
             container.addItem(generatedWeapon);
         }
         return generatedWeapon;
@@ -218,6 +273,8 @@ public class Weapon extends Item {
      * randomized values and sets durability based on quality multipliers.
      */
     public void updateAttributes() {
+        updateQualityMaterial();
+
         Random rand = new Random();
 
         // Base damage from quality

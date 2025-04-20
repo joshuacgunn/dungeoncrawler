@@ -2,6 +2,7 @@ package com.github.joshuacgunn.core.entity;
 
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Weapon;
+import com.github.joshuacgunn.core.item.Item;
 
 import java.util.Random;
 import java.util.UUID;
@@ -16,46 +17,54 @@ public class Enemy extends Entity {
     /**
      * Enum representing different types of enemies with their specific attributes.
      */
+    /**
+     * Enum representing different types of enemies with their specific attributes.
+     */
     public enum EnemyType {
-        KOBOLD("Kobold", 30.0f, 40.0f, 0, 1, 0, 1, 0, 1),
-        GOBLIN("Goblin", 45.0f, 55.0f, 1, 2, 1, 2, 1, 2),
-        ORC("Orc", 50.0f, 70.0f, 1, 3, 1, 3, 2, 3),
-        OGRE("Ogre", 70.0f, 80.0f, 2, 3, 2, 4, 2, 4),
-        TROLL("Troll", 80.0f, 100.0f, 2, 4, 3, 5, 3, 5),
-        WRAITH("Wraith", 90.0f, 120.0f, 3, 4, 4, 6, 4, 6),
-        DRAGON_PRIEST("Dragon Priest", 120.0f, 150.0f, 3, 6, 5, 7, 5, 7);
+        KOBOLD("Kobold", 30.0f, 40.0f, 0, 1, Item.ItemRarity.COMMON, Item.ItemRarity.COMMON),
+        GOBLIN("Goblin", 45.0f, 55.0f, 1, 2, Item.ItemRarity.COMMON, Item.ItemRarity.COMMON),
+        ORC("Orc", 50.0f, 70.0f, 1, 3, Item.ItemRarity.UNCOMMON, Item.ItemRarity.UNCOMMON),
+        OGRE("Ogre", 70.0f, 80.0f, 2, 3, Item.ItemRarity.UNCOMMON, Item.ItemRarity.UNCOMMON),
+        TROLL("Troll", 80.0f, 100.0f, 2, 4, Item.ItemRarity.RARE, Item.ItemRarity.RARE),
+        WRAITH("Wraith", 90.0f, 120.0f, 3, 4, Item.ItemRarity.EPIC, Item.ItemRarity.EPIC),
+        DRAGON_PRIEST("Dragon Priest", 120.0f, 150.0f, 3, 6, Item.ItemRarity.LEGENDARY, Item.ItemRarity.LEGENDARY);
 
         private final String name;
         private final float minHp;
         private final float maxHp;
         private final int minArmorPieces;
         private final int maxArmorPieces;
-        private final int minArmorQuality;
-        private final int maxArmorQuality;
-        private final int minWeaponQuality;
-        private final int maxWeaponQuality;
+        private final Item.ItemRarity armorRarity;
+        private final Item.ItemRarity weaponRarity;
 
         EnemyType(String name, float minHp, float maxHp,
-                  int minArmorPieces, int maxArmorPieces,
-                  int minArmorQuality, int maxArmorQuality,
-                  int minWeaponQuality, int maxWeaponQuality) {
+                  int minArmorPieces, int maxArmorPieces, Item.ItemRarity armorRarity,
+                  Item.ItemRarity weaponRarity) {
             this.name = name;
             this.minHp = minHp;
             this.maxHp = maxHp;
             this.minArmorPieces = minArmorPieces;
             this.maxArmorPieces = maxArmorPieces;
-            this.minArmorQuality = minArmorQuality;
-            this.maxArmorQuality = maxArmorQuality;
-            this.minWeaponQuality = minWeaponQuality;
-            this.maxWeaponQuality = maxWeaponQuality;
+            this.armorRarity = armorRarity;
+            this.weaponRarity = weaponRarity;
         }
 
         public String getName() {
             return name;
         }
+
+        public Item.ItemRarity getWeaponRarity() {
+            return weaponRarity;
+        }
+
+        public Item.ItemRarity getArmorRarity() {
+            return armorRarity;
+        }
     }
 
     private final EnemyType type;
+
+
 
     /**
      * Constructs a new enemy of the specified type.
@@ -93,22 +102,10 @@ public class Enemy extends Entity {
         int armorPieces = rand.nextInt(type.minArmorPieces, type.maxArmorPieces + 1);
 
         for (int i = 0; i < armorPieces; i++) {
-            Armor.generateArmor(type.minArmorQuality, type.maxArmorQuality, this.getInventory());
+            Armor.generateArmor(type.getArmorRarity(), this.getInventory());
         }
 
         // Generate weapon
-        Weapon.generateWeapon(type.minWeaponQuality, type.maxWeaponQuality, this.getInventory());
-    }
-
-    /**
-     * Factory method to create an enemy of the specified type.
-     *
-     * @param type The type of enemy to create
-     * @param uuid The unique identifier for the enemy
-     * @param newEnemy Whether this is a newly generated enemy
-     * @return A new enemy of the specified type
-     */
-    public static Enemy createEnemy(EnemyType type, UUID uuid, boolean newEnemy) {
-        return new Enemy(type, uuid, newEnemy);
+        Weapon.generateWeapon(type.getWeaponRarity(), this.getInventory());
     }
 }

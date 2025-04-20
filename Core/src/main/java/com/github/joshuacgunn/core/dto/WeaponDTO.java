@@ -1,5 +1,6 @@
 package com.github.joshuacgunn.core.dto;
 
+import com.github.joshuacgunn.core.item.Item;
 import com.github.joshuacgunn.core.item.Weapon;
 
 public class WeaponDTO extends ItemDTO {
