@@ -105,8 +105,10 @@ public class TownState implements GameState {
                     Shop shop = whichTown.getShopsInTown().get(i);
                     System.out.println((i + 1) + ": " + shop.getLocationName());
                 }
-                handleInput();
-                player.setCurrentLocation(whichTown.getShopsInTown().get(currentAction-1));
+                System.out.print("Choice: ");
+                int choice = scanner.nextInt();
+                scanner.nextLine();
+                player.setCurrentLocation(whichTown.getShopsInTown().get(choice-1));
                 System.out.println("You have entered " + whichTown.getShopsInTown().get(currentAction-1).getLocationName());
                 inTown = false;
                 inShop = true;

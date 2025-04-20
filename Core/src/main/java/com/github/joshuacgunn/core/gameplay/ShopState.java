@@ -43,6 +43,7 @@ public class ShopState implements GameState {
 
         if (isNew) {
             printLogo(this);
+            System.out.println("You have entered " + whichShop.getLocationName() + ".");
             System.out.println(whichShop.getShopOwner().getEntityName() + ": " + GameEvents.npcDialogue(whichShop.getShopOwner(), 1) );
         }
     }
