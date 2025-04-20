@@ -149,7 +149,10 @@ public class TownState implements GameState {
         for (Shop shop : whichTown.getShopsInTown() ) {
             if (whichTown.getShopsInTown().indexOf(shop) == whichTown.getShopsInTown().size()-1) {
                 shopsInTown.append(shop.getShopType().name.toLowerCase()).append(".");
-            } else {
+            } else if (whichTown.getShopsInTown().indexOf(shop) == whichTown.getShopsInTown().size()-2) {
+                shopsInTown.append(shop.getShopType().name.toLowerCase()).append(" and ");
+            }
+            else {
                 shopsInTown.append(shop.getShopType().name.toLowerCase()).append(", ");
             }
         }

@@ -165,7 +165,7 @@ public class Dungeon extends Location {
                 "Spire", "Tombs", "Fortress", "Dungeon", "Necropolis"
         };
 
-        return prefixes[rand.nextInt(prefixes.length)] + " " +
+        return "The " + prefixes[rand.nextInt(prefixes.length)] + " " +
                 locations[rand.nextInt(locations.length)];
     }
 }

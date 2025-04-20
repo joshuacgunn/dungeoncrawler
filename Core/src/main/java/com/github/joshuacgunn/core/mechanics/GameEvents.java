@@ -183,9 +183,9 @@ public abstract class GameEvents {
             if (player.getCurrentLocation() instanceof Town town) {
                 System.out.println("You are currently in the town of " + town.getLocationName() + ".");
             } else if (player.getCurrentLocation() instanceof Dungeon dungeon) {
-                System.out.println("You are currently in the dungeon " + dungeon.getLocationName() + ", on floor " + dungeon.getCurrentFloor().getFloorNumber() + ".");
+                System.out.println("You are currently in " + dungeon.getLocationName() + ", on floor " + dungeon.getCurrentFloor().getFloorNumber() + ".");
             } else if (player.getCurrentLocation() instanceof Shop shop) {
-                System.out.println("You are currently in the shop " + shop.getLocationName() + ", in the town of " + shop.getParentTown().getLocationName() + ".");
+                System.out.println("You are currently at " + shop.getLocationName() + ", in the town of " + shop.getParentTown().getLocationName() + ".");
             }
         } else {
             System.out.println("You are currently exploring the world. Have fun!");
@@ -218,6 +218,7 @@ public abstract class GameEvents {
         if (isNewGame) {
             player.setGameState(new TownState(gameLoop, false));
         }
+        SaveManager.saveState(player);
         gameLoop.startGameLoop();
     }
 
