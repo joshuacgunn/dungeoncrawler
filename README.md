@@ -7,7 +7,7 @@ There is now an official beta release of the game! Check it out under [Releases]
 Updates will come, but only when the game is in a stable state, and after I've made significant changes. If you'd like to use the most recent commit, feel free to build the project through gradle. 
 
 # Future Plans
-Although I have many things I want to add to the game, it is time consuming to add them. I'm currently a student, and my classes take priority over this project. That being said, I have no plans to drop this project any time soon, and would like to continue working on it until it's at least playable. Here are some things I'm currently planning on implementing:
+Although I have many things I want to add to the game, it is time consuming to add them. I'm currently a student, and my classes take priority over this project. That being said, I have no plans to drop this project any time soon, and would like to continue working on it until it's at least playable. Here are some things I'm currently planning on implementing*:
 - Currency system
 - Proper chest rarity generation
 - Sidequests
@@ -15,13 +15,13 @@ Although I have many things I want to add to the game, it is time consuming to a
 - Unique dungeons
 - ~~Unique NPC's~~ - (4/18) Added some, will add more in the future.
 - More enemy variety
-- Some ASCII art so the terminal doesn't look so try
+- ~~Some ASCII art so the terminal doesn't look so dry~~ - Added as of 4/19
 - Functional shops (they don't sell anything currently)
 - Random events while exploring
 - Leveling system
 - Proper player class system with different functionalities
 - A way for the player to move around in a dungeon
 - And more to come...
-
+_*Even if something is crossed out, it will still be changed in the future_
 # Disclaimer
 I'm relatively new to Java, which means my knowledge of how to code certain things is limited. AI has been used in this project to code some things. Most notably the Gson adapters are completely AI generated. I understand how they work, but I do not think I would be able to code them myself. 
