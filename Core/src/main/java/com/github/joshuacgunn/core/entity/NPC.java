@@ -15,18 +15,22 @@ public class NPC extends Entity {
      * Each personality affects the NPC's dialogue and interactions.
      */
     public enum Personality {
-        /** Uses sarcastic and witty responses */
         SARCASTIC,
-        /** Maintains a professional and straightforward demeanor */
         SERIOUS,
-        /** Displays hostile or aggressive behavior */
         ANGRY,
-        /** Makes humorous and lighthearted remarks */
         FUNNY,
-        /** Shows melancholic or pessimistic attitudes */
         DEPRESSED,
-        /** Exhibits naive or simple-minded behavior */
-        STUPID
+        STUPID,
+        CHARISMATIC,
+        COWARDLY,
+        OPTIMISTIC,
+        PESSIMISTIC,
+        GREEDY,
+        LOYAL,
+        MYSTERIOUS,
+        ADVENTUROUS,
+        WISE,
+        LAZY
     }
 
     /** The personality trait of this NPC */
@@ -45,7 +49,7 @@ public class NPC extends Entity {
     public NPC(String name, UUID uuid) {
         super(name, uuid);
         this.entityHp = 100;
-        this.npcPersonality = Personality.values()[random.nextInt(0, 5)];
+        this.npcPersonality = Personality.values()[random.nextInt(Personality.values().length)];
     }
 
     /**

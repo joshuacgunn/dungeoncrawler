@@ -42,15 +42,22 @@ public class TownState implements GameState {
 
         // isNew is true for new games, false for loaded games
         if (isNew) {
-            printLogo(this);
-            String townSize = getTownSize();
-            System.out.println("You have entered " + whichTown.getLocationName() +
-                    ", a " + townSize + " town with a " + getShopsInTown());
+            if (player.getPreviousGameState() != null) {
+                if (player.getPreviousGameState().getGameStateName().equals("ShopState")) {
+                    printLogo(this);
+                    System.out.println("You have re-entered " + whichTown.getLocationName());
+                }
+            } else {
+                printLogo(this);
+                String townSize = getTownSize();
+                System.out.println("You have entered " + whichTown.getLocationName() +
+                        ", a " + townSize + " town with a " + getShopsInTown());
+            }
         }
     }
 
     private String getTownSize() {
-        if (whichTown.getShopsInTown().size() == 3) {
+        if (whichTown.getShopsInTown().size() >= 3) {
             return "large";
         } else if (whichTown.getShopsInTown().size() == 2) {
             return "medium";

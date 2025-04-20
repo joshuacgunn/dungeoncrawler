@@ -20,12 +20,14 @@ public class Shop extends Location {
      * Each type has specific characteristics and limitations.
      */
     public enum ShopType {
-        /** Specializes in weapons and armor crafting/selling */
+        /** Specializes in weapons and armor selling/buying*/
         BLACKSMITH("Blacksmith", 3),
         /** A social hub with food, drinks, and information */
         TAVERN("Tavern", 7),
+        /** Magic shop with various magical items */
+        EMPORIUM("Emporium", 2),
         /** General store with various merchandise */
-        EMPORIUM("Emporium", 2);
+        GENERAL("General Store", 5);
 
         /** The display name of the shop type */
         public final String name;

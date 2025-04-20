@@ -93,7 +93,7 @@ public abstract class GameEvents {
      * Provides appropriate responses for different dialogue states.
      *
      * @param npc The NPC who is speaking
-     * @param dialogue The dialogue ID or context number
+     * @param dialogue The dialogue choice. 1 is for shop greeting, 2 is for regular npc greeting, 3 is for leaving the shop.
      * @return The selected dialogue string for the given context
      */
     public static String npcDialogue(NPC npc, int dialogue) {
@@ -151,6 +151,96 @@ public abstract class GameEvents {
                         return "State your business. I have inventory to manage.";
                     case 3:
                         return "Safe travels. Return when you require further supplies.";
+                }
+            case CHARISMATIC:
+                switch (dialogue) {
+                    case 1:
+                        return "Ah! A customer with discerning taste! Come in, come in! The finest goods await your perusal.";
+                    case 2:
+                        return "What a pleasure to meet you! Your presence brightens this dreary day.";
+                    case 3:
+                        return "Do return soon, won't you? I'll keep an eye out for special items just for you!";
+                }
+            case COWARDLY:
+                switch (dialogue) {
+                    case 1:
+                        return "Oh! You startled me... um, f-feel free to look around. Just don't touch anything sharp, please.";
+                    case 2:
+                        return "Oh! H-hello there... you're not going to cause trouble, are you?";
+                    case 3:
+                        return "Goodbye! Watch out for bandits on the road... and wolves... and bears... and everything else!";
+                }
+            case OPTIMISTIC:
+                switch (dialogue) {
+                    case 1:
+                        return "Welcome to my wonderful shop! Today is a GREAT day to find exactly what you're looking for!";
+                    case 2:
+                        return "Hello there, friend! Isn't it a beautiful day to be alive? I just know something amazing is going to happen!";
+                    case 3:
+                        return "Safe travels! The road ahead is full of opportunities and adventures waiting for you!";
+                }
+            case PESSIMISTIC:
+                switch (dialogue) {
+                    case 1:
+                        return "Welcome, I suppose. Don't expect to find anything good today. Stock's been terrible lately.";
+                    case 2:
+                        return "Oh, hello. Not that it matters. We're all just passing time until the inevitable end anyway.";
+                    case 3:
+                        return "Leaving already? Can't blame you. Nothing good lasts anyway.";
+                }
+            case GREEDY:
+                switch (dialogue) {
+                    case 1:
+                        return "Welcome, welcome! I see you have a full coin purse there. How fortunate... for both of us!";
+                    case 2:
+                        return "Hello there! Say, that's a nice looking weapon you have. I'll give you a fair price for it... very fair... for me.";
+                    case 3:
+                        return "Come back when you have more gold to spend! My prices might go up, though. Supply and demand, you know!";
+                }
+            case LOYAL:
+                switch (dialogue) {
+                    case 1:
+                        return "Welcome to my shop, friend. You'll find no fairer prices or better quality in all the realm, I promise you that.";
+                    case 2:
+                        return "Well met! If you ever need an ally in these parts, remember my face. I stand by my friends.";
+                    case 3:
+                        return "Farewell for now. Know that you'll always have a place here whenever you return.";
+                }
+            case MYSTERIOUS:
+                switch (dialogue) {
+                    case 1:
+                        return "Enter... if you seek what lies beyond the veil of ordinary merchandise. I have... unusual wares.";
+                    case 2:
+                        return "Our paths cross again... perhaps by chance, perhaps by design. The stars have much to reveal.";
+                    case 3:
+                        return "Our business concludes... for now. But the threads of fate often intertwine in unexpected ways...";
+                }
+            case ADVENTUROUS:
+                switch (dialogue) {
+                    case 1:
+                        return "Welcome, fellow traveler! These items? All collected during my expeditions to the farthest reaches of the realm!";
+                    case 2:
+                        return "Hail! Have you ventured to the Crystal Caves yet? No? Oh, you simply MUST go! I could tell you the way...";
+                    case 3:
+                        return "Safe journeys! May the road rise to meet you and the wind be always at your back! What an adventure awaits!";
+                }
+            case WISE:
+                switch (dialogue) {
+                    case 1:
+                        return "Welcome to my humble shop. One often finds what they need, rather than what they seek.";
+                    case 2:
+                        return "Greetings. Remember that even the smallest pebble can change the course of a mighty river.";
+                    case 3:
+                        return "Farewell. May your steps be guided by wisdom, and your heart by compassion.";
+                }
+            case LAZY:
+                switch (dialogue) {
+                    case 1:
+                        return "*Yawn* Oh, a customer... Browse if you want. Just don't ask me to reach anything from the top shelf.";
+                    case 2:
+                        return "Hey... *stretches* Don't suppose you'd grab that thing over there for me? No? Fine, I'll get up... eventually.";
+                    case 3:
+                        return "Yeah, bye... *yawn* Close the door on your way out... or don't. Whatever.";
                 }
             default:
                 return "I'm sorry, but I don't know what to say.";
