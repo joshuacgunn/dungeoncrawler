@@ -4,7 +4,7 @@ This is the rewrite of a previous project I was working on. I did this because t
 # Current State of the Project (04/19)
 There is now an official beta release of the game! Check it out under [Releases](https://github.com/joshuacgunn/dungeoncrawler/releases/tag/v0.0.1). JDK 21 is required to run the game.  
 
-Updates will come, but only when the game is in a stable state, and after I've made significant changes. If you'd like to use it in such a state, feel free to build the project through gradle. 
+Updates will come, but only when the game is in a stable state, and after I've made significant changes. If you'd like to use the most recent commit, feel free to build the project through gradle. 
 
 # Future Plans
 Although I have many things I want to add to the game, it is time consuming to add them. I'm currently a student, and my classes take priority over this project. That being said, I have no plans to drop this project any time soon, and would like to continue working on it until it's at least playable. Here are some things I'm currently planning on implementing:
@@ -20,6 +20,7 @@ Although I have many things I want to add to the game, it is time consuming to a
 - Random events while exploring
 - Leveling system
 - Proper player class system with different functionalities
+- A way for the player to move around in a dungeon
 - And more to come...
 
 # Disclaimer
