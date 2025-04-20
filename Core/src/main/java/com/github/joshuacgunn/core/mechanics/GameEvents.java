@@ -201,7 +201,7 @@ public abstract class GameEvents {
         clearConsole();
         Player player;
         boolean isNewGame;
-        if (new File("backups/saves/").exists()) {
+        if (new File("backups/saves/").exists() || new File("saves/").exists()) {
             isNewGame = false;
         } else {
             isNewGame = true;
@@ -216,7 +216,9 @@ public abstract class GameEvents {
         }
 
         GameLoop gameLoop = new GameLoop(player, isNewGame);
-        player.setGameState(new TownState(gameLoop, false));
+        if (isNewGame) {
+            player.setGameState(new TownState(gameLoop, false));
+        }
         gameLoop.startGameLoop();
     }
 
@@ -233,5 +235,23 @@ public abstract class GameEvents {
                 System.out.print("\033\143");
             }
         } catch (IOException | InterruptedException ex) {}
+    }
+
+    public static void printLogo() {
+        clearConsole();
+        System.out.println(
+                """
+                         _____                                                                                   _____\s
+                        ( ___ )                                                                                 ( ___ )
+                         |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   |\s
+                         |   |  ____                                        ____                    _            |   |\s
+                         |   | |  _ \\ _   _ _ __   __ _  ___  ___  _ __    / ___|_ __ __ ___      _| | ___ _ __  |   |\s
+                         |   | | | | | | | | '_ \\ / _` |/ _ \\/ _ \\| '_ \\  | |   | '__/ _` \\ \\ /\\ / / |/ _ \\ '__| |   |\s
+                         |   | | |_| | |_| | | | | (_| |  __/ (_) | | | | | |___| | | (_| |\\ V  V /| |  __/ |    |   |\s
+                         |   | |____/ \\__,_|_| |_|\\__, |\\___|\\___/|_| |_|  \\____|_|  \\__,_| \\_/\\_/ |_|\\___|_|    |   |\s
+                         |   |                    |___/                                                          |   |\s
+                         |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___|\s
+                        (_____)                                                                                 (_____)
+                        """);
     }
 }

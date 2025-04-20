@@ -159,6 +159,7 @@ public class ExploringState implements GameState {
                     GameEvents.switchGameStates(player, dungeonState1);
                 } else {
                     System.out.println("You decided not to go there.");
+                    Location.locationMap.remove(newLocation.getLocationUUID());
                     update();
                     break;
                 }

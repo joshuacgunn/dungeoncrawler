@@ -5,10 +5,13 @@ import com.github.joshuacgunn.core.mechanics.GameEvents;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-import static com.github.joshuacgunn.core.mechanics.GameEvents.clearConsole;
+import static com.github.joshuacgunn.core.mechanics.GameEvents.*;
+import static com.github.joshuacgunn.core.save.SaveManager.BACKUP_DIRECTORY;
+import static com.github.joshuacgunn.core.save.SaveManager.SAVE_DIRECTORY;
 
 public class MainMenuState implements GameState {
     Scanner scanner = new Scanner(System.in);
@@ -25,21 +28,7 @@ public class MainMenuState implements GameState {
      * It is responsible for setting up the starting point of the game's main menu.
      */
     public MainMenuState() {
-        clearConsole();
-        System.out.println(
-                """
-                         _____                                                                                   _____\s
-                        ( ___ )                                                                                 ( ___ )
-                         |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   |\s
-                         |   |  ____                                        ____                    _            |   |\s
-                         |   | |  _ \\ _   _ _ __   __ _  ___  ___  _ __    / ___|_ __ __ ___      _| | ___ _ __  |   |\s
-                         |   | | | | | | | | '_ \\ / _` |/ _ \\/ _ \\| '_ \\  | |   | '__/ _` \\ \\ /\\ / / |/ _ \\ '__| |   |\s
-                         |   | | |_| | |_| | | | | (_| |  __/ (_) | | | | | |___| | | (_| |\\ V  V /| |  __/ |    |   |\s
-                         |   | |____/ \\__,_|_| |_|\\__, |\\___|\\___/|_| |_|  \\____|_|  \\__,_| \\_/\\_/ |_|\\___|_|    |   |\s
-                         |   |                    |___/                                                          |   |\s
-                         |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___|\s
-                        (_____)                                                                                 (_____)
-                        """);
+        printLogo();
         handleGameState();
     }
 
@@ -70,14 +59,26 @@ public class MainMenuState implements GameState {
                     String input = scanner.nextLine();
                     switch (input) {
                         case "y":
-                            try {
-                                TimeUnit.SECONDS.sleep(2);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
+                            System.out.print("Starting new game");
+                            int totalTime = new Random().nextInt(1, 4);
+                            for (int seconds = 0; seconds < totalTime; seconds++) {
+                                for (int dots = 0; dots < 4; dots++) {
+                                    if (dots == 0) {
+                                        System.out.print("");
+                                    } else {
+                                        System.out.print(".");
+                                    }
+                                    try {
+                                        TimeUnit.MILLISECONDS.sleep(500);
+                                    } catch (InterruptedException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+                                System.out.print("\b\b\b   \b\b\b");
                             }
-                            System.out.println("Starting new game.");
                             try {
-                                Files.delete(Path.of("saves/"));
+                                deleteDirectory(new File(SAVE_DIRECTORY));
+                                deleteDirectory(new File(BACKUP_DIRECTORY));
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -88,6 +89,23 @@ public class MainMenuState implements GameState {
                             break;
                     }
                 } else {
+                    System.out.print("Starting new game");
+                    int totalTime = new Random().nextInt(1, 4);
+                    for (int seconds = 0; seconds < totalTime; seconds++) {
+                        for (int dots = 0; dots < 4; dots++) {
+                            if (dots == 0) {
+                                System.out.print("");
+                            } else {
+                                System.out.print(".");
+                            }
+                            try {
+                                TimeUnit.MILLISECONDS.sleep(500);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                        System.out.print("\b\b\b   \b\b\b");
+                    }
                     GameEvents.initializeGame();
                     break;
                 }
@@ -127,5 +145,21 @@ public class MainMenuState implements GameState {
     @Override
     public GameLoop getParentLoop() {
         return null;
+    }
+
+    public static void deleteDirectory(File directory) {
+        if (directory.exists()) {
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        deleteDirectory(file); // Recursive call
+                    } else {
+                        file.delete();
+                    }
+                }
+            }
+            directory.delete(); // Delete the (now empty) directory
+        }
     }
 }

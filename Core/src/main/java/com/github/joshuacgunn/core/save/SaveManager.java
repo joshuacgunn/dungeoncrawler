@@ -32,11 +32,11 @@ import static com.github.joshuacgunn.core.gson.GsonProvider.GSON;
  */
 public abstract class SaveManager {
     /** Directory path for main save files */
-    private static final String SAVE_DIRECTORY = "saves/";
-    
+    public static final String SAVE_DIRECTORY = "saves/";
+
     /** Directory path for backup save files */
-    private static final String BACKUP_DIRECTORY = "backups/";
-    
+    public static final String BACKUP_DIRECTORY = "backups/";
+
     /** Date format for backup file naming */
     private static final SimpleDateFormat date = new SimpleDateFormat("dd_HH.mm.ss");
 
@@ -266,38 +266,13 @@ public abstract class SaveManager {
      * @return The reconstructed Player object
      */
     public static Player loadPlayer() {
-        // Check for backup in case player_save.json is deleted somehow
-        File directory = new File(BACKUP_DIRECTORY + "player/");
-        File[] files = directory.listFiles();
-        String chosenFile = null;
-        long lastModifiedTime = Long.MIN_VALUE;
-
-        if (files != null && !((new File(SAVE_DIRECTORY + "player_save.json")).exists())) {
-            for (File file : files) {
-                if (file.lastModified() > lastModifiedTime) {
-                    chosenFile = file.toString();
-                    lastModifiedTime = file.lastModified();
-                }
-            }
-            try (Reader reader = new FileReader(chosenFile)) {
-                // Read specifically as PlayerDTO rather than EntityDTO
-                PlayerDTO dto = GSON.fromJson(reader, PlayerDTO.class);
-                Player player = (Player) EntityMapper.INSTANCE.entityDtoToEntity(dto);
-                return (Player) EntityMapper.INSTANCE.entityDtoToEntity(dto);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
             try (Reader reader = new FileReader(SAVE_DIRECTORY + "player_save.json")) {
-                // Read specifically as PlayerDTO rather than EntityDTO
                 PlayerDTO dto = GSON.fromJson(reader, PlayerDTO.class);
                 return (Player) EntityMapper.INSTANCE.entityDtoToEntity(dto);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-        return null;
-    }
 
     /**
      * Saves all dungeon locations and their states.
@@ -310,6 +285,7 @@ public abstract class SaveManager {
                 .map(location -> (Dungeon) location)
                 .map(DungeonMapper.INSTANCE::dungeonToDungeonDto)
                 .toList();
+
 
         try (Writer writer = new FileWriter(SAVE_DIRECTORY + "dungeons_snapshot.json")) {
             writer.write(GSON.toJson(dungeonDTOs));
@@ -426,5 +402,4 @@ public abstract class SaveManager {
             throw new RuntimeException(e);
         }
     }
-
 }

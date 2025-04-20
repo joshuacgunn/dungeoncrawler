@@ -1,6 +1,7 @@
 package com.github.joshuacgunn.core.gameplay;
 
 import com.github.joshuacgunn.core.entity.Player;
+import com.github.joshuacgunn.core.location.Location;
 import com.github.joshuacgunn.core.location.Shop;
 import com.github.joshuacgunn.core.location.Town;
 import com.github.joshuacgunn.core.location.World;
@@ -34,6 +35,7 @@ public class TownState implements GameState {
             this.whichTown = (Town) player.getCurrentLocation();
         } else {
             whichTown = new Town(UUID.randomUUID(), true);
+            Location.locationMap.remove(whichTown.getLocationUUID());
         }
 
         // isNew is true for new games, false for loaded games
@@ -141,7 +143,11 @@ public class TownState implements GameState {
     private String getShopsInTown() {
         StringBuilder shopsInTown = new StringBuilder();
         for (Shop shop : whichTown.getShopsInTown() ) {
-            shopsInTown.append(shop.getShopType().name.toLowerCase()).append(", ");
+            if (whichTown.getShopsInTown().indexOf(shop) == whichTown.getShopsInTown().size()-1) {
+                shopsInTown.append(shop.getShopType().name.toLowerCase()).append(".");
+            } else {
+                shopsInTown.append(shop.getShopType().name.toLowerCase()).append(", ");
+            }
         }
         return shopsInTown.toString();
     }
