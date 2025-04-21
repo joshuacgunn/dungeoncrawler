@@ -22,6 +22,7 @@ Although I have many things I want to add to the game, it is time consuming to a
 - Proper player class system with different functionalities
 - Player stats having an impact on gameplay
 - A way for the player to move around in a dungeon
+- Implement ticks for updating certain events regardless of player input/current state
 - And more to come...  
 _*Regardless of whether something is crossed out, I will continue changing all of these_
 # Disclaimer
