@@ -1,12 +1,14 @@
 package com.github.joshuacgunn.core.entity;
 
 import com.github.joshuacgunn.core.container.Inventory;
+import com.github.joshuacgunn.core.gameplay.CombatState;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
 import com.github.joshuacgunn.core.item.Weapon;
-import com.github.joshuacgunn.core.location.Dungeon;
 import com.github.joshuacgunn.core.location.DungeonFloor;
 import com.github.joshuacgunn.core.location.Location;
+import com.github.joshuacgunn.core.mechanics.TickManager;
+import com.github.joshuacgunn.core.mechanics.Tickable;
 
 import java.util.*;
 
@@ -16,7 +18,7 @@ import java.util.*;
  * @version 1.0
  */
 
-public abstract class Entity {
+public abstract class Entity implements Tickable {
     /**
      * The name of the entity.
      */
@@ -67,6 +69,8 @@ public abstract class Entity {
      */
     public static Map<UUID, Entity> entityMap = new HashMap<>();
 
+    private Map<StatusEffect, Integer> activeStatusEffects = new HashMap<>();
+
     /**
      * @param name Sets entity name
      * @param uuid Unique identifier to be used to identify objects in registries
@@ -76,6 +80,7 @@ public abstract class Entity {
         this.entityUUID = uuid;
         entityMap.put(uuid, this);
         inventory = new Inventory(UUID.randomUUID(), this);
+        TickManager.getInstance().register(this);
     }
 
     public Inventory getInventory() {
@@ -247,5 +252,69 @@ public abstract class Entity {
 
     public void addItem(Item item) {
         this.inventory.addItem(item);
+    }
+
+    @Override
+    public void onTick(int currentTick) {
+        Iterator<Map.Entry<StatusEffect, Integer>> iterator = activeStatusEffects.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<StatusEffect, Integer> entry = iterator.next();
+            int remainingDuration = entry.getValue() - 1;
+
+            if (remainingDuration <= 0) {
+                removeStatusEffect(entry.getKey());
+                iterator.remove();
+            } else {
+                entry.setValue(remainingDuration);
+            }
+        }
+
+        // Other time-based logic like health regeneration
+        if (currentTick % 5 == 0 && this instanceof Player player) { // Every 5 seconds
+            if (!(player.getGameState() instanceof CombatState)) { // Don't regenerate health in combat
+                //            this.entityHp += 10;
+            }
+        }
+    }
+
+    public void addStatusEffect(StatusEffect effect, int durationInTicks) {
+        activeStatusEffects.put(effect, durationInTicks);
+        applyStatusEffect(effect);
+    }
+
+    private void applyStatusEffect(StatusEffect effect) {
+        // Apply the effect based on its type
+        switch (effect) {
+            case STRENGTH_POTION:
+//                addTemporaryStrength(5);
+                break;
+            // Handle other effects
+        }
+    }
+
+    private void removeStatusEffect(StatusEffect effect) {
+        // Remove the effect
+        switch (effect) {
+            case STRENGTH_POTION:
+//                removeTemporaryStrength(5);
+                break;
+            // Handle other effects
+        }
+    }
+
+    public Map<StatusEffect, Integer> getActiveStatusEffects() {
+        return activeStatusEffects;
+    }
+
+    public void setActiveStatusEffects(Map<StatusEffect, Integer> activeStatusEffects) {
+        this.activeStatusEffects = activeStatusEffects;
+    }
+
+    public enum StatusEffect {
+        STRENGTH_POTION,
+        SPEED_POTION,
+        POISON,
+        REGENERATION,
+        BLEEDING
     }
 }

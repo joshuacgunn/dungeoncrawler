@@ -1,8 +1,8 @@
 package com.github.joshuacgunn.core.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import com.github.joshuacgunn.core.entity.Entity;
+
+import java.util.*;
 
 /**
  * Base DTO class for transferring entity data.
@@ -19,6 +19,7 @@ public class EntityDTO {
     private UUID currentWeaponUUID;
     private List<UUID> equippedArmorUUIDs = new ArrayList<>();
     private InventoryDTO inventory;
+    private Map<Entity.StatusEffect, Integer> statusEffects = new HashMap<>();
 
     public EntityDTO() {
         // Default constructor
@@ -102,5 +103,13 @@ public class EntityDTO {
 
     public void setEntityType(String entityType) {
         this.entityType = entityType;
+    }
+
+    public Map<Entity.StatusEffect, Integer> getStatusEffects() {
+        return statusEffects;
+    }
+
+    public void setStatusEffects(Map<Entity.StatusEffect, Integer> statusEffects) {
+        this.statusEffects = statusEffects;
     }
 }

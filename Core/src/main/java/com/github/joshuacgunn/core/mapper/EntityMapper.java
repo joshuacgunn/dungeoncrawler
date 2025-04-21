@@ -11,7 +11,7 @@ import com.github.joshuacgunn.core.item.Item;
 import com.github.joshuacgunn.core.item.Weapon;
 import com.github.joshuacgunn.core.location.Location;
 import com.github.joshuacgunn.core.location.World;
-import com.github.joshuacgunn.core.mechanics.PlayerStats;
+import com.github.joshuacgunn.core.mechanics.EntityStats;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -75,6 +75,7 @@ public interface EntityMapper {
         dto.setEntityHp(entity.getEntityHp());
         dto.setEntityDefense(entity.getEntityDefense());
         dto.setAlive(entity.isAlive());
+        dto.setStatusEffects(entity.getActiveStatusEffects());
         if (entity.getCurrentLocation() != null) {
             dto.setCurrentLocationUUID(entity.getCurrentLocation().getLocationUUID());
         }
@@ -148,12 +149,12 @@ public interface EntityMapper {
 
         dto.setPlayerStats(player.getPlayerStats());
 
-        dto.setPlayerStatsValue(PlayerStats.Stat.STRENGTH, player.getPlayerStats().getStatValue(PlayerStats.Stat.STRENGTH));
-        dto.setPlayerStatsValue(PlayerStats.Stat.DEXTERITY, player.getPlayerStats().getStatValue(PlayerStats.Stat.DEXTERITY));
-        dto.setPlayerStatsValue(PlayerStats.Stat.INTELLIGENCE, player.getPlayerStats().getStatValue(PlayerStats.Stat.INTELLIGENCE));
-        dto.setPlayerStatsValue(PlayerStats.Stat.LUCK, player.getPlayerStats().getStatValue(PlayerStats.Stat.LUCK));
-        dto.setPlayerStatsValue(PlayerStats.Stat.CHARISMA, player.getPlayerStats().getStatValue(PlayerStats.Stat.CHARISMA));
-        dto.setPlayerStatsValue(PlayerStats.Stat.VITALITY, player.getPlayerStats().getStatValue(PlayerStats.Stat.VITALITY));
+        dto.setPlayerStatsValue(EntityStats.Stat.STRENGTH, player.getPlayerStats().getStatValue(EntityStats.Stat.STRENGTH));
+        dto.setPlayerStatsValue(EntityStats.Stat.DEXTERITY, player.getPlayerStats().getStatValue(EntityStats.Stat.DEXTERITY));
+        dto.setPlayerStatsValue(EntityStats.Stat.INTELLIGENCE, player.getPlayerStats().getStatValue(EntityStats.Stat.INTELLIGENCE));
+        dto.setPlayerStatsValue(EntityStats.Stat.LUCK, player.getPlayerStats().getStatValue(EntityStats.Stat.LUCK));
+        dto.setPlayerStatsValue(EntityStats.Stat.CHARISMA, player.getPlayerStats().getStatValue(EntityStats.Stat.CHARISMA));
+        dto.setPlayerStatsValue(EntityStats.Stat.VITALITY, player.getPlayerStats().getStatValue(EntityStats.Stat.VITALITY));
 
         return dto;
     }
@@ -204,7 +205,9 @@ public interface EntityMapper {
             entityType = "Entity";
         }
 
+
         Entity entity;
+
         switch(entityType) {
             case "Player":
                 entity = playerDtoToPlayer((PlayerDTO) dto);
@@ -223,8 +226,12 @@ public interface EntityMapper {
         entity.setDeathStatus(dto.isAlive());
         entity.setEntityHp(dto.getEntityHp());
 
-        // Handle armors
+        // Handle status effects
+        if (dto.getStatusEffects() != null) {
+            entity.setActiveStatusEffects(dto.getStatusEffects());
+        }
 
+        // Handle items in inventory
         if (dto.getInventory() != null && dto.getInventory().getItemUUIDs() != null) {
             for (UUID itemUUID : dto.getInventory().getItemUUIDs()) {
                 Item item = Item.itemMap.get(itemUUID);
@@ -232,11 +239,13 @@ public interface EntityMapper {
             }
         }
 
+        // Handle current weapon
         if (dto.getCurrentWeaponUUID() != null) {
             Weapon weapon = (Weapon) Item.itemMap.get(dto.getCurrentWeaponUUID());
             entity.setCurrentWeapon(weapon);
         }
 
+        // Handle equipped armor
         if (!dto.getEquippedArmorUUIDs().isEmpty() && dto.getEquippedArmorUUIDs() != null) {
             for (UUID armorUUID : dto.getEquippedArmorUUIDs()) {
                 Armor armor = (Armor) Item.itemMap.get(armorUUID);
@@ -246,11 +255,11 @@ public interface EntityMapper {
             }
         }
 
+        // Handle current location
         if (dto.getCurrentLocationUUID() != null) {
             entity.setCurrentLocation(Location.locationMap.get(dto.getCurrentLocationUUID()));
         }
 
-        // Handle current weapon
         return entity;
     }
 
@@ -263,13 +272,12 @@ public interface EntityMapper {
         player.setPlayerLevel(dto.getPlayerLevel());
         
         // Set player stats
-
-        player.getPlayerStats().setStatValue(PlayerStats.Stat.STRENGTH, dto.getPlayerStatsValue(PlayerStats.Stat.STRENGTH));
-        player.getPlayerStats().setStatValue(PlayerStats.Stat.DEXTERITY, dto.getPlayerStatsValue(PlayerStats.Stat.DEXTERITY));
-        player.getPlayerStats().setStatValue(PlayerStats.Stat.INTELLIGENCE, dto.getPlayerStatsValue(PlayerStats.Stat.INTELLIGENCE));
-        player.getPlayerStats().setStatValue(PlayerStats.Stat.LUCK, dto.getPlayerStatsValue(PlayerStats.Stat.LUCK));
-        player.getPlayerStats().setStatValue(PlayerStats.Stat.CHARISMA, dto.getPlayerStatsValue(PlayerStats.Stat.CHARISMA));
-        player.getPlayerStats().setStatValue(PlayerStats.Stat.VITALITY, dto.getPlayerStatsValue(PlayerStats.Stat.VITALITY));
+        player.getPlayerStats().setStatValue(EntityStats.Stat.STRENGTH, dto.getPlayerStatsValue(EntityStats.Stat.STRENGTH));
+        player.getPlayerStats().setStatValue(EntityStats.Stat.DEXTERITY, dto.getPlayerStatsValue(EntityStats.Stat.DEXTERITY));
+        player.getPlayerStats().setStatValue(EntityStats.Stat.INTELLIGENCE, dto.getPlayerStatsValue(EntityStats.Stat.INTELLIGENCE));
+        player.getPlayerStats().setStatValue(EntityStats.Stat.LUCK, dto.getPlayerStatsValue(EntityStats.Stat.LUCK));
+        player.getPlayerStats().setStatValue(EntityStats.Stat.CHARISMA, dto.getPlayerStatsValue(EntityStats.Stat.CHARISMA));
+        player.getPlayerStats().setStatValue(EntityStats.Stat.VITALITY, dto.getPlayerStatsValue(EntityStats.Stat.VITALITY));
 
         if (Location.locationMap.containsKey(dto.getCurrentLocationUUID())) {
             player.setCurrentLocation(Location.locationMap.get(dto.getCurrentLocationUUID()));
