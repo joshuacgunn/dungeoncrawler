@@ -10,7 +10,7 @@ import com.github.joshuacgunn.core.mechanics.GameEvents;
 import java.util.Scanner;
 import java.util.UUID;
 
-import static com.github.joshuacgunn.core.mechanics.GameEvents.printLogo;
+import static com.github.joshuacgunn.core.mechanics.GameEvents.printScreen;
 
 public class TownState implements GameState {
     private final GameLoop parentLoop;
@@ -43,10 +43,10 @@ public class TownState implements GameState {
         // isNew is true for new games, false for loaded games
         if (isNew) {
             if (player.getPreviousGameState() != null && player.getPreviousGameState().getGameStateName().equals("ShopState")) {
-                printLogo(this);
+                printScreen(this);
                 System.out.println("You have re-entered " + whichTown.getLocationName());
             } else {
-                printLogo(this);
+                printScreen(this);
                 String townSize = getTownSize();
                 System.out.println("You have entered " + whichTown.getLocationName() +
                         ", a " + townSize + " town with a " + getShopsInTown());

@@ -24,7 +24,7 @@ public class MainMenuState implements GameState {
      * It is responsible for setting up the starting point of the game's main menu.
      */
     public MainMenuState() {
-        printLogo(this);
+        printScreen(this);
         handleGameState();
     }
 

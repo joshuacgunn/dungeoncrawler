@@ -10,7 +10,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.Scanner;
 
-import static com.github.joshuacgunn.core.mechanics.GameEvents.printLogo;
+import static com.github.joshuacgunn.core.mechanics.GameEvents.printScreen;
 
 /**
  * Represents the combat state of the game where battles between the player and enemies take place.
@@ -51,7 +51,7 @@ public class CombatState implements GameState {
             this.enemy = new Enemy(Enemy.EnemyType.GOBLIN, UUID.randomUUID(), false);
             Entity.entityMap.remove(enemy.getEntityUUID());
         }
-        printLogo(this);
+        printScreen(this);
         System.out.println("You are approached by a[n] " + enemy.getEntityName() + ", wielding a[n] " + enemy.getCurrentWeapon().getWeaponMaterial().name().toLowerCase() + " sword");
     }
 

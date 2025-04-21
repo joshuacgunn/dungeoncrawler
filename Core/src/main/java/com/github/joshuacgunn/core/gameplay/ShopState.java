@@ -10,7 +10,7 @@ import com.github.joshuacgunn.core.mechanics.GameEvents;
 import java.util.Scanner;
 import java.util.UUID;
 
-import static com.github.joshuacgunn.core.mechanics.GameEvents.printLogo;
+import static com.github.joshuacgunn.core.mechanics.GameEvents.printScreen;
 
 public class ShopState implements GameState {
     private final GameLoop parentLoop;
@@ -42,7 +42,7 @@ public class ShopState implements GameState {
         }
 
         if (isNew) {
-            printLogo(this);
+            printScreen(this);
             System.out.println("You have entered " + whichShop.getLocationName() + ".");
             System.out.println(whichShop.getShopOwner().getEntityName() + ": " + GameEvents.npcDialogue(whichShop.getShopOwner(), 1) );
         }

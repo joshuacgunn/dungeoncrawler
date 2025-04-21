@@ -1,14 +1,14 @@
 package com.github.joshuacgunn.core.dto;
 
 import com.github.joshuacgunn.core.entity.Player;
-import com.github.joshuacgunn.core.mechanics.PlayerStats;
+import com.github.joshuacgunn.core.mechanics.EntityStats;
 
 /**
  * PlayerDTO extends EntityDTO to add player-specific properties.
  */
 public class PlayerDTO extends EntityDTO {
     public Player.PlayerClass playerClass;
-    public PlayerStats playerStats;
+    public EntityStats entityStats;
     public String gameState;
     public String previousGameState;
     public int playerLevel;
@@ -51,34 +51,34 @@ public class PlayerDTO extends EntityDTO {
         return this.playerClass;
     }
 
-    public int getPlayerStatsValue(PlayerStats.Stat stat) {
+    public int getPlayerStatsValue(EntityStats.Stat stat) {
         switch (stat) {
             case LUCK:
-                return this.playerStats.getStatValue(PlayerStats.Stat.LUCK);
+                return this.entityStats.getStatValue(EntityStats.Stat.LUCK);
             case CHARISMA:
-                return this.playerStats.getStatValue(PlayerStats.Stat.CHARISMA);
+                return this.entityStats.getStatValue(EntityStats.Stat.CHARISMA);
             case VITALITY:
-                return this.playerStats.getStatValue(PlayerStats.Stat.VITALITY);
+                return this.entityStats.getStatValue(EntityStats.Stat.VITALITY);
             case INTELLIGENCE:
-                return this.playerStats.getStatValue(PlayerStats.Stat.INTELLIGENCE);
+                return this.entityStats.getStatValue(EntityStats.Stat.INTELLIGENCE);
             case STRENGTH:
-                return this.playerStats.getStatValue(PlayerStats.Stat.STRENGTH);
+                return this.entityStats.getStatValue(EntityStats.Stat.STRENGTH);
             case DEXTERITY:
-                return this.playerStats.getStatValue(PlayerStats.Stat.DEXTERITY);
+                return this.entityStats.getStatValue(EntityStats.Stat.DEXTERITY);
             default:
                 return 0;
         }
     }
 
-    public PlayerStats getPlayerStats() {
-        return this.playerStats;
+    public EntityStats getPlayerStats() {
+        return this.entityStats;
     }
 
-    public void setPlayerStats(PlayerStats playerStats) {
-        this.playerStats = playerStats;
+    public void setPlayerStats(EntityStats entityStats) {
+        this.entityStats = entityStats;
     }
 
-    public void setPlayerStatsValue(PlayerStats.Stat stat, int value) {
-        this.playerStats.setStatValue(stat, value);
+    public void setPlayerStatsValue(EntityStats.Stat stat, int value) {
+        this.entityStats.setStatValue(stat, value);
     }
 }

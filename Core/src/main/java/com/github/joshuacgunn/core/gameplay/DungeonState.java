@@ -1,16 +1,14 @@
 package com.github.joshuacgunn.core.gameplay;
 
-import com.github.joshuacgunn.core.entity.Enemy;
 import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.location.Dungeon;
 import com.github.joshuacgunn.core.location.World;
 import com.github.joshuacgunn.core.mechanics.GameEvents;
 
-import java.util.Random;
 import java.util.Scanner;
 import java.util.UUID;
 
-import static com.github.joshuacgunn.core.mechanics.GameEvents.printLogo;
+import static com.github.joshuacgunn.core.mechanics.GameEvents.printScreen;
 
 /**
  * Represents the dungeon exploration state of the game where players navigate through
@@ -41,10 +39,10 @@ public class DungeonState implements GameState {
         this.player = parentLoop.getPlayer();
         this.whichDungeon = (Dungeon) player.getCurrentLocation();
         if (isNew) {
-            printLogo(this);
+            printScreen(this);
             System.out.println("You have entered " + whichDungeon.getLocationName() + ", a dungeon with " + whichDungeon.getFloors().size() + " floors, and a difficulty of " + whichDungeon.getDifficultyRating());
         } else if (player.getPreviousGameState() != null && player.getPreviousGameState().getGameStateName().equals("CombatState")) {
-            printLogo(this);
+            printScreen(this);
             System.out.println("You have re-entered " + whichDungeon.getLocationName());
             if (ranAway) {
                 System.out.println("You scurried away from the enemy...");

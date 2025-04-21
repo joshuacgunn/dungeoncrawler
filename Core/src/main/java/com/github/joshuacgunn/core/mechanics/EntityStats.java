@@ -1,8 +1,6 @@
 package com.github.joshuacgunn.core.mechanics;
 
-import com.github.joshuacgunn.core.entity.Player;
-
-public class PlayerStats {
+public class EntityStats {
 
     public int strength = Stat.STRENGTH.statValue;
     public int dexterity = Stat.DEXTERITY.statValue;

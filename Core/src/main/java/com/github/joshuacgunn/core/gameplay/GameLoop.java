@@ -3,6 +3,7 @@ package com.github.joshuacgunn.core.gameplay;
 import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.location.Location;
 import com.github.joshuacgunn.core.mechanics.GameEvents;
+import com.github.joshuacgunn.core.mechanics.TickManager;
 
 /**
  * Manages the game's main loop and state transitions.
@@ -24,6 +25,7 @@ public class GameLoop {
     /** The player associated with this game loop */
     private final Player player;
     private final boolean isNewGame;
+    private boolean isRunning = true;
 
     /**
      * Creates a new GameLoop instance.
@@ -50,6 +52,7 @@ public class GameLoop {
                 createAndSetPreviousGameState(player.getPreviousGameStateName());
             }
         }
+        TickManager.getInstance().start();
     }
 
     private void createAndSetGameState(String stateName, boolean isNew) {
@@ -178,8 +181,11 @@ public class GameLoop {
      * and handles any state transitions.
      */
     public void startGameLoop() {
-        if (this.currentGameState != null) {
-            this.currentGameState.handleGameState();
+        while (isRunning) {
+            if (this.currentGameState != null) {
+                this.currentGameState.handleGameState();
+            }
         }
+        TickManager.getInstance().stop();
     }
 }

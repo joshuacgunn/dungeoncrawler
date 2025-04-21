@@ -11,13 +11,16 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-import static com.github.joshuacgunn.core.mechanics.GameEvents.printLogo;
+import static com.github.joshuacgunn.core.mechanics.GameEvents.printLoadingScreen;
+import static com.github.joshuacgunn.core.mechanics.GameEvents.printScreen;
 
 public class ExploringState implements GameState {
     private final GameLoop parentLoop;
     Scanner scanner = new Scanner(System.in);
     private int currentAction;
     private boolean isExploring = true;
+    private boolean inTown = false;
+    private boolean inDungeon = false;
     private final Player player;
 
     /**
@@ -31,7 +34,7 @@ public class ExploringState implements GameState {
         this.player = parentLoop.getPlayer();
 
         if (isNew) {
-            printLogo(this);
+            printScreen(this);
             if (player.getPreviousGameState() != null) {
                 System.out.println("You begin exploring the world...");
             }
@@ -44,8 +47,20 @@ public class ExploringState implements GameState {
         while (isExploring) {
             update();
         }
-        MainMenuState mainMenuState = new MainMenuState();
-        GameEvents.switchGameStates(player, mainMenuState);
+        if (inTown) {
+            player.setPreviousGameState(this);
+            TownState townState = new TownState(parentLoop, true);
+            printLoadingScreen(townState);
+            GameEvents.switchGameStates(player, townState);
+        } else if (inDungeon) {
+            player.setPreviousGameState(this);
+            DungeonState dungeonState = new DungeonState(parentLoop, true);
+            printLoadingScreen(dungeonState);
+            GameEvents.switchGameStates(player, dungeonState);
+        } else {
+            MainMenuState mainMenuState = new MainMenuState();
+            GameEvents.switchGameStates(player, mainMenuState);
+        }
     }
 
     @Override
@@ -88,10 +103,8 @@ public class ExploringState implements GameState {
                 }
 
                 isExploring = false;
+                inTown = true;
                 player.setCurrentLocation(towns.get(townIndex-1));
-                player.setPreviousGameState(this);
-                TownState townState = new TownState(parentLoop, true);
-                GameEvents.switchGameStates(player, townState);
                 break;
             case 2:
 
@@ -121,10 +134,8 @@ public class ExploringState implements GameState {
                 }
 
                 isExploring = false;
+                inDungeon = true;
                 player.setCurrentLocation(dungeons.get(dungeonIndex-1));
-                player.setPreviousGameState(this);
-                DungeonState dungeonState = new DungeonState(parentLoop, true);
-                GameEvents.switchGameStates(player, dungeonState);
                 break;
             case 3:
                 System.out.print("Searching for a new place to go");
@@ -151,16 +162,12 @@ public class ExploringState implements GameState {
                 String input = scanner.nextLine();
                 if (newLocation instanceof Town && input.equalsIgnoreCase("y") ) {
                     isExploring = false;
+                    inTown = true;
                     player.setCurrentLocation(newLocation);
-                    player.setPreviousGameState(this);
-                    TownState townState1 = new TownState(parentLoop, true);
-                    GameEvents.switchGameStates(player, townState1);
                 } else if (newLocation instanceof Dungeon && input.equalsIgnoreCase("y") ) {
                     isExploring = false;
+                    inDungeon = true;
                     player.setCurrentLocation(newLocation);
-                    player.setPreviousGameState(this);
-                    DungeonState dungeonState1 = new DungeonState(parentLoop, true);
-                    GameEvents.switchGameStates(player, dungeonState1);
                 } else {
                     System.out.println("You decided not to go there.");
                     Location.locationMap.remove(newLocation.getLocationUUID());
