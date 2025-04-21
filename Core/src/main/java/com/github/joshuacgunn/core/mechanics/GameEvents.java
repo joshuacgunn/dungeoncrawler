@@ -6,6 +6,7 @@ import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.gameplay.*;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
+import com.github.joshuacgunn.core.item.Weapon;
 import com.github.joshuacgunn.core.location.*;
 import com.github.joshuacgunn.core.save.SaveManager;
 
@@ -27,32 +28,53 @@ public abstract class GameEvents {
      * @param entity The entity whose inventory should be displayed
      */
     public static void showInventory(Entity entity) {
-        System.out.println("Your inventory:");
-        for (Item item : entity.getInventory().getItems()) {
-            if (!(item.getItemUUID().equals(entity.getCurrentWeapon().getItemUUID()))) {
-                System.out.println(item.getItemName());
+        if (entity instanceof Player) {
+            System.out.println("Your inventory:");
+            for (Item item : entity.getInventory().getItems()) {
+                if (!(item.getItemUUID().equals(entity.getCurrentWeapon().getItemUUID()))) {
+                    System.out.println(item.getItemName());
+                }
             }
-        }
-        if (entity.getCurrentWeapon() != null) {
-            System.out.println("Your equipped weapon:");
-            System.out.println("    Name: " + entity.getCurrentWeapon().getItemName());
-            System.out.println("    Damage: " + entity.getCurrentWeapon().getWeaponDamage());
-            System.out.println("    Armor Penetration: " + entity.getCurrentWeapon().getArmorPenetration());
-            System.out.println("    Quality: " + entity.getCurrentWeapon().getWeaponQuality().name().toLowerCase());
-            System.out.println("    Material: " + entity.getCurrentWeapon().getWeaponMaterial().name().toLowerCase());
+            if (entity.getCurrentWeapon() != null) {
+                System.out.println("Your equipped weapon:");
+                System.out.println("    Name: " + entity.getCurrentWeapon().getItemName());
+                System.out.println("    Damage: " + entity.getCurrentWeapon().getWeaponDamage());
+                System.out.println("    Armor Penetration: " + entity.getCurrentWeapon().getArmorPenetration());
+                System.out.println("    Quality: " + entity.getCurrentWeapon().getWeaponQuality().name().toLowerCase());
+                System.out.println("    Material: " + entity.getCurrentWeapon().getWeaponMaterial().name().toLowerCase());
 
-        }
-        if (!entity.getArmors().isEmpty()) {
-            System.out.println("Your equipped armor:");
-            for (Armor item : entity.getArmors()) {
-                System.out.println("    Name: " + item.getItemName());
-                System.out.println("    Defense: " + item.getArmorDefense());
-                System.out.println("    Slot: " + item.getArmorSlot().name().toLowerCase());
-                System.out.println("    Material: " + item.getArmorMaterial().name().toLowerCase());
-                System.out.println("    Quality: " + item.getArmorQuality().name().toLowerCase());
+            }
+            if (!entity.getArmors().isEmpty()) {
+                System.out.println("Your equipped armor:");
+                for (Armor item : entity.getArmors()) {
+                    System.out.println("    Name: " + item.getItemName());
+                    System.out.println("    Defense: " + item.getArmorDefense());
+                    System.out.println("    Slot: " + item.getArmorSlot().name().toLowerCase());
+                    System.out.println("    Material: " + item.getArmorMaterial().name().toLowerCase());
+                    System.out.println("    Quality: " + item.getArmorQuality().name().toLowerCase());
+                }
+            }
+        } else if (entity instanceof NPC) {
+            int i = 0;
+            System.out.println("Items for sale:");
+            for (Item item : entity.getInventory().getItems()) {
+                i += 1;
+                System.out.println(i + ". " + item.getItemName());
+                System.out.println("    Rarity: " + item.getItemRarity().name().toLowerCase());
+                if (item instanceof Armor armor) {
+                    System.out.println("    Defense: " + armor.getArmorDefense());
+                    System.out.println("    Slot: " + armor.getArmorSlot().name().toLowerCase());
+                    System.out.println("    Material: " + armor.getArmorMaterial().name().toLowerCase());
+                    System.out.println("    Quality: " + armor.getArmorQuality().name().toLowerCase());
+                } else if (item instanceof Weapon weapon) {
+                    System.out.println("    Damage: " + weapon.getWeaponDamage());
+                    System.out.println("    Armor Penetration: " + weapon.getArmorPenetration());
+                    System.out.println("    Quality: " + weapon.getWeaponQuality());
+                    System.out.println("    Material: " + weapon.getWeaponMaterial());
+                }
             }
         }
-    }
+     }
 
     /**
      * Handles the transition between different game states.

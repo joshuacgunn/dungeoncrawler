@@ -102,7 +102,7 @@ public class Enemy extends Entity {
         int armorPieces = rand.nextInt(type.minArmorPieces, type.maxArmorPieces + 1);
 
         for (int i = 0; i < armorPieces; i++) {
-            Armor.generateArmor(type.getArmorRarity(), this.getInventory());
+            Armor.generateArmor(type.getArmorRarity(), this.getInventory(), true);
         }
 
         // Generate weapon

@@ -2,6 +2,9 @@ package com.github.joshuacgunn.core.location;
 
 import com.github.javafaker.Faker;
 import com.github.joshuacgunn.core.entity.NPC;
+import com.github.joshuacgunn.core.item.Armor;
+import com.github.joshuacgunn.core.item.Item;
+import com.github.joshuacgunn.core.item.Weapon;
 import com.github.joshuacgunn.core.mechanics.GameEvents;
 
 import java.util.ArrayList;
@@ -72,6 +75,8 @@ public class Shop extends Location {
         this.parentTown = parentTown;
         this.setLocationName(shopOwner.getEntityName() + "'s " + shopType.name);
         if (isNew) {
+            this.shopOwner.setCurrentLocation(this);
+            generateVendorItems();
             this.npcsInShop = generateNPCs();
             for (NPC npc : GameEvents.generateUniqueNPCs(this)) {
                 if (this.npcsInShop.contains(npc)) {
@@ -143,5 +148,51 @@ public class Shop extends Location {
         }
 
         return npcsToReturn;
+    }
+
+    public List<Item> generateVendorItems() {
+        List<Item> items = new ArrayList<>();
+        Random random = new Random();
+        // Common 3-4
+        // Uncommon 2-3
+        // Rare 1-2
+        // Epic 0-1
+        if (this.shopType.equals(ShopType.BLACKSMITH)) {
+            for (int i = 0; i < random.nextInt(3, 4); i++) {
+                float weaponOrArmorChance = random.nextFloat();
+                if (weaponOrArmorChance < .5f) {
+                    items.add(Weapon.generateWeapon(Item.ItemRarity.COMMON, this.shopOwner.getInventory()));
+                } else {
+                    items.add(Armor.generateArmor(Item.ItemRarity.COMMON, this.shopOwner.getInventory(), false));
+                }
+            }
+            for (int i = 0; i < random.nextInt(2, 3); i++) {
+                float weaponOrArmorChance = random.nextFloat();
+                if (weaponOrArmorChance < .5f) {
+                    items.add(Weapon.generateWeapon(Item.ItemRarity.UNCOMMON, this.shopOwner.getInventory()));
+                } else {
+                    items.add(Armor.generateArmor(Item.ItemRarity.UNCOMMON, this.shopOwner.getInventory(), false));
+                }
+            }
+            for (int i = 0; i < random.nextInt(1, 2); i++) {
+                float weaponOrArmorChance = random.nextFloat();
+                if (weaponOrArmorChance < .5f) {
+                    items.add(Weapon.generateWeapon(Item.ItemRarity.RARE, this.shopOwner.getInventory()));
+                } else {
+                    items.add(Armor.generateArmor(Item.ItemRarity.RARE, this.shopOwner.getInventory(), false));
+                }
+            }
+            for (int i = 0; i < random.nextInt(0, 1); i++) {
+                float weaponOrArmorChance = random.nextFloat();
+                if (weaponOrArmorChance < .5f) {
+                    items.add(Weapon.generateWeapon(Item.ItemRarity.EPIC, this.shopOwner.getInventory()));
+                } else {
+                    items.add(Armor.generateArmor(Item.ItemRarity.EPIC, this.shopOwner.getInventory(), false));
+                }
+            }
+        } else if (this.shopType.equals(ShopType.TAVERN)) {
+
+        }
+        return items;
     }
 }

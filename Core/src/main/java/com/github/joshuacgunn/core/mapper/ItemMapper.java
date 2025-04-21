@@ -47,6 +47,7 @@ public interface ItemMapper {
 
         if (item instanceof Weapon weapon) {
             WeaponDTO dto = new WeaponDTO();
+            dto.setItemRarity(weapon.getItemRarity());
             dto.setItemName(weapon.getItemName());
             dto.setItemUUID(weapon.getItemUUID());
             dto.setWeaponQuality(weapon.getWeaponQuality());
@@ -54,24 +55,24 @@ public interface ItemMapper {
             dto.setWeaponDamage(weapon.getWeaponDamage());
             dto.setWeaponDurability(weapon.getWeaponDurability());
             dto.setArmorPenetration(weapon.getArmorPenetration());
-            dto.setItemRarity(weapon.getItemRarity());
             dto.setItemType("Weapon"); // Explicitly set type
             return dto;
         } else if (item instanceof Armor armor) {
             ArmorDTO dto = new ArmorDTO();
+            dto.setItemRarity(armor.getItemRarity());
             dto.setItemName(armor.getItemName());
             dto.setItemUUID(armor.getItemUUID());
             dto.setArmorDefense(armor.getArmorDefense());
             dto.setArmorSlot(armor.getArmorSlot());
             dto.setArmorQuality(armor.getArmorQuality());
             dto.setArmorMaterial(armor.getArmorMaterial());
-            dto.setItemRarity(armor.getItemRarity());
             dto.setItemType("Armor"); // Explicitly set type
             return dto;
         } else {
             ItemDTO dto = new ItemDTO();
             dto.setItemName(item.getItemName());
             dto.setItemUUID(item.getItemUUID());
+            dto.setItemRarity(item.getItemRarity());
             dto.setItemType("Item"); // Explicitly set type
             return dto;
         }

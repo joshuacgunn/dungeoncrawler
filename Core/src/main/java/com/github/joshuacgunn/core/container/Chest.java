@@ -187,7 +187,7 @@ public class Chest extends Container{
 
             float chanceToGenerate = rand.nextFloat();
             if (chanceToGenerate < generatePercent) {
-                return (T) Armor.generateArmor(rarityToUse, this);
+                return (T) Armor.generateArmor(rarityToUse, this, false);
             } else if (chanceToGenerate < generatePercent * 2) {
                 return (T) Weapon.generateWeapon(rarityToUse, this);
             }

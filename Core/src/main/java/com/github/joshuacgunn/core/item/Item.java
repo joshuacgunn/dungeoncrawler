@@ -17,6 +17,8 @@ public class Item {
     /** Global registry mapping UUIDs to all created items */
     public static Map<UUID, Item> itemMap = new HashMap<>();
 
+    protected ItemRarity itemRarity;
+
     public enum ItemRarity {
         COMMON,
         UNCOMMON,
@@ -62,7 +64,7 @@ public class Item {
     }
 
     public ItemRarity getItemRarity() {
-        return ItemRarity.COMMON;
+        return this.itemRarity;
     }
 
     /**

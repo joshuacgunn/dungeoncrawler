@@ -4,6 +4,7 @@ import com.github.joshuacgunn.core.container.Chest;
 import com.github.joshuacgunn.core.container.Container;
 import com.github.joshuacgunn.core.container.Inventory;
 import com.github.joshuacgunn.core.entity.Entity;
+import com.github.joshuacgunn.core.entity.NPC;
 
 import java.util.UUID;
 import java.util.Random;
@@ -77,7 +78,6 @@ public class Armor extends Item {
     private ArmorSlot armorSlot;
     private ArmorQuality armorQuality;
     private ArmorMaterial armorMaterial;
-    private final ItemRarity itemRarity;
     Random rand = new Random();
     /**
      * Creates a new item and registers it in the global item map.
@@ -228,7 +228,7 @@ public class Armor extends Item {
      * @param container The container to add the armor to
      * @return The generated armor piece
      */
-    public static Armor generateArmor(ItemRarity rarity, Container container) {
+    public static Armor generateArmor(ItemRarity rarity, Container container, boolean equipArmor) {
         final Random rand = new Random();
         Entity entity = null;
 
@@ -239,7 +239,7 @@ public class Armor extends Item {
 
         Armor generatedArmor = new Armor(UUID.randomUUID(), slot, "Generated Armor", rarity, true);
 
-        if (entity != null && entity.armors.containsKey(generatedArmor.getArmorSlot())) {
+        if (equipArmor && entity != null && entity.armors.containsKey(generatedArmor.getArmorSlot())) {
             while (entity.armors.containsKey(generatedArmor.getArmorSlot())) {
                 Item.itemMap.remove(generatedArmor.getItemUUID());
                 slot = Armor.ArmorSlot.values()[rand.nextInt(0, 4)];
@@ -248,9 +248,16 @@ public class Armor extends Item {
         }
 
         if (entity != null) {
-            generatedArmor.setItemName(entity.getEntityName() + "'s " + generatedArmor.armorQuality.name().toLowerCase() + " " + generatedArmor.armorMaterial.name().toLowerCase() + " " + generatedArmor.getArmorSlot().name().toLowerCase());
-            entity.getInventory().addItem(generatedArmor);
-            entity.equipArmor(generatedArmor);
+            if (!(entity instanceof NPC)) {
+                generatedArmor.setItemName(entity.getEntityName() + "'s " + generatedArmor.armorQuality.name().toLowerCase() + " " + generatedArmor.armorMaterial.name().toLowerCase() + " " + generatedArmor.getArmorSlot().name().toLowerCase());
+                entity.getInventory().addItem(generatedArmor);
+                if (equipArmor) {
+                    entity.equipArmor(generatedArmor);
+                }
+            } else {
+                generatedArmor.setItemName(generatedArmor.armorQuality.name().toLowerCase() + " " + generatedArmor.armorMaterial.name().toLowerCase() + " " + generatedArmor.getArmorSlot().name().toLowerCase());
+                entity.getInventory().addItem(generatedArmor);
+            }
         } else if (container instanceof Chest) {
             generatedArmor.setItemName(generatedArmor.armorQuality.name().toLowerCase() + " " + generatedArmor.armorMaterial.name().toLowerCase() + " armor");
             container.addItem(generatedArmor);

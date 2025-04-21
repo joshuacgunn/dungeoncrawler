@@ -87,6 +87,8 @@ public class ShopState implements GameState {
                 break;
             case 1:
                 System.out.println("Which item would you like to buy?");
+                GameEvents.showInventory(whichShop.getShopOwner());
+                break;
             case 2:
                 inShop = false;
                 break;

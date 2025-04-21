@@ -3,6 +3,7 @@ package com.github.joshuacgunn.core.item;
 import com.github.joshuacgunn.core.container.Container;
 import com.github.joshuacgunn.core.container.Inventory;
 import com.github.joshuacgunn.core.entity.Entity;
+import com.github.joshuacgunn.core.entity.NPC;
 
 import java.util.Random;
 import java.util.UUID;
@@ -28,8 +29,6 @@ public class Weapon extends Item {
     private WeaponQuality weaponQuality;
 
     private WeaponMaterial weaponMaterial;
-
-    private final ItemRarity itemRarity;
 
     /**
      * Enum representing different materials that weapons can be made of, each
@@ -248,12 +247,19 @@ public class Weapon extends Item {
      * @return The generated weapon
      */
     public static Weapon generateWeapon(ItemRarity rarity, Container container) {
+
         Weapon generatedWeapon = new Weapon("Weapon", UUID.randomUUID(), rarity, true);
+
         if (container instanceof Inventory inventory) {
             Entity entity = inventory.getOwner();
-            generatedWeapon.setItemName(entity.getEntityName() + "s " + generatedWeapon.getWeaponQuality().name().toLowerCase() + " " + generatedWeapon.getWeaponMaterial().name().toLowerCase() + " sword");
-            entity.addItem(generatedWeapon);
-            entity.setCurrentWeapon(generatedWeapon);
+            if (!(entity instanceof NPC)) {
+                generatedWeapon.setItemName(entity.getEntityName() + "s " + generatedWeapon.getWeaponQuality().name().toLowerCase() + " " + generatedWeapon.getWeaponMaterial().name().toLowerCase() + " sword");
+                entity.addItem(generatedWeapon);
+                entity.setCurrentWeapon(generatedWeapon);
+            } else {
+                generatedWeapon.setItemName(generatedWeapon.getWeaponQuality().name().toLowerCase() + " " + generatedWeapon.getWeaponMaterial().name().toLowerCase() + " sword");
+                entity.addItem(generatedWeapon);
+            }
         } else {
             generatedWeapon.setItemName(generatedWeapon.getWeaponQuality().name().toLowerCase() + " " + generatedWeapon.getWeaponMaterial().name().toLowerCase() + " sword");
             container.addItem(generatedWeapon);
