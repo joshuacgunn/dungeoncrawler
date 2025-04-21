@@ -3,6 +3,7 @@ package com.github.joshuacgunn.core.entity;
 import com.github.joshuacgunn.core.gameplay.GameState;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
+import com.github.joshuacgunn.core.item.Potion;
 import com.github.joshuacgunn.core.item.Weapon;
 import com.github.joshuacgunn.core.mechanics.PlayerStats;
 
@@ -150,22 +151,36 @@ public class Player extends Entity {
     public float calculateWeaponDamage() {
         float baseDamage = currentWeapon.getWeaponDamage();
 
-        float strengthBonus = playerStats.getStrength() * 0.1f;
+        float strengthBonus = playerStats.getStatValue(PlayerStats.Stat.STRENGTH) * 0.1f;
 
         float classBonus = 0f;
 
         switch(playerClass) {
             case PALADIN:
-                classBonus = playerStats.getStrength() * 0.03f;
+                classBonus = playerStats.getStatValue(PlayerStats.Stat.STRENGTH) * 0.03f;
                 break;
             case WIZARD:
-                classBonus = playerStats.getIntelligence() * 0.05f;
+                classBonus = playerStats.getStatValue(PlayerStats.Stat.INTELLIGENCE) * 0.05f;
                 break;
             case ROGUE:
-                classBonus = playerStats.getDexterity() * 0.05f;
+                classBonus = playerStats.getStatValue(PlayerStats.Stat.DEXTERITY) * 0.05f;
                 break;
         }
         return baseDamage * (1f + strengthBonus + classBonus);
+    }
+
+    public void usePotion(Potion potion) {
+        switch (potion.getPotionType()) {
+            case HEALING:
+                System.out.println("Healing potion used!");
+                break;
+            case MANA:
+                System.out.println("Mana restoration potion used!");
+                break;
+            case ALCOHOL:
+                System.out.println("Alcohol used!");
+                break;
+        }
     }
 
     /**
@@ -181,35 +196,30 @@ public class Player extends Entity {
 
         switch(playerClass) {
             case ROGUE:
-                stats.setDexterity(12);
-                stats.setStrength(4);
-                stats.setCharisma(2);
-                stats.setLuck(8);
-                stats.setIntelligence(5);
-                stats.setVitality(4);
+                stats.setStatValue(PlayerStats.Stat.DEXTERITY, 12);
+                stats.setStatValue(PlayerStats.Stat.STRENGTH, 4);
+                stats.setStatValue(PlayerStats.Stat.CHARISMA, 2);
+                stats.setStatValue(PlayerStats.Stat.LUCK, 8);
+                stats.setStatValue(PlayerStats.Stat.INTELLIGENCE, 5);
+                stats.setStatValue(PlayerStats.Stat.VITALITY, 4);
                 break;
             case WIZARD:
-                stats.setDexterity(4);
-                stats.setStrength(2);
-                stats.setCharisma(6);
-                stats.setLuck(3);
-                stats.setIntelligence(11);
-                stats.setVitality(6);
+                stats.setStatValue(PlayerStats.Stat.DEXTERITY, 4);
+                stats.setStatValue(PlayerStats.Stat.STRENGTH, 2);
+                stats.setStatValue(PlayerStats.Stat.CHARISMA, 6);
+                stats.setStatValue(PlayerStats.Stat.LUCK, 6);
+                stats.setStatValue(PlayerStats.Stat.INTELLIGENCE, 11);
+                stats.setStatValue(PlayerStats.Stat.VITALITY, 5);
                 break;
             case PALADIN:
-                stats.setDexterity(1);
-                stats.setStrength(14);
-                stats.setCharisma(9);
-                stats.setLuck(2);
-                stats.setIntelligence(3);
-                stats.setVitality(8);
+                stats.setStatValue(PlayerStats.Stat.DEXTERITY, 1);
+                stats.setStatValue(PlayerStats.Stat.STRENGTH, 14);
+                stats.setStatValue(PlayerStats.Stat.CHARISMA, 9);
+                stats.setStatValue(PlayerStats.Stat.LUCK, 2);
+                stats.setStatValue(PlayerStats.Stat.INTELLIGENCE, 3);
+                stats.setStatValue(PlayerStats.Stat.VITALITY, 8);
                 break;
             case null, default:
-                stats.setDexterity(0);
-                stats.setStrength(0);
-                stats.setCharisma(0);
-                stats.setLuck(0);
-                stats.setIntelligence(0);
                 break;
         }
         return stats;
@@ -230,12 +240,12 @@ public class Player extends Entity {
                 getEntityName(), getEntityUUID(),
                 entityHp, MAX_HP,
                 playerClass,
-                this.playerStats.getStrength(),
-                this.playerStats.getDexterity(),
-                this.playerStats.getVitality(),
-                this.playerStats.getIntelligence(),
-                this.playerStats.getLuck(),
-                this.playerStats.getCharisma(),
+                this.playerStats.getStatValue(PlayerStats.Stat.STRENGTH),
+                this.playerStats.getStatValue(PlayerStats.Stat.DEXTERITY),
+                this.playerStats.getStatValue(PlayerStats.Stat.VITALITY),
+                this.playerStats.getStatValue(PlayerStats.Stat.INTELLIGENCE),
+                this.playerStats.getStatValue(PlayerStats.Stat.LUCK),
+                this.playerStats.getStatValue(PlayerStats.Stat.CHARISMA),
                 currentWeapon != null ? currentWeapon.getItemName() : "None"
         );
     }

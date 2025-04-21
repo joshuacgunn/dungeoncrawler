@@ -1,58 +1,83 @@
 package com.github.joshuacgunn.core.mechanics;
 
+import com.github.joshuacgunn.core.entity.Player;
+
 public class PlayerStats {
-    private int strength;
-    private int dexterity;
-    private int vitality;
-    private int intelligence;
-    private int luck;
-    private int charisma;
 
-    public int getStrength() {
-        return this.strength;
+    public int strength = Stat.STRENGTH.statValue;
+    public int dexterity = Stat.DEXTERITY.statValue;
+    public int vitality = Stat.VITALITY.statValue;
+    public int intelligence = Stat.INTELLIGENCE.statValue;
+    public int luck = Stat.LUCK.statValue;
+    public int charisma = Stat.CHARISMA.statValue;
+
+    public enum Stat {
+        STRENGTH("Strength", 0),
+        DEXTERITY("Dexterity", 0),
+        VITALITY("Vitality", 0),
+        INTELLIGENCE("Intelligence", 0),
+        LUCK("Luck", 0),
+        CHARISMA("Charisma", 0);
+
+        private final String statName;
+        private int statValue;
+
+        Stat(String statName, int statValue) {
+            this.statName = statName;
+            this.statValue = statValue;
+        }
+
+        public String getStatName() {
+            return this.statName;
+        }
+
+        public static Stat getStatByName(String statName) {
+            return Stat.valueOf(statName.toUpperCase());
+        }
     }
 
-    public int getDexterity() {
-        return this.dexterity;
+    public int getStatValue(Stat stat) {
+        switch (stat) {
+            case LUCK:
+                return this.luck;
+            case CHARISMA:
+                return this.charisma;
+            case VITALITY:
+                return this.vitality;
+            case INTELLIGENCE:
+                return this.intelligence;
+            case STRENGTH:
+                return this.strength;
+            case DEXTERITY:
+                return this.dexterity;
+            default:
+                return 0;
+        }
     }
 
-    public int getVitality() {
-        return this.vitality;
+    public void setStatValue(Stat stat, int statValue) {
+        switch (stat) {
+            case LUCK:
+                this.luck = statValue;
+                break;
+            case CHARISMA:
+                this.charisma = statValue;
+                break;
+            case VITALITY:
+                this.vitality = statValue;
+                break;
+            case INTELLIGENCE:
+                this.intelligence = statValue;
+                break;
+            case STRENGTH:
+                this.strength = statValue;
+                break;
+            case DEXTERITY:
+                this.dexterity = statValue;
+        }
     }
 
-    public int getIntelligence() {
-        return this.intelligence;
-    }
+    public void addTemporaryStat(Stat stat, int amount) {
 
-    public int getLuck() {
-        return this.luck;
-    }
-
-    public int getCharisma() {
-        return this.charisma;
-    }
-
-    public void setStrength(int strength) {
-        this.strength = strength;
-    }
-
-    public void setDexterity(int dexterity) {
-        this.dexterity = dexterity;
-    }
-
-    public void setVitality(int vitality) {
-        this.vitality = vitality;
-    }
-
-    public void setIntelligence(int intelligence) {
-        this.intelligence = intelligence;
-    }
-
-    public void setLuck(int luck) {
-        this.luck = luck;
-    }
-
-    public void setCharisma(int charisma) {
-        this.charisma = charisma;
     }
 }

@@ -11,6 +11,7 @@ import com.github.joshuacgunn.core.item.Item;
 import com.github.joshuacgunn.core.item.Weapon;
 import com.github.joshuacgunn.core.location.Location;
 import com.github.joshuacgunn.core.location.World;
+import com.github.joshuacgunn.core.mechanics.PlayerStats;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -147,12 +148,12 @@ public interface EntityMapper {
 
         dto.setPlayerStats(player.getPlayerStats());
 
-        dto.getPlayerStats().setStrength(player.getPlayerStats().getStrength());
-        dto.getPlayerStats().setDexterity(player.getPlayerStats().getDexterity());
-        dto.getPlayerStats().setIntelligence(player.getPlayerStats().getIntelligence());
-        dto.getPlayerStats().setLuck(player.getPlayerStats().getLuck());
-        dto.getPlayerStats().setCharisma(player.getPlayerStats().getCharisma());
-        dto.getPlayerStats().setVitality(player.getPlayerStats().getVitality());
+        dto.setPlayerStatsValue(PlayerStats.Stat.STRENGTH, player.getPlayerStats().getStatValue(PlayerStats.Stat.STRENGTH));
+        dto.setPlayerStatsValue(PlayerStats.Stat.DEXTERITY, player.getPlayerStats().getStatValue(PlayerStats.Stat.DEXTERITY));
+        dto.setPlayerStatsValue(PlayerStats.Stat.INTELLIGENCE, player.getPlayerStats().getStatValue(PlayerStats.Stat.INTELLIGENCE));
+        dto.setPlayerStatsValue(PlayerStats.Stat.LUCK, player.getPlayerStats().getStatValue(PlayerStats.Stat.LUCK));
+        dto.setPlayerStatsValue(PlayerStats.Stat.CHARISMA, player.getPlayerStats().getStatValue(PlayerStats.Stat.CHARISMA));
+        dto.setPlayerStatsValue(PlayerStats.Stat.VITALITY, player.getPlayerStats().getStatValue(PlayerStats.Stat.VITALITY));
 
         return dto;
     }
@@ -262,12 +263,13 @@ public interface EntityMapper {
         player.setPlayerLevel(dto.getPlayerLevel());
         
         // Set player stats
-        player.getPlayerStats().setStrength(dto.getPlayerStats().getStrength());
-        player.getPlayerStats().setDexterity(dto.getPlayerStats().getDexterity());
-        player.getPlayerStats().setIntelligence(dto.getPlayerStats().getIntelligence());
-        player.getPlayerStats().setLuck(dto.getPlayerStats().getLuck());
-        player.getPlayerStats().setCharisma(dto.getPlayerStats().getCharisma());
-        player.getPlayerStats().setVitality(dto.getPlayerStats().getVitality());
+
+        player.getPlayerStats().setStatValue(PlayerStats.Stat.STRENGTH, dto.getPlayerStatsValue(PlayerStats.Stat.STRENGTH));
+        player.getPlayerStats().setStatValue(PlayerStats.Stat.DEXTERITY, dto.getPlayerStatsValue(PlayerStats.Stat.DEXTERITY));
+        player.getPlayerStats().setStatValue(PlayerStats.Stat.INTELLIGENCE, dto.getPlayerStatsValue(PlayerStats.Stat.INTELLIGENCE));
+        player.getPlayerStats().setStatValue(PlayerStats.Stat.LUCK, dto.getPlayerStatsValue(PlayerStats.Stat.LUCK));
+        player.getPlayerStats().setStatValue(PlayerStats.Stat.CHARISMA, dto.getPlayerStatsValue(PlayerStats.Stat.CHARISMA));
+        player.getPlayerStats().setStatValue(PlayerStats.Stat.VITALITY, dto.getPlayerStatsValue(PlayerStats.Stat.VITALITY));
 
         if (Location.locationMap.containsKey(dto.getCurrentLocationUUID())) {
             player.setCurrentLocation(Location.locationMap.get(dto.getCurrentLocationUUID()));

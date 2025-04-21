@@ -51,11 +51,34 @@ public class PlayerDTO extends EntityDTO {
         return this.playerClass;
     }
 
+    public int getPlayerStatsValue(PlayerStats.Stat stat) {
+        switch (stat) {
+            case LUCK:
+                return this.playerStats.getStatValue(PlayerStats.Stat.LUCK);
+            case CHARISMA:
+                return this.playerStats.getStatValue(PlayerStats.Stat.CHARISMA);
+            case VITALITY:
+                return this.playerStats.getStatValue(PlayerStats.Stat.VITALITY);
+            case INTELLIGENCE:
+                return this.playerStats.getStatValue(PlayerStats.Stat.INTELLIGENCE);
+            case STRENGTH:
+                return this.playerStats.getStatValue(PlayerStats.Stat.STRENGTH);
+            case DEXTERITY:
+                return this.playerStats.getStatValue(PlayerStats.Stat.DEXTERITY);
+            default:
+                return 0;
+        }
+    }
+
     public PlayerStats getPlayerStats() {
         return this.playerStats;
     }
 
     public void setPlayerStats(PlayerStats playerStats) {
         this.playerStats = playerStats;
+    }
+
+    public void setPlayerStatsValue(PlayerStats.Stat stat, int value) {
+        this.playerStats.setStatValue(stat, value);
     }
 }

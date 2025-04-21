@@ -62,9 +62,14 @@ public class EntityDTOTypeAdapter implements JsonSerializer<EntityDTO>, JsonDese
         }
 
         // Inventory serialization remains unchanged
-        if (src instanceof PlayerDTO playerDTO && playerDTO.getInventory() != null) {
-            result.add("inventory", context.serialize(playerDTO.getInventory()));
-            result.add("playerClass", context.serialize(playerDTO.getPlayerClass()));
+        if (src instanceof PlayerDTO playerDTO) {
+            if (playerDTO.getInventory() != null) {
+                result.add("inventory", context.serialize(playerDTO.getInventory()));
+                result.add("playerClass", context.serialize(playerDTO.getPlayerClass()));
+            }
+            if (playerDTO.getPlayerStats() != null) {
+                result.add("playerStats", context.serialize(playerDTO.getPlayerStats()));
+            }
         }
 
         if (src instanceof EnemyDTO enemyDTO && enemyDTO.getInventory() != null) {
