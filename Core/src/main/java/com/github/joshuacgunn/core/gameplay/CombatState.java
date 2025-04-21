@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.Scanner;
 
+import static com.github.joshuacgunn.core.mechanics.GameEvents.playerDeath;
 import static com.github.joshuacgunn.core.mechanics.GameEvents.printScreen;
 
 /**
@@ -65,7 +66,7 @@ public class CombatState implements GameState {
             update();
         }
         if (!player.isAlive()) {
-            parentLoop.stopGame();
+            playerDeath(player);
         } else {
             player.setPreviousGameState(this);
             DungeonState dungeonState = new DungeonState(parentLoop, false);

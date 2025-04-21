@@ -8,6 +8,7 @@ version = "v0.2.0"
 
 repositories {
     mavenCentral()
+    maven { url = uri("https://www.jetbrains.com/intellij-repository/releases") }
 }
 
 tasks.jar {
@@ -32,6 +33,7 @@ dependencies {
     implementation ("org.reflections:reflections:0.10.2")
     implementation("ch.qos.logback:logback-classic:1.5.6")
     implementation("com.github.javafaker:javafaker:1.0.2")
+    implementation("com.intellij:forms_rt:7.0.3")
 }
 
 tasks.test {

@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+import static com.github.joshuacgunn.core.gameplay.Game.gui;
 import static com.github.joshuacgunn.core.mechanics.GameEvents.printLoadingScreen;
 import static com.github.joshuacgunn.core.mechanics.GameEvents.printScreen;
 
@@ -36,7 +37,7 @@ public class ExploringState implements GameState {
         if (isNew) {
             printScreen(this);
             if (player.getPreviousGameState() != null) {
-                System.out.println("You begin exploring the world...");
+                gui.outputArea.setText("You begin exploring the world...");
             }
         }
     }
@@ -50,12 +51,12 @@ public class ExploringState implements GameState {
         if (inTown) {
             player.setPreviousGameState(this);
             TownState townState = new TownState(parentLoop, true);
-            printLoadingScreen(townState);
+//            printLoadingScreen(townState);
             GameEvents.switchGameStates(player, townState);
         } else if (inDungeon) {
             player.setPreviousGameState(this);
             DungeonState dungeonState = new DungeonState(parentLoop, true);
-            printLoadingScreen(dungeonState);
+//            printLoadingScreen(dungeonState);
             GameEvents.switchGameStates(player, dungeonState);
         } else {
             MainMenuState mainMenuState = new MainMenuState();

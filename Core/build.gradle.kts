@@ -20,6 +20,7 @@ dependencies {
     implementation("com.github.javafaker:javafaker:1.0.2")
     implementation("org.slf4j:slf4j-api:1.6.1")
     implementation("org.slf4j:slf4j-simple:1.6.1")
+    implementation("com.intellij:forms_rt:7.0.3")
 }
 
 

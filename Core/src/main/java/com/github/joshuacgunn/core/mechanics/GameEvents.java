@@ -14,6 +14,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static com.github.joshuacgunn.core.gameplay.MainMenuState.deleteDirectory;
+import static com.github.joshuacgunn.core.save.SaveManager.BACKUP_DIRECTORY;
+import static com.github.joshuacgunn.core.save.SaveManager.SAVE_DIRECTORY;
+
 /**
  * A utility class that manages and handles various game-related events and actions
  * in the Terminal RPG game. This class serves as a central hub for common game operations
@@ -449,6 +453,21 @@ public abstract class GameEvents {
             }
         } catch (IOException e) {
             // Handle exception silently
+        }
+    }
+
+    public static void playerDeath(Player player) {
+        deleteDirectory(new File(SAVE_DIRECTORY));
+        deleteDirectory(new File(BACKUP_DIRECTORY));
+        System.out.println("You died at level " + player.getPlayerLevel() + "!");
+        System.out.println("Would you like to start a new save? (y/n)");
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        if (input.equalsIgnoreCase("y")) {
+            initializeGame();
+        } else {
+            System.out.println("Goodbye!");
+            System.exit(0);
         }
     }
 }

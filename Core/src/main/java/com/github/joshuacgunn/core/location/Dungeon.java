@@ -89,7 +89,6 @@ public class Dungeon extends Location {
      * @return true if the floor was successfully cleared and the dungeon is marked as cleared; false otherwise
      */
     public boolean clearFloor() {
-        System.out.println("You cleared floor " + currentFloor.getFloorNumber() + ", moving to floor " + (currentFloor.getFloorNumber() + 2) + " in the dungeon.");
         currentFloor = floors.get(currentFloor.getFloorNumber());
         if (currentFloor != null && currentFloor.getFloorNumber() <= 1) {
             isCleared = true;

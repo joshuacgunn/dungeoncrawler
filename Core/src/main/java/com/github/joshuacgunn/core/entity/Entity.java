@@ -7,10 +7,13 @@ import com.github.joshuacgunn.core.item.Item;
 import com.github.joshuacgunn.core.item.Weapon;
 import com.github.joshuacgunn.core.location.DungeonFloor;
 import com.github.joshuacgunn.core.location.Location;
+import com.github.joshuacgunn.core.mechanics.EntityStats;
 import com.github.joshuacgunn.core.mechanics.TickManager;
 import com.github.joshuacgunn.core.mechanics.Tickable;
 
 import java.util.*;
+
+import static com.github.joshuacgunn.core.item.Potion.consumePotion;
 
 /**
  * Master entity class for which each sub-entity (player, npc, monster, etc.) will inherit
@@ -288,6 +291,12 @@ public abstract class Entity implements Tickable {
             case STRENGTH_POTION:
 //                addTemporaryStrength(5);
                 break;
+            case ALCOHOL:
+                if (this instanceof Player player) {
+                    consumePotion(this, StatusEffect.ALCOHOL);
+                    addTemporaryStat(EntityStats.Stat.STRENGTH, 5);
+                    addTemporaryStat(EntityStats.Stat.CHARISMA, 5);
+                }
             // Handle other effects
         }
     }
@@ -296,7 +305,13 @@ public abstract class Entity implements Tickable {
         // Remove the effect
         switch (effect) {
             case STRENGTH_POTION:
-//                removeTemporaryStrength(5);
+
+                break;
+            case ALCOHOL:
+                if (this instanceof Player player) {
+                    removeTemporaryStat(EntityStats.Stat.STRENGTH, 5);
+                    removeTemporaryStat(EntityStats.Stat.CHARISMA, 5);
+                }
                 break;
             // Handle other effects
         }
@@ -310,11 +325,25 @@ public abstract class Entity implements Tickable {
         this.activeStatusEffects = activeStatusEffects;
     }
 
+    public void addTemporaryStat(EntityStats.Stat stat, int amount) {
+        if (this instanceof Player player) {
+            player.getPlayerStats().setStatValue(stat, player.getPlayerStats().getStatValue(stat) + amount);
+        }
+    }
+
+    public void removeTemporaryStat(EntityStats.Stat stat, int amount) {
+        if (this instanceof Player player) {
+            player.getPlayerStats().setStatValue(stat, player.getPlayerStats().getStatValue(stat) - amount);
+        }
+    }
+
     public enum StatusEffect {
         STRENGTH_POTION,
         SPEED_POTION,
         POISON,
         REGENERATION,
-        BLEEDING
+        BLEEDING,
+        CHARISMA_POTION,
+        ALCOHOL
     }
 }

@@ -92,6 +92,10 @@ public class DungeonState implements GameState {
     @Override
     public void update() {
         if (!inDungeon) return;
+        if (whichDungeon.getCurrentFloor().getEnemiesOnFloor().isEmpty()) {
+            whichDungeon.clearFloor();
+            System.out.println("You cleared the floor! Moving on to floor " + whichDungeon.getCurrentFloor().getFloorNumber());
+        }
         System.out.println("What would you like to do?");
         System.out.println("0. Back to the main menu");
         System.out.println("1. Attack an enemy");
