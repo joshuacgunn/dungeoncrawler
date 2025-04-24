@@ -25,3 +25,5 @@ Although I have many things I want to add to the game, it is time consuming to a
 _*Regardless of whether something is crossed out, I will continue changing all of these_
 # Disclaimer
 I'm relatively new to Java, which means my knowledge of how to code certain things is limited. AI has been used in this project to code some things. Most notably the Gson adapters are completely AI generated. I understand how they work, but I do not think I would be able to code them myself. 
+# Credits
+[Joan Stark's ASCII art library](https://oldcompcz.github.io/jgs/joan_stark/). This project is greatly enhanced by her amazing ASCII art. 
