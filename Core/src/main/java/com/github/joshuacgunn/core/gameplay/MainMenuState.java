@@ -56,23 +56,7 @@ public class MainMenuState implements GameState {
                     String input = scanner.nextLine();
                     switch (input) {
                         case "y":
-                            System.out.print("Starting new game");
-                            int totalTime = new Random().nextInt(1, 4);
-                            for (int seconds = 0; seconds < totalTime; seconds++) {
-                                for (int dots = 0; dots < 4; dots++) {
-                                    if (dots == 0) {
-                                        System.out.print("");
-                                    } else {
-                                        System.out.print(".");
-                                    }
-                                    try {
-                                        TimeUnit.MILLISECONDS.sleep(500);
-                                    } catch (InterruptedException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                }
-                                System.out.print("\b\b\b   \b\b\b");
-                            }
+                            GameEvents.printLoadingDots("Starting new game", new Random().nextInt(1, 4));
                             try {
                                 deleteDirectory(new File(SAVE_DIRECTORY));
                                 deleteDirectory(new File(BACKUP_DIRECTORY));

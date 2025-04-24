@@ -13,6 +13,7 @@ import com.github.joshuacgunn.core.save.SaveManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static com.github.joshuacgunn.core.gameplay.MainMenuState.deleteDirectory;
 import static com.github.joshuacgunn.core.save.SaveManager.BACKUP_DIRECTORY;
@@ -318,21 +319,20 @@ public abstract class GameEvents {
         clearConsole();
         Player player;
         boolean isNewGame;
-        if (new File("backups/saves/").exists() || new File("saves/").exists()) {
-            isNewGame = false;
-        } else {
-            isNewGame = true;
-        }
+        isNewGame = !new File("backups/saves/").exists() && !new File("saves/").exists();
 
         if (isNewGame) {
             player = createPlayer();
             Town startingTown = new Town(UUID.randomUUID(), true);
             player.setCurrentLocation(startingTown);
         } else {
+            printLoadingScreen();
             player = SaveManager.loadState();
         }
 
         TickManager.getInstance().start();
+
+        printContinuePrompt();
 
         GameLoop gameLoop = new GameLoop(player, isNewGame);
         if (isNewGame) {
@@ -354,7 +354,11 @@ public abstract class GameEvents {
             else {
                 System.out.print("\033\143");
             }
-        } catch (IOException | InterruptedException ex) {}
+        } catch (IOException | InterruptedException ex) {
+            System.out.println("Error clearing console: " + ex.getMessage());
+            // Fallback to simple newline if console clear fails
+            System.out.println("\n\n\n\n\n\n\n\n\n");
+        }
     }
 
     public static void printScreen(GameState gameState) {
@@ -363,40 +367,64 @@ public abstract class GameEvents {
             Location location = Entity.getEntitiesByType(Player.class).getFirst().getCurrentLocation();
             System.out.println(AsciiArt.getArtForLocation(location, gameState));
         } else {
-            System.out.println(AsciiArt.LOGO_MAIN_MENU);
+            System.out.println(AsciiArt.MAIN_MENU);
         }
     }
 
+    public static void printLoadingDots(String string, int time) {
+        System.out.print(string);
+        for (int seconds = 0; seconds < time; seconds++) {
+            for (int dots = 0; dots < 4; dots++) {
+                if (dots == 0) {
+                    System.out.print("");
+                } else {
+                    System.out.print(".");
+                }
+                try {
+                    TimeUnit.MILLISECONDS.sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            System.out.print("\b\b\b   \b\b\b");
+        }
+    }
+
+    /**
+     * Creates a single NPC with specified name and personality.
+     *
+     * @param name The name of the NPC
+     * @param personality The personality trait of the NPC
+     * @return A newly created NPC instance
+     */
+    public static NPC generateUniqueNPC(String name, NPC.Personality personality) {
+        NPC npc = new NPC(name, UUID.randomUUID());
+        npc.setNpcPersonality(personality);
+        return npc;
+    }
+
+    /**
+     * Generates a list of unique NPCs based on the shop type and parent town.
+     * This method creates specific NPCs for certain towns and shop types.
+     *
+     * @param shop The shop for which to generate unique NPCs
+     * @return A list of unique NPCs relevant to the shop's context
+     */
     public static List<NPC> generateUniqueNPCs(Shop shop) {
         ArrayList<NPC> npcList = new ArrayList<>();
         String name = shop.getParentTown().getLocationName();
+
         if (name.equalsIgnoreCase("Blaviken") && shop.getShopType() == Shop.ShopType.TAVERN) {
-            NPC geralt = new NPC("Geralt of Rivia", UUID.randomUUID());
-            geralt.setNpcPersonality(NPC.Personality.SERIOUS);
-            npcList.add(geralt);
-            NPC ciri = new NPC("Ciri", UUID.randomUUID());
-            ciri.setNpcPersonality(NPC.Personality.SERIOUS);
-            npcList.add(ciri);
-            NPC vesemir = new NPC("Vesemir", UUID.randomUUID());
-            vesemir.setNpcPersonality(NPC.Personality.SERIOUS);
-            npcList.add(vesemir);
+            npcList.add(generateUniqueNPC("Geralt of Rivia", NPC.Personality.ADVENTUROUS));
+            npcList.add(generateUniqueNPC("Ciri", NPC.Personality.LOYAL));
+            npcList.add(generateUniqueNPC("Vesemir", NPC.Personality.WISE));
         } else if (name.equalsIgnoreCase("Pallet Town") && shop.getShopType() == Shop.ShopType.TAVERN) {
-            NPC ash = new NPC("Ash Ketchum", UUID.randomUUID());
-            ash.setNpcPersonality(NPC.Personality.FUNNY);
-            npcList.add(ash);
-            NPC paul = new NPC("Paul", UUID.randomUUID());
-            paul.setNpcPersonality(NPC.Personality.SERIOUS);
-            npcList.add(paul);
-            NPC gary = new NPC("Gary Oak", UUID.randomUUID());
-            gary.setNpcPersonality(NPC.Personality.SARCASTIC);
-            npcList.add(gary);
+            npcList.add(generateUniqueNPC("Ash Ketchum", NPC.Personality.OPTIMISTIC));
+            npcList.add(generateUniqueNPC("Paul", NPC.Personality.SERIOUS));
+            npcList.add(generateUniqueNPC("Gary Oak", NPC.Personality.SARCASTIC));
         } else if (name.equalsIgnoreCase("Silver Skalitz") && shop.getShopType() == Shop.ShopType.BLACKSMITH) {
-            NPC henry = new NPC("Henry", UUID.randomUUID());
-            henry.setNpcPersonality(NPC.Personality.FUNNY);
-            npcList.add(henry);
-            NPC theresa = new NPC("Theresa", UUID.randomUUID());
-            theresa.setNpcPersonality(NPC.Personality.SARCASTIC);
-            npcList.add(theresa);
+            npcList.add(generateUniqueNPC("Henry", NPC.Personality.ADVENTUROUS));
+            npcList.add(generateUniqueNPC("Theresa", NPC.Personality.LOYAL));
         }
         return npcList;
     }
@@ -412,7 +440,7 @@ public abstract class GameEvents {
      * @return A newly created Player instance with the chosen attributes
      */
     public static Player createPlayer() {
-        System.out.println(AsciiArt.LOGO_CREATE_CHARACTER);
+        System.out.println(AsciiArt.CREATE_CHARACTER);
         Scanner scanner = new Scanner(System.in);
         System.out.println("What is your name?");
         System.out.print("Name: ");
@@ -429,30 +457,16 @@ public abstract class GameEvents {
         Player player = new Player(name, uuid, playerClassEnum, true);
         System.out.println("You chose " + playerClassEnum.name().toLowerCase() + "!");
         System.out.println(player.getPlayerStatsString());
-        System.out.println("\nPress ENTER key to to continue...");
-        try {
-            System.in.read();
-            // Clear the input buffer
-            while (System.in.available() > 0) {
-                System.in.read();
-            }
-        } catch (IOException e) {
-            // Handle exception silently
-        }
         return player;
     }
 
-    public static void printLoadingScreen(GameState gameState) {
+    public static void printLoadingScreen() {
         clearConsole();
+        System.out.println(AsciiArt.getRandomLoadingScreen());
+        System.out.print(AsciiArt.HINTS);
+    }
 
-        // Display information about the location
-//        System.out.println("\nEntering " + location.getLocationName() + "...");
-
-        if (gameState instanceof TownState townState) {
-        } else if (gameState instanceof DungeonState dungeonState) {
-        } else if (gameState instanceof ShopState shopState) {
-        }
-
+    public static void printContinuePrompt() {
         System.out.println("\nPress ENTER key to to continue...");
         try {
             System.in.read();
@@ -468,6 +482,7 @@ public abstract class GameEvents {
     public static void playerDeath(Player player) {
         deleteDirectory(new File(SAVE_DIRECTORY));
         deleteDirectory(new File(BACKUP_DIRECTORY));
+        System.out.println(AsciiArt.DEATH_SCREEN);
         System.out.println("You died at level " + player.getPlayerLevel() + "!");
         System.out.println("Would you like to start a new save? (y/n)");
         Scanner scanner = new Scanner(System.in);

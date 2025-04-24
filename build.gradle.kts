@@ -13,7 +13,7 @@ repositories {
 
 tasks.jar {
     manifest {
-        attributes["Main-Class"] = "com.github.joshuacgunn.core.gameplay.Game"
+        attributes["Main-Class"] = "com.github.joshuacgunn.core.gameplay.PlayGame"
     }
     configurations["compileClasspath"].forEach { file: File ->
         from(zipTree(file.absoluteFile))

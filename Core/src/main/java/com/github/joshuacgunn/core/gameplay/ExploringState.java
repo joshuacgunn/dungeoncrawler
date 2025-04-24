@@ -11,8 +11,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-import static com.github.joshuacgunn.core.mechanics.GameEvents.printLoadingScreen;
-import static com.github.joshuacgunn.core.mechanics.GameEvents.printScreen;
+import static com.github.joshuacgunn.core.mechanics.GameEvents.*;
 
 public class ExploringState implements GameState {
     private final GameLoop parentLoop;
@@ -138,24 +137,7 @@ public class ExploringState implements GameState {
                 player.setCurrentLocation(dungeons.get(dungeonIndex-1));
                 break;
             case 3:
-                System.out.print("Searching for a new place to go");
-                int totalTime = new Random().nextInt(3, 6);
-                for (int seconds = 0; seconds < totalTime; seconds++) {
-                    for (int dots = 0; dots < 4; dots++) {
-                        if (dots == 0) {
-                            System.out.print("");
-                        } else {
-                            System.out.print(".");
-                        }
-                        try {
-                            TimeUnit.MILLISECONDS.sleep(500);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    System.out.print("\b\b\b   \b\b\b");
-                }
-                System.out.println("...");
+                printLoadingDots("Searching for a new place to go", new Random().nextInt(3, 5));
                 Location newLocation = Location.generateLocation();
                 System.out.println("You found a new " + newLocation.getClass().getSimpleName().toLowerCase() + " to go to: " + newLocation.getLocationName());
                 System.out.println("Would you like to go there? (y/n)");
