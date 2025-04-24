@@ -1,6 +1,7 @@
 package com.github.joshuacgunn.core.dto;
 
 import com.github.joshuacgunn.core.entity.Entity;
+import com.github.joshuacgunn.core.mechanics.EntityStats;
 
 import java.util.*;
 
@@ -15,11 +16,13 @@ public class EntityDTO {
     private float entityHp;
     private boolean isAlive;
     private UUID currentLocationUUID;
+    public EntityStats entityStats;
     private float entityDefense;
     private UUID currentWeaponUUID;
     private List<UUID> equippedArmorUUIDs = new ArrayList<>();
     private InventoryDTO inventory;
     private Map<Entity.StatusEffect, Integer> statusEffects = new HashMap<>();
+
 
     public EntityDTO() {
         // Default constructor
@@ -111,5 +114,36 @@ public class EntityDTO {
 
     public void setStatusEffects(Map<Entity.StatusEffect, Integer> statusEffects) {
         this.statusEffects = statusEffects;
+    }
+
+    public int getEntityStatsValue(EntityStats.Stat stat) {
+        switch (stat) {
+            case LUCK:
+                return this.entityStats.getStatValue(EntityStats.Stat.LUCK);
+            case CHARISMA:
+                return this.entityStats.getStatValue(EntityStats.Stat.CHARISMA);
+            case VITALITY:
+                return this.entityStats.getStatValue(EntityStats.Stat.VITALITY);
+            case INTELLIGENCE:
+                return this.entityStats.getStatValue(EntityStats.Stat.INTELLIGENCE);
+            case STRENGTH:
+                return this.entityStats.getStatValue(EntityStats.Stat.STRENGTH);
+            case DEXTERITY:
+                return this.entityStats.getStatValue(EntityStats.Stat.DEXTERITY);
+            default:
+                return 0;
+        }
+    }
+
+    public EntityStats getEntityStats() {
+        return this.entityStats;
+    }
+
+    public void setEntityStats(EntityStats entityStats) {
+        this.entityStats = entityStats;
+    }
+
+    public void setEntityStatsValue(EntityStats.Stat stat, int value) {
+        this.entityStats.setStatValue(stat, value);
     }
 }

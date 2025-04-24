@@ -34,7 +34,6 @@ public class Player extends Entity {
     }
 
 
-    private EntityStats entityStats;
     private final PlayerClass playerClass;
     private String gameStateName;
     private String previousGameStateName;
@@ -112,14 +111,6 @@ public class Player extends Entity {
         this.previousGameStateName = previousGameState.getClass().getSimpleName();
     }
 
-    public EntityStats getPlayerStats() {
-        return this.entityStats;
-    }
-
-    public void setPlayerStats(EntityStats entityStats) {
-        this.entityStats = entityStats;
-    }
-
     public PlayerClass getPlayerClass() {
         return this.playerClass;
     }
@@ -144,7 +135,6 @@ public class Player extends Entity {
         if (!(this.currentWeapon == null)) {
             this.currentWeapon = null;
         }
-
     }
 
     public float calculateWeaponDamage() {

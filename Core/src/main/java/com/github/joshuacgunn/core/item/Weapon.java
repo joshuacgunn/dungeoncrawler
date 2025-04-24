@@ -189,6 +189,7 @@ public class Weapon extends Item {
 
         switch (this.itemRarity) {
             case COMMON:
+                this.itemValue = random.nextFloat(10f, 15f);
                 if (extraQualityChance < .9f) {
                     this.weaponQuality = WeaponQuality.values()[random.nextInt(0, 2)];
                 } else {
@@ -197,14 +198,18 @@ public class Weapon extends Item {
                 this.weaponMaterial = WeaponMaterial.BRONZE;
                 break;
             case UNCOMMON:
-                if (extraQualityChance < .9f) {
-                    this.weaponQuality = WeaponQuality.values()[random.nextInt(1, 3)];
+                this.itemValue = random.nextFloat(20f, 30f);
+                if (extraQualityChance < .15f) {
+                    this.weaponQuality = WeaponQuality.DULL;
+                } else if (extraQualityChance < .9f) {
+                    this.weaponQuality = WeaponQuality.JAGGED;
                 } else {
                     this.weaponQuality = WeaponQuality.TEMPERED;
                 }
                 this.weaponMaterial = WeaponMaterial.IRON;
                 break;
             case RARE:
+                this.itemValue = random.nextFloat(35f, 45f);
                 if (extraQualityChance < .9f) {
                     this.weaponQuality = WeaponQuality.values()[random.nextInt(2, 4)];
                 } else {
@@ -213,6 +218,7 @@ public class Weapon extends Item {
                 this.weaponMaterial = WeaponMaterial.STEEL;
                 break;
             case EPIC:
+                this.itemValue = random.nextFloat(65f, 80f);
                 if (extraQualityChance < .9f) {
                     this.weaponQuality = WeaponQuality.values()[4];
                 } else {
@@ -221,6 +227,7 @@ public class Weapon extends Item {
                 this.weaponMaterial = WeaponMaterial.OBSIDIAN;
                 break;
             case LEGENDARY:
+                this.itemValue = random.nextFloat(125f, 145f);
                 if (extraQualityChance < .9f) {
                     this.weaponQuality = WeaponQuality.values()[5];
                 } else {
@@ -229,10 +236,12 @@ public class Weapon extends Item {
                 this.weaponMaterial = WeaponMaterial.MITHRIL;
                 break;
             case MYTHICAL:
+                this.itemValue = random.nextFloat(200f, 225f);
                 this.weaponQuality = WeaponQuality.HEAVENLY;
                 this.weaponMaterial = WeaponMaterial.CELESTIUM;
                 break;
             case DEMONIC:
+                this.itemValue = random.nextFloat(300f, 350f);
                 this.weaponQuality = WeaponQuality.HELLMADE;
                 this.weaponMaterial = WeaponMaterial.DEMONITE;
                 break;

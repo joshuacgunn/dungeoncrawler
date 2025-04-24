@@ -67,8 +67,8 @@ public class EntityDTOTypeAdapter implements JsonSerializer<EntityDTO>, JsonDese
                 result.add("inventory", context.serialize(playerDTO.getInventory()));
                 result.add("playerClass", context.serialize(playerDTO.getPlayerClass()));
             }
-            if (playerDTO.getPlayerStats() != null) {
-                result.add("playerStats", context.serialize(playerDTO.getPlayerStats()));
+            if (playerDTO.getEntityStats() != null) {
+                result.add("playerStats", context.serialize(playerDTO.getEntityStats()));
             }
         }
 

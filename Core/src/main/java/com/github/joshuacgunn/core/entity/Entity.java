@@ -33,6 +33,7 @@ public abstract class Entity implements Tickable {
     protected UUID entityUUID;
 
     private final Inventory inventory;
+    protected EntityStats entityStats;
 
     /**
      * The current health points (HP) of the entity.
@@ -84,6 +85,9 @@ public abstract class Entity implements Tickable {
         entityMap.put(uuid, this);
         inventory = new Inventory(UUID.randomUUID(), this);
         TickManager.getInstance().register(this);
+        if (!(this instanceof Player)) {
+            entityStats = new EntityStats();
+        }
     }
 
     public Inventory getInventory() {
@@ -101,10 +105,6 @@ public abstract class Entity implements Tickable {
      */
     public Location getCurrentLocation() {
         return currentLocation;
-    }
-
-    public void setEntityName(String name) {
-        this.entityName = name;
     }
 
     /**
@@ -327,14 +327,27 @@ public abstract class Entity implements Tickable {
 
     public void addTemporaryStat(EntityStats.Stat stat, int amount) {
         if (this instanceof Player player) {
-            player.getPlayerStats().setStatValue(stat, player.getPlayerStats().getStatValue(stat) + amount);
+            player.getEntityStats().setStatValue(stat, player.getEntityStats().getStatValue(stat) + amount);
         }
     }
 
     public void removeTemporaryStat(EntityStats.Stat stat, int amount) {
         if (this instanceof Player player) {
-            player.getPlayerStats().setStatValue(stat, player.getPlayerStats().getStatValue(stat) - amount);
+            player.getEntityStats().setStatValue(stat, player.getEntityStats().getStatValue(stat) - amount);
         }
+    }
+
+    public EntityStats getEntityStats() {
+        return this.entityStats;
+    }
+
+    public void setEntityStats(EntityStats entityStats) {
+        this.entityStats = entityStats;
+    }
+
+
+    public int getSpecificStatValue(EntityStats.Stat stat) {
+        return this.entityStats.getStatValue(stat);
     }
 
     public enum StatusEffect {

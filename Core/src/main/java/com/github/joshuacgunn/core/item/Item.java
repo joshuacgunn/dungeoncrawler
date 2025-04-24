@@ -8,17 +8,12 @@ import java.util.*;
  * a global registry of all items.
  */
 public class Item {
-    /** The name of this item */
-    protected String itemName;
-
-    /** Unique identifier for this item */
-    private UUID itemUUID;
-
     /** Global registry mapping UUIDs to all created items */
     public static Map<UUID, Item> itemMap = new HashMap<>();
-
+    protected String itemName;
+    private UUID itemUUID;
+    protected float itemValue;
     protected ItemRarity itemRarity;
-
     public enum ItemRarity {
         COMMON,
         UNCOMMON,
@@ -74,6 +69,14 @@ public class Item {
      */
     public static List<Item> getItems() {
         return itemMap.values().stream().toList();
+    }
+
+    public float getItemValue() {
+        return this.itemValue;
+    }
+
+    public void setItemValue(float value) {
+        this.itemValue = value;
     }
 
     /**

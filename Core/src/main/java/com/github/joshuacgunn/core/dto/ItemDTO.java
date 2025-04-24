@@ -12,11 +12,20 @@ public class ItemDTO implements Serializable {
     private String itemName;
     private UUID itemUUID;
     private Item.ItemRarity itemRarity;
+    private float itemValue;
 
     public ItemDTO() { }
 
     public String getItemType() {
         return itemType;
+    }
+
+    public float getItemValue() {
+        return itemValue;
+    }
+
+    public void setItemValue(float value) {
+        this.itemValue = value;
     }
 
     public void setItemType(String itemType) {

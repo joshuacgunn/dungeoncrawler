@@ -64,6 +64,7 @@ public abstract class GameEvents {
             for (Item item : entity.getInventory().getItems()) {
                 i += 1;
                 System.out.println(i + ". " + item.getItemName());
+                System.out.println("    Cost: " + item.getItemValue());
                 System.out.println("    Rarity: " + item.getItemRarity().name().toLowerCase());
                 if (item instanceof Armor armor) {
                     System.out.println("    Defense: " + armor.getArmorDefense());
@@ -428,6 +429,16 @@ public abstract class GameEvents {
         Player player = new Player(name, uuid, playerClassEnum, true);
         System.out.println("You chose " + playerClassEnum.name().toLowerCase() + "!");
         System.out.println(player.getPlayerStatsString());
+        System.out.println("\nPress ENTER key to to continue...");
+        try {
+            System.in.read();
+            // Clear the input buffer
+            while (System.in.available() > 0) {
+                System.in.read();
+            }
+        } catch (IOException e) {
+            // Handle exception silently
+        }
         return player;
     }
 
@@ -442,9 +453,7 @@ public abstract class GameEvents {
         } else if (gameState instanceof ShopState shopState) {
         }
 
-        // Display "Press any key to continue" prompt
-        System.out.println("\nPress any key to to continue...");
-
+        System.out.println("\nPress ENTER key to to continue...");
         try {
             System.in.read();
             // Clear the input buffer

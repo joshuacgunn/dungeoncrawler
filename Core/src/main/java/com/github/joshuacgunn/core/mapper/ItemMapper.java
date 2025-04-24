@@ -45,11 +45,14 @@ public interface ItemMapper {
     default ItemDTO itemToItemDTO(Item item) {
         if (item == null) return null;
 
+
+
         if (item instanceof Weapon weapon) {
             WeaponDTO dto = new WeaponDTO();
             dto.setItemRarity(weapon.getItemRarity());
             dto.setItemName(weapon.getItemName());
             dto.setItemUUID(weapon.getItemUUID());
+            dto.setItemValue(weapon.getItemValue());
             dto.setWeaponQuality(weapon.getWeaponQuality());
             dto.setWeaponMaterial(weapon.getWeaponMaterial());
             dto.setWeaponDamage(weapon.getWeaponDamage());
@@ -62,6 +65,7 @@ public interface ItemMapper {
             dto.setItemRarity(armor.getItemRarity());
             dto.setItemName(armor.getItemName());
             dto.setItemUUID(armor.getItemUUID());
+            dto.setItemValue(armor.getItemValue());
             dto.setArmorDefense(armor.getArmorDefense());
             dto.setArmorSlot(armor.getArmorSlot());
             dto.setArmorQuality(armor.getArmorQuality());
@@ -72,6 +76,7 @@ public interface ItemMapper {
             ItemDTO dto = new ItemDTO();
             dto.setItemName(item.getItemName());
             dto.setItemUUID(item.getItemUUID());
+            dto.setItemValue(item.getItemValue());
             dto.setItemRarity(item.getItemRarity());
             dto.setItemType("Item"); // Explicitly set type
             return dto;
@@ -109,6 +114,7 @@ public interface ItemMapper {
             weapon.setArmorPenetration(weaponDTO.getArmorPenetration());
             weapon.setWeaponDurability(weaponDTO.getWeaponDurability());
             weapon.setWeaponDurability(weaponDTO.getWeaponDurability());
+            weapon.setItemValue(weaponDTO.getItemValue());
             return weapon;
         } if (dto instanceof ArmorDTO armorDTO) {
             Armor armor = new Armor(
@@ -121,6 +127,7 @@ public interface ItemMapper {
             armor.setArmorQuality(armorDTO.getArmorQuality());
             armor.setArmorMaterial(armorDTO.getArmorMaterial());
             armor.setArmorDefense(armorDTO.getArmorDefense());
+            armor.setItemValue(armorDTO.getItemValue());
             return armor;
         } else {
             return new Item(dto.getItemName(), dto.getItemUUID());

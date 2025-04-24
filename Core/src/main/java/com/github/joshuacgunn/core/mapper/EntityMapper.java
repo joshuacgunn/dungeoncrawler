@@ -111,6 +111,16 @@ public interface EntityMapper {
             dto.setCurrentWeaponUUID(entity.getCurrentWeapon().getItemUUID());
         }
 
+        if (entity.getEntityStats() != null) {
+            dto.setEntityStats(entity.getEntityStats());
+            dto.setEntityStatsValue(EntityStats.Stat.STRENGTH, entity.getEntityStats().getStatValue(EntityStats.Stat.STRENGTH));
+            dto.setEntityStatsValue(EntityStats.Stat.DEXTERITY, entity.getEntityStats().getStatValue(EntityStats.Stat.DEXTERITY));
+            dto.setEntityStatsValue(EntityStats.Stat.INTELLIGENCE, entity.getEntityStats().getStatValue(EntityStats.Stat.INTELLIGENCE));
+            dto.setEntityStatsValue(EntityStats.Stat.LUCK, entity.getEntityStats().getStatValue(EntityStats.Stat.LUCK));
+            dto.setEntityStatsValue(EntityStats.Stat.CHARISMA, entity.getEntityStats().getStatValue(EntityStats.Stat.CHARISMA));
+            dto.setEntityStatsValue(EntityStats.Stat.VITALITY, entity.getEntityStats().getStatValue(EntityStats.Stat.VITALITY));
+        }
+
         return dto;
     }
 
@@ -146,15 +156,6 @@ public interface EntityMapper {
         dto.setPlayerClass(player.getPlayerClass());
 
         dto.setPlayerLevel(player.getPlayerLevel() );
-
-        dto.setPlayerStats(player.getPlayerStats());
-
-        dto.setPlayerStatsValue(EntityStats.Stat.STRENGTH, player.getPlayerStats().getStatValue(EntityStats.Stat.STRENGTH));
-        dto.setPlayerStatsValue(EntityStats.Stat.DEXTERITY, player.getPlayerStats().getStatValue(EntityStats.Stat.DEXTERITY));
-        dto.setPlayerStatsValue(EntityStats.Stat.INTELLIGENCE, player.getPlayerStats().getStatValue(EntityStats.Stat.INTELLIGENCE));
-        dto.setPlayerStatsValue(EntityStats.Stat.LUCK, player.getPlayerStats().getStatValue(EntityStats.Stat.LUCK));
-        dto.setPlayerStatsValue(EntityStats.Stat.CHARISMA, player.getPlayerStats().getStatValue(EntityStats.Stat.CHARISMA));
-        dto.setPlayerStatsValue(EntityStats.Stat.VITALITY, player.getPlayerStats().getStatValue(EntityStats.Stat.VITALITY));
 
         return dto;
     }
@@ -226,6 +227,18 @@ public interface EntityMapper {
         entity.setDeathStatus(dto.isAlive());
         entity.setEntityHp(dto.getEntityHp());
 
+        if (dto.getEntityStats() != null) {
+            entity.setEntityStats(dto.getEntityStats());
+
+            // Set player stats
+            entity.getEntityStats().setStatValue(EntityStats.Stat.STRENGTH, dto.getEntityStatsValue(EntityStats.Stat.STRENGTH));
+            entity.getEntityStats().setStatValue(EntityStats.Stat.DEXTERITY, dto.getEntityStatsValue(EntityStats.Stat.DEXTERITY));
+            entity.getEntityStats().setStatValue(EntityStats.Stat.INTELLIGENCE, dto.getEntityStatsValue(EntityStats.Stat.INTELLIGENCE));
+            entity.getEntityStats().setStatValue(EntityStats.Stat.LUCK, dto.getEntityStatsValue(EntityStats.Stat.LUCK));
+            entity.getEntityStats().setStatValue(EntityStats.Stat.CHARISMA, dto.getEntityStatsValue(EntityStats.Stat.CHARISMA));
+            entity.getEntityStats().setStatValue(EntityStats.Stat.VITALITY, dto.getEntityStatsValue(EntityStats.Stat.VITALITY));
+        }
+
         // Handle status effects
         if (dto.getStatusEffects() != null) {
             entity.setActiveStatusEffects(dto.getStatusEffects());
@@ -268,16 +281,7 @@ public interface EntityMapper {
 
         Player player = new Player(dto.getEntityName(), dto.getEntityUUID(), dto.getPlayerClass(), false);
 
-        player.setPlayerStats(dto.getPlayerStats());
         player.setPlayerLevel(dto.getPlayerLevel());
-        
-        // Set player stats
-        player.getPlayerStats().setStatValue(EntityStats.Stat.STRENGTH, dto.getPlayerStatsValue(EntityStats.Stat.STRENGTH));
-        player.getPlayerStats().setStatValue(EntityStats.Stat.DEXTERITY, dto.getPlayerStatsValue(EntityStats.Stat.DEXTERITY));
-        player.getPlayerStats().setStatValue(EntityStats.Stat.INTELLIGENCE, dto.getPlayerStatsValue(EntityStats.Stat.INTELLIGENCE));
-        player.getPlayerStats().setStatValue(EntityStats.Stat.LUCK, dto.getPlayerStatsValue(EntityStats.Stat.LUCK));
-        player.getPlayerStats().setStatValue(EntityStats.Stat.CHARISMA, dto.getPlayerStatsValue(EntityStats.Stat.CHARISMA));
-        player.getPlayerStats().setStatValue(EntityStats.Stat.VITALITY, dto.getPlayerStatsValue(EntityStats.Stat.VITALITY));
 
         if (Location.locationMap.containsKey(dto.getCurrentLocationUUID())) {
             player.setCurrentLocation(Location.locationMap.get(dto.getCurrentLocationUUID()));

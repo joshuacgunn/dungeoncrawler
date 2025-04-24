@@ -146,6 +146,7 @@ public class Armor extends Item {
 
         switch (this.itemRarity) {
             case COMMON:
+                this.itemValue = random.nextFloat(10f, 15f);
                 if (extraQualityChance < .9f) {
                     this.armorQuality = ArmorQuality.values()[random.nextInt(0, 2)]; // FLIMSY or WORN
                 } else {
@@ -154,22 +155,27 @@ public class Armor extends Item {
                 this.armorMaterial = ArmorMaterial.LEATHER;
                 break;
             case UNCOMMON:
-                if (extraQualityChance < .9f) {
-                    this.armorQuality = ArmorQuality.values()[random.nextInt(1, 3)]; // WORN or DECENT
+                this.itemValue = random.nextFloat(20f, 30f);
+                if (extraQualityChance < .15f) {
+                    this.armorQuality = ArmorQuality.WORN;
+                } else if (extraQualityChance < .9f) {
+                    this.armorQuality = ArmorQuality.DECENT;
                 } else {
                     this.armorQuality = ArmorQuality.STURDY;
                 }
                 this.armorMaterial = ArmorMaterial.BRONZE;
                 break;
             case RARE:
+                this.itemValue = random.nextFloat(35f, 45f);
                 if (extraQualityChance < .9f) {
-                    this.armorQuality = ArmorQuality.values()[random.nextInt(2, 4)]; // DECENT or STURDY
+                    this.armorQuality = ArmorQuality.values()[random.nextInt(3, 4)]; // DECENT or STURDY
                 } else {
                     this.armorQuality = ArmorQuality.HARDENED;
                 }
                 this.armorMaterial = ArmorMaterial.IRON;
                 break;
             case EPIC:
+                this.itemValue = random.nextFloat(50f, 60f);
                 if (extraQualityChance < .9f) {
                     this.armorQuality = ArmorQuality.values()[4]; // HARDENED
                 } else {
@@ -178,6 +184,7 @@ public class Armor extends Item {
                 this.armorMaterial = ArmorMaterial.STEEL;
                 break;
             case LEGENDARY:
+                this.itemValue = random.nextFloat(65f, 75f);
                 if (extraQualityChance < .9f) {
                     this.armorQuality = ArmorQuality.values()[5]; // FINE
                 } else {
@@ -186,10 +193,12 @@ public class Armor extends Item {
                 this.armorMaterial = ArmorMaterial.MITHRIL;
                 break;
             case MYTHICAL:
+                this.itemValue = random.nextFloat(200f, 225f);
                 this.armorQuality = ArmorQuality.HEAVENLY;
                 this.armorMaterial = ArmorMaterial.CELESTIUM;
                 break;
             case DEMONIC:
+                this.itemValue = random.nextFloat(300f, 350f);
                 this.armorQuality = ArmorQuality.HELLMADE;
                 this.armorMaterial = ArmorMaterial.DEMONITE;
                 break;
