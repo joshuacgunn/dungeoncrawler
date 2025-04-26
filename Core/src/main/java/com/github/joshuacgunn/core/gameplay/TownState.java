@@ -49,7 +49,7 @@ public class TownState implements GameState {
                 printScreen(this);
                 String townSize = getTownSize();
                 System.out.println("You have entered " + whichTown.getLocationName() +
-                        ", a " + townSize + " town with a " + getShopsInTown());
+                        ", a " + townSize + " town with a " + getShopsInTown(whichTown));
             }
         }
     }
@@ -151,12 +151,12 @@ public class TownState implements GameState {
         return parentLoop;
     }
 
-    private String getShopsInTown() {
+    static String getShopsInTown(Town town) {
         StringBuilder shopsInTown = new StringBuilder();
-        for (Shop shop : whichTown.getShopsInTown() ) {
-            if (whichTown.getShopsInTown().indexOf(shop) == whichTown.getShopsInTown().size()-1) {
+        for (Shop shop : town.getShopsInTown() ) {
+            if (town.getShopsInTown().indexOf(shop) == town.getShopsInTown().size()-1) {
                 shopsInTown.append(shop.getShopType().name.toLowerCase()).append(".");
-            } else if (whichTown.getShopsInTown().indexOf(shop) == whichTown.getShopsInTown().size()-2) {
+            } else if (town.getShopsInTown().indexOf(shop) == town.getShopsInTown().size()-2) {
                 shopsInTown.append(shop.getShopType().name.toLowerCase()).append(" and ");
             }
             else {

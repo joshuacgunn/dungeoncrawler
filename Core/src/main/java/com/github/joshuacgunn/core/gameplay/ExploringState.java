@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+import static com.github.joshuacgunn.core.gameplay.TownState.getShopsInTown;
 import static com.github.joshuacgunn.core.mechanics.GameEvents.*;
 
 public class ExploringState implements GameState {
@@ -91,7 +92,7 @@ public class ExploringState implements GameState {
                 }
 
                 for (Town town : towns) {
-                    System.out.println(i + ": " + town.getLocationName() + " (" + town.getShopsInTown().size() + " shops)");
+                    System.out.println(i + ": " + town.getLocationName() + " (" + getShopsInTown(town) + ")");
                     i += 1;
                 }
                 int townIndex = scanner.nextInt();
@@ -122,7 +123,7 @@ public class ExploringState implements GameState {
                 }
 
                 for (Dungeon dungeon : dungeons) {
-                    System.out.println(j + ": " + dungeon.getLocationName() + " (" + dungeon.getFloors().size() + " floors, " + dungeon.getDifficultyRating() + " difficulty rating)");
+                    System.out.println(j + ": " + dungeon.getLocationName() + " (" + dungeon.getFloors().size() + " floors, " + dungeon.getDifficultyRating() + " difficulty)");
                 }
 
                 int dungeonIndex = scanner.nextInt();

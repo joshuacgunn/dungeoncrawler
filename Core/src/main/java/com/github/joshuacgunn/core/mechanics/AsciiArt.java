@@ -419,18 +419,22 @@ public class AsciiArt {
 
 
     public static final String WILDERNESS_6 = """
-                                  .--.-.
-                                 ( (    )__\s
-                  ^^            (_,  \\ ) ,_)
-                      ^^          '-'--`--'             |   \s
-                                                    \\       / \s
-                             ~,                       .-'-. \s
-                             /|                  --  /     \\  -- \s
-                 ~^~`^~^`^~ / |\\ ~^~~^~``~~^~~^^~^~^-=======-~^~^~^~~^~~^~^~\s
-                ~^~ ~^~ ^~ /__|_\\~^~ ~^~^~^~_~^~^_~-=========- -~^~^~^^~^_~
-               ~^~ ~^~^ ~ '======' `~^-~~^~-^~^_~^~~ -=====- ~^~^~-~^~^~^~~^~
-               jgs  ~^~ ~^ ~^~ ~^~^ ~^~-~^~~^~-~^~~-~^~^~-~^~~^-~^~^~^-~^~^~^~\
-            """;
+                .--.-.
+               ( (    )__\s
+              (_,  \\ ) ,_)                                   |
+                '-'--`--'             ~~|     ,            \\ _ /
+                                       ,|`-._/|        -==  (_)  ==-
+                           ^^        .' |   /||\\           /   \\
+                       ^^          .'   | ./ ||`\\            |
+                                  / `-. |/._ ||  \\
+                                 /     `||  `|;-._\\\s
+                                 |      ||   ||   \\
+            ~^~_~^~_-~^~=~^~~^= /       ||   ||__  \\~^=~^~-~^~_~^~=~^~-~^~\s
+             ~^~ ~=~^~ _~^~ =~ `--------|`---||  `"-`___~~^~ =_~^=~~^~=`~^
+              jgs ~^~=~^_~^~ =~ \\~~~~~~~'~~~~'~~~~/~~`` ~=~^~ ~^=_~^~ ~~^
+             ~^~ ~^=~^~_~-=~^~ ^ `--------------'~^~=~^~_~^=~^~=~ ~^~-~^=
+              ~^~=~ ~^=~^~ ~^~^=~^~-~^~ ~^~=~^~^~ =~^~^=~^~^=~^~^ =~~`~^
+                 ~^~= ~^~= ~~^~~`=~``^~^^~= ~^=~^~^~^ =`^~^`^~^=~^~-~~^""";
 
     public static final String WILDERNESS_7 = """
                       ,~-.
@@ -452,22 +456,26 @@ public class AsciiArt {
                         `""\"'""";
 
     public static final String LOADING_1 = """
-            
-                    .           \s
-                  \\ _ /     .-='-. _db_      .--==-,
-                -= (_) =-  (_  (  _IIII_   _(    )  `.
-                  /   \\      (    |" " |-.(  ` ,_  `  )
-                    '         '-._HHHHHH  `)---' `'--'    =.=
-                                  |.   |--`                    =.=
-                                  |    |      =.=
-                        _H___,=====;___|           =.=
-                     n_/____/____/``\\__\\
-                    /__|:: :|. .|:::|::|                  =.=
-                 _%&|__&%_"_|_"_|_ H|__|__
-                jgs`";;;;`";;;;'";;'"';;;;``;;-.
-                .  ' `";;'  `;;;  `;'   `;  .`' `\\
-                . '  .  `' .  `';.    '   .   .  |^-`^~_^^~``-^^_~^^-`^~
-                   '    `    `      '   `    '   ;_~ -   _-~  _`  ~  -_ `\
+                                *         \\  /  .              .
+                                        -= [] =-       *
+                                     *    [##]     *    .   *
+                          .   *    .     [IIII]                  *
+                                          |##|        \s
+                                        IIIIIIII  .       *
+                          *    .  *      |____|               .
+                                         |____|     *     _      \s
+                       .       *    __u__|   #| *       .` `. \s
+                               ____/____/|____|         '._.'    *    \s
+                          *   /___/____/_|____|     .           \s
+                              |# #|   | #| #  |           *     .
+                              |___| # |# |_!~_| ____            \s
+                      .    __/^^^^|_#_|.^,/|\\ __^ ^_\\___     .
+                          /^ \\__^,_- ,/- /_| \\ ^\\__'\\__ \\     \s
+                       ~~/ -^| ,\\_--,/<^_`<|__\\ ^ /__^,\\_~~~~~~~~~~~~
+                      ~~/lc'/ ^ ' \\-_\\ ,___|`___, ^^<\\ ^/~~~~~~~~~~~~~
+                     ~~~~~~~~~~~~|/   \\|~~~~~~'~~~~~~~~~~~~~~~~~~~~~~
+                    ~~~~~~~~~~~~~|=====|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\
             """;
 
     public static final String LOADING_2 = """
@@ -604,11 +612,20 @@ public class AsciiArt {
             "Towns can have numerous different shops, be sure to visit them all!",
             "Your health will slowly regenerate when outside of combat.",
             "You can find various items in dungeon chests, including weapons and armor.",
-            "Exploring the wilderness can lead to random encounters");
+            "Exploring the wilderness can lead to random encounters",
+            "You won't be able to use potions in combat, so use them wisely before battles.",
+            "Prices will go down if your charisma is higher.",
+            "You can find better weapons and armor in dungeons than in shops.",
+            "Some NPC's will give you quests, which can reward you with items and gold.");
 
-    public static final String HINTS = "================================================================\n" +
-            HINT_LIST.get(new Random().nextInt(HINT_LIST.size())) +"\n" +
-            "================================================================";
+    public static String getRandomHint() {
+        return HINT_LIST.get(new Random().nextInt(HINT_LIST.size()));
+    }
+
+    public static final String HINTS = "===================================================================\n" +
+            getRandomHint() +"\n" +
+            "===================================================================\n";
+
 
 
     /**

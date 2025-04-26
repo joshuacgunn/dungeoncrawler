@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
 import static com.github.joshuacgunn.core.gameplay.MainMenuState.deleteDirectory;
 import static com.github.joshuacgunn.core.save.SaveManager.BACKUP_DIRECTORY;
@@ -305,6 +307,8 @@ public abstract class GameEvents {
                 System.out.println("You are currently in " + dungeon.getLocationName() + ", on floor " + dungeon.getCurrentFloor().getFloorNumber() + ".");
             } else if (player.getCurrentLocation() instanceof Shop shop) {
                 System.out.println("You are currently at " + shop.getLocationName() + ", in the town of " + shop.getParentTown().getLocationName() + ".");
+            } else {
+                System.out.println("You are currently exploring the world. Have fun!");
             }
         } else {
             System.out.println("You are currently exploring the world. Have fun!");
@@ -328,11 +332,10 @@ public abstract class GameEvents {
         } else {
             printLoadingScreen();
             player = SaveManager.loadState();
+            printContinuePrompt();
         }
 
         TickManager.getInstance().start();
-
-        printContinuePrompt();
 
         GameLoop gameLoop = new GameLoop(player, isNewGame);
         if (isNewGame) {
@@ -467,21 +470,21 @@ public abstract class GameEvents {
     }
 
     public static void printContinuePrompt() {
-        System.out.println("\nPress ENTER key to to continue...");
-        try {
-            System.in.read();
-            // Clear the input buffer
-            while (System.in.available() > 0) {
-                System.in.read();
-            }
-        } catch (IOException e) {
-            // Handle exception silently
+        try (Terminal terminal = TerminalBuilder.builder()
+                .system(true)
+                .build()) {
+            terminal.enterRawMode();                         // switch off line buffering
+            System.out.print("Press any key to continue…");
+            int ch = terminal.reader().read();               // blocks until a key is pressed
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
     public static void playerDeath(Player player) {
         deleteDirectory(new File(SAVE_DIRECTORY));
         deleteDirectory(new File(BACKUP_DIRECTORY));
+        clearConsole();
         System.out.println(AsciiArt.DEATH_SCREEN);
         System.out.println("You died at level " + player.getPlayerLevel() + "!");
         System.out.println("Would you like to start a new save? (y/n)");

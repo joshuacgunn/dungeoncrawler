@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    id("application")
 }
 
 group = "com.github.joshuacgunn"
@@ -7,6 +8,11 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    allprojects {
+        repositories {
+            maven { url = uri("https://jitpack.io") }
+        }
+    }
 }
 
 dependencies {
@@ -19,11 +25,12 @@ dependencies {
     implementation ("org.reflections:reflections:0.10.2")
     implementation("com.github.javafaker:javafaker:1.0.2")
     implementation("org.slf4j:slf4j-api:1.6.1")
-    implementation("org.slf4j:slf4j-simple:1.6.1")
-    implementation("com.intellij:forms_rt:7.0.3")
+    implementation("org.jline:jline-terminal:3.21.0")
+    implementation("org.jline:jline-reader:3.21.0")
+    implementation("org.hexworks.zircon:zircon.core-jvm:2021.1.0-RELEASE")
+    implementation("org.hexworks.zircon:zircon.jvm.swing:2021.1.0-RELEASE")
+
 }
-
-
 tasks.test {
     useJUnitPlatform()
 }

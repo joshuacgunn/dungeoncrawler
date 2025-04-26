@@ -1,3 +1,4 @@
+import org.gradle.api.publish.internal.component.MavenPublishingAwareVariant
 
 plugins {
     id("java")
@@ -9,6 +10,11 @@ version = "v0.2.0"
 repositories {
     mavenCentral()
     maven { url = uri("https://www.jetbrains.com/intellij-repository/releases") }
+    allprojects {
+        repositories {
+            maven { url = uri("https://jitpack.io") }
+        }
+    }
 }
 
 tasks.jar {
@@ -33,7 +39,10 @@ dependencies {
     implementation ("org.reflections:reflections:0.10.2")
     implementation("ch.qos.logback:logback-classic:1.5.6")
     implementation("com.github.javafaker:javafaker:1.0.2")
-    implementation("com.intellij:forms_rt:7.0.3")
+    implementation("org.jline:jline-terminal:3.21.0")
+    implementation("org.jline:jline-reader:3.21.0")
+    implementation("org.hexworks.zircon:zircon.core-jvm:2021.1.0-RELEASE")
+    implementation("org.hexworks.zircon:zircon.jvm.swing:2021.1.0-RELEASE")
 }
 
 tasks.test {
