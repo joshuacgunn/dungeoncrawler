@@ -67,6 +67,7 @@ public class ShopState implements GameState {
             TownState townState = new TownState(parentLoop, true);
             GameEvents.switchGameStates(player, townState);
         } else {
+            player.setLastGameLocation(player.getCurrentLocation());
             player.setCurrentLocation(null);
             GameEvents.switchGameStates(player, new MainMenuState());
         }

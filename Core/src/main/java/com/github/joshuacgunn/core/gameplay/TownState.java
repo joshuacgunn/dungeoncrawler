@@ -36,8 +36,9 @@ public class TownState implements GameState {
         if (player.getCurrentLocation() != null && player.getCurrentLocation() instanceof Town ) {
             this.whichTown = (Town) player.getCurrentLocation();
         } else {
-            whichTown = new Town(UUID.randomUUID(), true);
-            Location.locationMap.remove(whichTown.getLocationUUID());
+            Town town = new Town(UUID.randomUUID(), false);
+            whichTown = town;
+            Location.locationMap.remove(town.getLocationUUID());
         }
 
         // isNew is true for new games, false for loaded games
@@ -79,6 +80,7 @@ public class TownState implements GameState {
             ShopState shopState = new ShopState(parentLoop, true);
             GameEvents.switchGameStates(player, shopState);
         } else {
+            player.setLastGameLocation(player.getCurrentLocation());
             player.setCurrentLocation(null);
             GameEvents.switchGameStates(player, new MainMenuState());
         }

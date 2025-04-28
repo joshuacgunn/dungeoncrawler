@@ -3,6 +3,8 @@ package com.github.joshuacgunn.core.dto;
 import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.mechanics.EntityStats;
 
+import java.util.UUID;
+
 /**
  * PlayerDTO extends EntityDTO to add player-specific properties.
  */
@@ -10,6 +12,7 @@ public class PlayerDTO extends EntityDTO {
     public Player.PlayerClass playerClass;
     public String gameState;
     public String previousGameState;
+    public UUID lastGameLocationUUID;
     public int playerLevel;
 
 
@@ -50,4 +53,11 @@ public class PlayerDTO extends EntityDTO {
         return this.playerClass;
     }
 
+    public UUID getLastGameLocationUUID() {
+        return lastGameLocationUUID;
+    }
+
+    public void setLastGameLocationUUID(UUID uuid) {
+        this.lastGameLocationUUID = uuid;
+    }
 }

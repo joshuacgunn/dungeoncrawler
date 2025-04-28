@@ -2,6 +2,7 @@ package com.github.joshuacgunn.core.entity;
 
 import com.github.joshuacgunn.core.container.Inventory;
 import com.github.joshuacgunn.core.gameplay.CombatState;
+import com.github.joshuacgunn.core.gameplay.DungeonState;
 import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
 import com.github.joshuacgunn.core.item.Weapon;
@@ -55,6 +56,7 @@ public abstract class Entity implements Tickable {
      * The dungeon the player is currently in
      */
     private Location currentLocation;
+    private String currentLocationType;
 
     /**
      * The total defense value of the entity.
@@ -171,6 +173,14 @@ public abstract class Entity implements Tickable {
         this.currentWeapon = weapon;
     }
 
+    public void setCurrentLocationType(String currentLocationType) {
+        this.currentLocationType = currentLocationType;
+    }
+
+    public String getCurrentLocationType() {
+        return currentLocationType;
+    }
+
     /**
      * Reduces the entity's health points (HP) by the specified damage amount.
      * If the damage exceeds the current HP, the entity is marked as dead.
@@ -273,9 +283,11 @@ public abstract class Entity implements Tickable {
         }
 
         // Other time-based logic like health regeneration
-        if (currentTick % 5 == 0 && this instanceof Player player) { // Every 5 seconds
-            if (!(player.getGameState() instanceof CombatState)) { // Don't regenerate health in combat
-                //            this.entityHp += 10;
+        if (currentTick % 10 == 0 && this instanceof Player player) { // Every 10 seconds
+            if (!(player.getGameState() instanceof CombatState || player.getGameState() instanceof DungeonState)) { // Don't regenerate health in combat
+                if (player.getEntityHp() < 100 && player.getEntityHp() > 0) {
+                    player.setEntityHp(player.getEntityHp() + ((float) player.getSpecificStatValue(EntityStats.Stat.VITALITY) / 10));
+                }
             }
         }
     }

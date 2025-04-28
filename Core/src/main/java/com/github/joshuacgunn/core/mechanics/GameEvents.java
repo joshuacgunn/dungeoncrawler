@@ -67,7 +67,7 @@ public abstract class GameEvents {
             for (Item item : entity.getInventory().getItems()) {
                 i += 1;
                 System.out.println(i + ". " + item.getItemName());
-                System.out.println("    Cost: " + item.getItemValue());
+                System.out.println("    Cost: " + item.getItemValue()*(item.getItemRarity().ordinal()+1));
                 System.out.println("    Rarity: " + item.getItemRarity().name().toLowerCase());
                 if (item instanceof Armor armor) {
                     System.out.println("    Defense: " + armor.getArmorDefense());
@@ -323,7 +323,11 @@ public abstract class GameEvents {
         clearConsole();
         Player player;
         boolean isNewGame;
-        isNewGame = !new File("backups/saves/").exists() && !new File("saves/").exists();
+        if (new File("saves/").exists()) {
+            isNewGame = false;
+        } else {
+            isNewGame = true;
+        }
 
         if (isNewGame) {
             player = createPlayer();

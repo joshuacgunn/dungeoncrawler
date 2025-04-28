@@ -15,6 +15,7 @@ import com.github.joshuacgunn.core.mapper.DungeonMapper;
 import com.github.joshuacgunn.core.mapper.EntityMapper;
 import com.github.joshuacgunn.core.mapper.ItemMapper;
 import com.github.joshuacgunn.core.mapper.TownMapper;
+import com.github.joshuacgunn.core.mechanics.GameEvents;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.io.FileUtils;
 
@@ -69,11 +70,9 @@ public abstract class SaveManager {
 
         // The order of this is critical for functionality. It will not work if changed.
         loadItems();
-
         loadEntities();
         loadDungeons();
         loadTowns();
-
         manageBackupDirectory();
         return loadPlayer();
     }

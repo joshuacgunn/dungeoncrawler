@@ -1,6 +1,9 @@
 package com.github.joshuacgunn.core.gameplay;
 
+import com.github.joshuacgunn.core.entity.Entity;
+import com.github.joshuacgunn.core.entity.Player;
 import com.github.joshuacgunn.core.mechanics.GameEvents;
+import com.github.joshuacgunn.core.save.SaveManager;
 
 import java.io.File;
 import java.util.Random;
@@ -33,6 +36,7 @@ public class MainMenuState implements GameState {
         while (inMainMenu) {
             update();
         }
+        SaveManager.saveState(Entity.getEntitiesByType(Player.class).getFirst());
         System.exit(0);
     }
 

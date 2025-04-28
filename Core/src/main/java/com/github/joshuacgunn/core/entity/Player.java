@@ -5,6 +5,7 @@ import com.github.joshuacgunn.core.item.Armor;
 import com.github.joshuacgunn.core.item.Item;
 import com.github.joshuacgunn.core.item.Potion;
 import com.github.joshuacgunn.core.item.Weapon;
+import com.github.joshuacgunn.core.location.Location;
 import com.github.joshuacgunn.core.mechanics.EntityStats;
 
 import java.util.UUID;
@@ -20,6 +21,8 @@ import java.util.UUID;
 public class Player extends Entity {
     /** The maximum health points a player can have */
     public static final float MAX_HP = 100f;
+
+    private Location lastGameLocation;
 
     /**
      * Possible player character classes that determine initial stats and abilities.
@@ -122,6 +125,14 @@ public class Player extends Entity {
      */
     public void setCurrentWeapon(Weapon weapon) {
         this.currentWeapon = weapon;
+    }
+
+    public void setLastGameLocation(Location lastGameLocation) {
+        this.lastGameLocation = lastGameLocation;
+    }
+
+    public Location getLastGameLocation() {
+        return lastGameLocation;
     }
 
     public void equipWeapon(Weapon weapon) {

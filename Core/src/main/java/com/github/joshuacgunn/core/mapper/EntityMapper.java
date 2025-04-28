@@ -76,8 +76,11 @@ public interface EntityMapper {
         dto.setEntityDefense(entity.getEntityDefense());
         dto.setAlive(entity.isAlive());
         dto.setStatusEffects(entity.getActiveStatusEffects());
+
+
         if (entity.getCurrentLocation() != null) {
             dto.setCurrentLocationUUID(entity.getCurrentLocation().getLocationUUID());
+            dto.setCurrentLocationType(entity.getCurrentLocationType());
         }
 
         // Handle inventory items with null check
@@ -138,15 +141,12 @@ public interface EntityMapper {
 
         PlayerDTO dto = new PlayerDTO();
 
-        // Handle current dungeon
-        if (player.getCurrentLocation() != null) {
-            dto.setCurrentLocationUUID(player.getCurrentLocation().getLocationUUID());
-        } else {
-            dto.setCurrentLocationUUID(new World(UUID.randomUUID()).getLocationUUID());
-        }
-
         if (player.getGameState() != null) {
             dto.setGameState(player.getGameState().getGameStateName());
+        }
+
+        if (player.getLastGameLocation() != null) {
+            dto.setLastGameLocationUUID(player.getLastGameLocation().getLocationUUID());
         }
 
         if (player.getPreviousGameStateName() != null) {
@@ -268,10 +268,15 @@ public interface EntityMapper {
             }
         }
 
-        // Handle current location
-        if (dto.getCurrentLocationUUID() != null) {
-            entity.setCurrentLocation(Location.locationMap.get(dto.getCurrentLocationUUID()));
-        }
+//        if (dto.getCurrentLocationUUID() != null) {
+//            Location location = Location.locationMap.get(dto.getCurrentLocationUUID());
+//            if (location != null) {
+//                entity.setCurrentLocation(location);
+//                entity.setCurrentLocationType(dto.getCurrentLocationType());
+//            } else {
+//                System.err.println("Warning: Could not find location with UUID: " + dto.getCurrentLocationUUID());
+//            }
+//        }
 
         return entity;
     }
@@ -283,10 +288,10 @@ public interface EntityMapper {
 
         player.setPlayerLevel(dto.getPlayerLevel());
 
-        if (Location.locationMap.containsKey(dto.getCurrentLocationUUID())) {
+        if (dto.getCurrentLocationUUID() != null && Location.locationMap.containsKey(dto.getCurrentLocationUUID())) {
             player.setCurrentLocation(Location.locationMap.get(dto.getCurrentLocationUUID()));
-        } else {
-            player.setCurrentLocation(new World(UUID.randomUUID()));
+        } else if (dto.getLastGameLocationUUID() != null && Location.locationMap.containsKey(dto.getLastGameLocationUUID())) {
+            player.setCurrentLocation(Location.locationMap.get(dto.getLastGameLocationUUID()));
         }
 
         if (dto.getGameState() != null) {

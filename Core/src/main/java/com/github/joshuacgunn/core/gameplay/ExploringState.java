@@ -50,12 +50,10 @@ public class ExploringState implements GameState {
         if (inTown) {
             player.setPreviousGameState(this);
             TownState townState = new TownState(parentLoop, true);
-//            printLoadingScreen(townState);
             GameEvents.switchGameStates(player, townState);
         } else if (inDungeon) {
             player.setPreviousGameState(this);
             DungeonState dungeonState = new DungeonState(parentLoop, true);
-//            printLoadingScreen(dungeonState);
             GameEvents.switchGameStates(player, dungeonState);
         } else {
             MainMenuState mainMenuState = new MainMenuState();
@@ -86,10 +84,7 @@ public class ExploringState implements GameState {
                 System.out.println("0: Go back");
 
                 int i = 1;
-                ArrayList<Town> towns = new ArrayList<>();
-                for (Town town : Location.getLocationsByType(Town.class)) {
-                    towns.add(town);
-                }
+                ArrayList<Town> towns = new ArrayList<>(Location.getLocationsByType(Town.class));
 
                 for (Town town : towns) {
                     System.out.println(i + ": " + town.getLocationName() + " (" + getShopsInTown(town) + ")");
@@ -117,10 +112,7 @@ public class ExploringState implements GameState {
                 System.out.println("0: Go back");
 
                 int j = 1;
-                ArrayList<Dungeon> dungeons = new ArrayList<>();
-                for (Dungeon dungeon : Location.getLocationsByType(Dungeon.class)) {
-                    dungeons.add(dungeon);
-                }
+                ArrayList<Dungeon> dungeons = new ArrayList<>(Location.getLocationsByType(Dungeon.class));
 
                 for (Dungeon dungeon : dungeons) {
                     System.out.println(j + ": " + dungeon.getLocationName() + " (" + dungeon.getFloors().size() + " floors, " + dungeon.getDifficultyRating() + " difficulty)");

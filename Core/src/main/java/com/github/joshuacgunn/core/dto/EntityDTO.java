@@ -16,6 +16,7 @@ public class EntityDTO {
     private float entityHp;
     private boolean isAlive;
     private UUID currentLocationUUID;
+    private String currentLocationType;
     public EntityStats entityStats;
     private float entityDefense;
     private UUID currentWeaponUUID;
@@ -145,5 +146,13 @@ public class EntityDTO {
 
     public void setEntityStatsValue(EntityStats.Stat stat, int value) {
         this.entityStats.setStatValue(stat, value);
+    }
+
+    public String getCurrentLocationType() {
+        return currentLocationType;
+    }
+
+    public void setCurrentLocationType(String currentLocationType) {
+        this.currentLocationType = currentLocationType;
     }
 }

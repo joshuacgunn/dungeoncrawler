@@ -71,11 +71,11 @@ public class DungeonState implements GameState {
             GameEvents.switchGameStates(player, combatState);
         } else if (inGame) {
             System.out.println("You have left the dungeon");
-            player.setCurrentLocation(new World(UUID.randomUUID()));
             player.setPreviousGameState(this);
             ExploringState exploringState = new ExploringState(parentLoop, true);
             GameEvents.switchGameStates(player, exploringState);
         } else {
+            player.setLastGameLocation(player.getCurrentLocation());
             player.setCurrentLocation(null);
             GameEvents.switchGameStates(player, new MainMenuState());
         }
@@ -117,6 +117,7 @@ public class DungeonState implements GameState {
                 break;
             case 4:
                 inDungeon = false;
+                player.setCurrentLocation(new World(UUID.randomUUID()));
                 break;
         }
     }
