@@ -2,7 +2,7 @@
 This is the rewrite of a previous project I was working on. I did this because the old project had many, *many* critical flaws in the code. This new version is simpler, more intuitive, and has more dynamic code for future updates. 
 
 # Current State of the Project (4/21)
-The game is in a pretty stable state (v0.2.0), although there's not much to do in game. I've decided to switch from the terminal to Swing, as the ideas I have for this project would be a pain to add in the terminal, and a proper GUI would make the game much better. 
+The game is in a pretty stable state (v0.2.0), although there's not much to do in game. 
 
 # Future Plans
 Although I have many things I want to add to the game, it is time consuming to add them. I'm currently a student, and my classes take priority over this project. That being said, I have no plans to drop this project any time soon, and would like to continue working on it until it's at least playable. Here are some things I'm currently planning on implementing*:
@@ -21,6 +21,7 @@ Although I have many things I want to add to the game, it is time consuming to a
 - Player stats having an impact on gameplay
 - A way for the player to move around in a dungeon
 - ~~Implement ticks for updating certain events regardless of player input/current state~~ - Added as of 4/21
+- A proper GUI instead of the terminal
 - And more to come...  
 _*Regardless of whether something is crossed out, I will continue changing all of these_
 # Disclaimer
