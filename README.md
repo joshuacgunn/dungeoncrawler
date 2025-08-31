@@ -2,7 +2,7 @@
 This is the rewrite of a previous project I was working on. I did this because the old project had many, *many* critical flaws in the code. This new version is simpler, more intuitive, and has more dynamic code for future updates. 
 
 # Current State of the Project (8/25)
-The game is in a playable state, although it is very incomplete. I'm currently working on switching over to Swing from the terminal.
+The game is in a playable state, although it is very incomplete. I'm currently working on switching over to LibGDX from terminal
 
 # Future Plans
 Although I have many things I want to add to the game, it is time consuming to add them. I'm currently a student, and my classes take priority over this project. That being said, I have no plans to drop this project any time soon, and would like to continue working on it until it's at least playable. Here are some things I'm currently planning on implementing*:
