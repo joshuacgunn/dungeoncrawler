@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+
 buildscript {
   repositories {
     mavenCentral()
@@ -11,8 +14,8 @@ buildscript {
   }
 }
 
-dependencies {
-
+plugins {
+  id 'application'
 }
 
 allprojects {
@@ -27,6 +30,9 @@ allprojects {
     }
   }
 }
+
+mainClassName = 'io.github.joshuacgunn.core.gameplay.PlayGame'
+application.setMainClass(mainClassName)
 
 configure(subprojects) {
   apply plugin: 'java-library'
@@ -56,8 +62,8 @@ configure(subprojects) {
   compileJava {
     options.incremental = true
   }
-  compileKotlin.compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
-  compileTestKotlin.compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+  compileKotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
+  compileTestKotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
 
 }
 

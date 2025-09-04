@@ -1,5 +1,14 @@
+plugins {
+  id 'application'
+  id 'java'
+}
+
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 eclipse.project.name = appName + '-core'
+
+application {
+  mainClass = 'io.github.joshuacgunn.core.gameplay.PlayGame'
+}
 
 dependencies {
   api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
@@ -27,3 +36,14 @@ dependencies {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }
 }
+
+jar {
+  manifest {
+    attributes 'Main-Class': 'io.github.joshuacgunn.core.gameplay.PlayGame'
+  }
+  from {
+    configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+  }
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
